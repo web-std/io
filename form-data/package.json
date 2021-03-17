@@ -55,10 +55,6 @@
     "test": "npm run test:es && npm run test:cjs",
     "precommit": "lint-staged"
   },
-  "pre-push": [
-    "check",
-    "test"
-  ],
   "lint-staged": {
     "*.js": [
       "prettier --no-semi --write",
