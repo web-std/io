@@ -1,0 +1,129 @@
+name: blob
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  check:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: 15
+        project: blob
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Restore yarn cache
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Typecheck
+        uses: gozala/typescript-error-reporter-action@v1.0.8
+        project: ${{matrix.project}}/tsconfig.json
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version:
+          - 14
+          - 15
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        project: blob
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Restore yarn cache
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Test (ES)
+        run: yarn --cwd ${{matrix.project}} test:es
+
+      - name: Test (CJS)
+        run: yarn --cwd ${{matrix.project}} test:cjs
+
+      - name: Test (Web)
+        run: yarn --cwd ${{matrix.project}} test:web
+  publish:
+    name: Publish
+    needs:
+      - test
+      - check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: blob
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Restore yarn cache
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Build
+        run: yarn --cwd ${{matrix.project}} build
+
+      - name: Publish
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          DEPLOY_DIR: ${{matrix.project}}
+          SRC_PACKAGE_DIR: ${{matrix.project}}

@@ -1,4 +1,4 @@
-name: CI
+name: file
 
 on:
   push:
@@ -14,12 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version:
-          - 15
-        project:
-          - blob
-          - file
-          - form-data
+        node-version: 15
+        project: file
     steps:
       - uses: actions/checkout@v2
 
@@ -43,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Typecheck ${{matrix.project}}
+      - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
         project: ${{matrix.project}}/tsconfig.json
   test:
@@ -59,10 +55,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        project:
-          - blob
-          - file
-          - form-data
+        project: file
 
     steps:
       - uses: actions/checkout@v2
@@ -87,13 +80,13 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Test ${{matrix.project}} (ES)
+      - name: Test (ES)
         run: yarn --cwd ${{matrix.project}} test:es
 
-      - name: Test ${{matrix.project}} (CJS)
+      - name: Test (CJS)
         run: yarn --cwd ${{matrix.project}} test:cjs
 
-      - name: Test ${{matrix.project}} (Web)
+      - name: Test (Web)
         run: yarn --cwd ${{matrix.project}} test:web
   publish:
     name: Publish
@@ -103,15 +96,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project:
-          - blob
-          - file
-          - form-data
+        project: file
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
 
-            - name: Restore yarn cache
+      - name: Restore yarn cache
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
