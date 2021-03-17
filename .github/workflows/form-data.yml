@@ -14,8 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: 15
-        project: form-data
+        node-version:
+          - 15
+        project:
+          - form-data
     steps:
       - uses: actions/checkout@v2
 
@@ -41,7 +43,8 @@ jobs:
 
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
-        project: ${{matrix.project}}/tsconfig.json
+          with:
+            project: ${{matrix.project}}/tsconfig.json
   test:
     name: Test
     runs-on: ${{ matrix.os }}
@@ -55,7 +58,8 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        project: form-data
+        project:
+          - form-data
 
     steps:
       - uses: actions/checkout@v2
@@ -96,7 +100,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: form-data
+        project:
+          - form-data
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
