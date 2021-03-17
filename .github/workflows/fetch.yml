@@ -4,42 +4,45 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "fetch/**"
   pull_request:
     branches:
       - main
     paths:
-      - "**.js"
-      - "package.json"
-      - ".github/workflows/ci.yml"
+      - "fetch/**"
+      - ".github/workflows/fetch.yml"
 
 jobs:
   test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
+        node-version:
+          - 14
+          - 15
         os:
           - ubuntu-latest
           - windows-latest
-          - macOS-latest
-        node:
-          - 14
-          - 15
+          - macos-latest
         project:
           - fetch
         exclude:
           - os: windows-latest
-            node: "15"
+            node-version: 15
           # On macOS, run tests with only the LTS environments.
-          - os: macOS-latest
-            node: "15"
+          - os: macos-latest
+            node-version: 15
 
-    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ matrix.node-version }}
 
       - name: Restore yarn cache
         id: yarn-cache-dir-path
@@ -57,7 +60,7 @@ jobs:
         run: yarn install
 
       - name: Test
-      - run: yarn --cwd ${{matrix.project}} test -- --colors
+        run: yarn --cwd ${{matrix.project}} test -- --colors
 
       # upload coverage only once
       - name: Coveralls
@@ -65,7 +68,6 @@ jobs:
         if: matrix.node == '14' && matrix.os == 'ubuntu-latest'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
   publish:
     name: Publish
     needs:

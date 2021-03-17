@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "form-data/**"
   pull_request:
     branches:
-      - "**"
+      - main
+    paths:
+      - "form-data/**"
+      - ".github/workflows/form-data.yml"
 
 jobs:
   check:

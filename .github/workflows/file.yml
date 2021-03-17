@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "file/**"
   pull_request:
     branches:
-      - "**"
-
+      - main
+    paths:
+      - "file/**"
+      - ".github/workflows/file.yml"
 jobs:
   check:
     name: Typecheck
