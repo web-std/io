@@ -1,0 +1,66 @@
+{
+  "name": "@web-std/file",
+  "version": "1.0.0",
+  "description": "Web API compatible File implementation for node",
+  "keywords": [
+    "file",
+    "blob",
+    "typed",
+    "typescript"
+  ],
+  "type": "module",
+  "module": "./src/lib.js",
+  "main": "./dist/src/lib.cjs",
+  "exports": {
+    ".": {
+      "import": "./src/lib.js",
+      "require": "./dist/src/lib.cjs"
+    }
+  },
+  "browser": {
+    "./src/lib.js": "./src/lib.web.js"
+  },
+  "types": "./src/lib.d.ts",
+  "dependencies": {
+    "@web-std/blob": "2.0.0"
+  },
+  "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
+  "repository": "https://github.com/web-std/io",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "14.0.23",
+    "git-validate": "2.2.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "@web-std/fetch": "1.0.0",
+    "playwright-test": "2.1.0",
+    "prettier": "^2.2.1",
+    "rimraf": "3.0.2",
+    "rollup": "2.22.1",
+    "rollup-plugin-multi-input": "1.1.1",
+    "typescript": "^4.2.3",
+    "uvu": "0.5.1"
+  },
+  "scripts": {
+    "check": "tsc --build",
+    "build": "npm run build:cjs && npm run build:types",
+    "build:cjs": "rollup --config rollup.config.js",
+    "build:types": "tsc --build",
+    "prepare": "npm run build",
+    "test:es": "uvu test all.spec.js",
+    "test:web": "playwright-test -r uvu test/web.spec.js",
+    "test:cjs": "rimraf dist && npm run build && node dist/test/web.spec.cjs",
+    "test": "npm run test:es && npm run test:cjs",
+    "precommit": "lint-staged"
+  },
+  "pre-push": [
+    "check",
+    "test"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "prettier --no-semi --write",
+      "git add"
+    ]
+  }
+}

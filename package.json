@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "workspaces": [
+    "blob",
+    "file",
+    "form-data",
+    "fetch"
+  ],
+  "scripts": {
+    "test:blob": "yarn --cwd blob test",
+    "test:file": "yarn --cwd file test",
+    "test:form-data": "yarn --cwd form-data test"
+  }
+}

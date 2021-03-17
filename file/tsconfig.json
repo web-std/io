@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+  },
+  "references": [
+    {
+      "path": "../blob"
+    }
+  ],
+  "include": [
+    "src/**/*.js",
+    "test/**/*.js"
+  ]
+}
