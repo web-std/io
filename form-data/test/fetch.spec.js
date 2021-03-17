@@ -1,5 +1,5 @@
 import { FormData } from "@web-std/form-data"
-import { Blob, File } from "@web-std/file"
+import { Blob } from "@web-std/file"
 import { Response } from "@web-std/fetch"
 import { assert } from "./test.js"
 
