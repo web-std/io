@@ -441,6 +441,13 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
+"@web-std/file@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@web-std/file/-/file-1.0.0.tgz#68c5f3e2a139bad87aeb3cdde10a1873d9f00a96"
+  integrity sha512-XWcy8xy+FLa+VMxkeH1/yYqdyfm57o4C16c9p1xjb2WN5oPCFn77JX1dglPz7/aiagVtxN/gDanc9PhGzTrn2A==
+  dependencies:
+    "@web-std/blob" "2.0.0"
+
 "@zxing/text-encoding@0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@zxing/text-encoding/-/text-encoding-0.9.0.tgz#fb50ffabc6c7c66a0c96b4c03e3d9be74864b70b"

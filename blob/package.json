@@ -8,15 +8,11 @@
   ],
   "type": "module",
   "module": "./src/lib.js",
-  "browser": {
-    "./src/lib.js": "./src/lib.web.js"
-  },
-  "main": "./dist/src/lib.cjs",
+  "main": "./dist/src/lib.node.cjs",
   "exports": {
     ".": {
-      "browser": "./src/lib.web.js",
-      "import": "./src/lib.js",
-      "require": "./dist/src/lib.cjs"
+      "require": "./dist/src/lib.node.cjs",
+      "node": "./src/lib.node.js"
     }
   },
   "types": "./dist/src/lib.d.ts",
