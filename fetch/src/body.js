@@ -17,17 +17,23 @@ import {isBlob, isURLSearchParameters, isFormData} from './utils/is.js';
 import {blobToNodeStream} from './utils/blob-to-stream.js';
 
 const INTERNALS = Symbol('Body internals');
+export const BODY = Symbol('Body content');
 
 /**
  * Body mixin
  *
  * Ref: https://fetch.spec.whatwg.org/#body
  *
- * @param   Stream  body  Readable stream
+ * @param   Stream  stream  Readable stream
  * @param   Object  opts  Response options
  * @return  Void
  */
 export default class Body {
+	/**
+	 * 
+	 * @param {BodyInit|Stream} body
+	 * @param {{size?:number}} options
+	 */
 	constructor(body, {
 		size = 0
 	} = {}) {
@@ -62,6 +68,7 @@ export default class Body {
 		}
 
 		this[INTERNALS] = {
+			/** @type {Stream|Buffer|Blob|null} */
 			body,
 			boundary,
 			disturbed: false,
@@ -79,8 +86,8 @@ export default class Body {
 		}
 	}
 
-	get body() {
-		return this[INTERNALS].body;
+	get [BODY]() {
+		return this[INTERNALS].body
 	}
 
 	get bodyUsed() {
@@ -156,7 +163,8 @@ Object.defineProperties(Body.prototype, {
  *
  * Ref: https://fetch.spec.whatwg.org/#concept-body-consume-body
  *
- * @return Promise
+ * @param {Body} data
+ * @return {Promise<Buffer>}
  */
 async function consumeBody(data) {
 	if (data[INTERNALS].disturbed) {
@@ -169,7 +177,7 @@ async function consumeBody(data) {
 		throw data[INTERNALS].error;
 	}
 
-	let {body} = data;
+	let {body} = data[INTERNALS];
 
 	// Body is null
 	if (body === null) {
@@ -198,7 +206,7 @@ async function consumeBody(data) {
 
 	try {
 		for await (const chunk of body) {
-			const bytes = typeof chunk === "string" ? Buffer.from(chunk) : chunk
+			const bytes = typeof chunk === 'string' ? Buffer.from(chunk) : chunk;
 			if (data.size > 0 && accumBytes + bytes.byteLength > data.size) {
 				const err = new FetchError(`content size at ${data.url} over limit: ${data.size}`, 'max-size');
 				body.destroy(err);
@@ -238,7 +246,7 @@ async function consumeBody(data) {
 export const clone = (instance, highWaterMark) => {
 	let p1;
 	let p2;
-	let {body} = instance;
+	let {body} = instance[INTERNALS];
 
 	// Don't allow cloning a used body
 	if (instance.bodyUsed) {
@@ -321,11 +329,11 @@ export const extractContentType = (body, request) => {
  *
  * ref: https://fetch.spec.whatwg.org/#concept-body-total-bytes
  *
- * @param {any} obj.body Body object from the Body instance.
+ * @param {Body} request Body object from the Body instance.
  * @returns {number | null}
  */
 export const getTotalBytes = request => {
-	const {body} = request;
+	const body = request[BODY];
 
 	// Body is null or undefined
 	if (body === null) {
@@ -360,10 +368,10 @@ export const getTotalBytes = request => {
  * Write a Body to a Node.js WritableStream (e.g. http.Request) object.
  *
  * @param {Stream.Writable} dest The stream to write to.
- * @param obj.body Body object from the Body instance.
+ * @param {null|Buffer|Blob|Stream} body Body object from the Body instance.
  * @returns {void}
  */
-export const writeToStream = (dest, {body}) => {
+export const writeToStream = (dest, body) => {
 	if (body === null) {
 		// Body is null
 		dest.end();

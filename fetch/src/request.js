@@ -9,7 +9,7 @@
 
 import {format as formatUrl} from 'url';
 import Headers from './headers.js';
-import Body, {clone, extractContentType, getTotalBytes} from './body.js';
+import Body, {clone, extractContentType, getTotalBytes, BODY} from './body.js';
 import {isAbortSignal} from './utils/is.js';
 import {getSearch} from './utils/get-search.js';
 
@@ -18,8 +18,8 @@ const INTERNALS = Symbol('Request internals');
 /**
  * Check if `obj` is an instance of Request.
  *
- * @param  {*} obj
- * @return {boolean}
+ * @param  {any} object
+ * @return {object is Request}
  */
 const isRequest = object => {
 	return (
@@ -36,6 +36,10 @@ const isRequest = object => {
  * @return  Void
  */
 export default class Request extends Body {
+	/**
+	 * @param {RequestInfo} input  Url or Request instance
+   * @param {RequestInit} init   Custom options
+	 */
 	constructor(input, init = {}) {
 		let parsedURL;
 
@@ -51,14 +55,14 @@ export default class Request extends Body {
 		method = method.toUpperCase();
 
 		// eslint-disable-next-line no-eq-null, eqeqeq
-		if (((init.body != null || isRequest(input)) && input.body !== null) &&
+		if (((isRequest(input) || init.body != null) && input[BODY] !== null) &&
 			(method === 'GET' || method === 'HEAD')) {
 			throw new TypeError('Request with GET/HEAD method cannot have body');
 		}
 
 		const inputBody = init.body ?
 			init.body :
-			(isRequest(input) && input.body !== null ?
+			(isRequest(input) && input[BODY] !== null ?
 				clone(input) :
 				null);
 
@@ -150,7 +154,7 @@ Object.defineProperties(Request.prototype, {
 /**
  * Convert a Request to Node.js http request options.
  *
- * @param   Request  A Request instance
+ * @param {Request}  A Request instance
  * @return  Object   The options object to be passed to http.request
  */
 export const getNodeRequestOptions = request => {
@@ -164,11 +168,11 @@ export const getNodeRequestOptions = request => {
 
 	// HTTP-network-or-cache fetch steps 2.4-2.7
 	let contentLengthValue = null;
-	if (request.body === null && /^(post|put)$/i.test(request.method)) {
+	if (request[BODY] === null && /^(post|put)$/i.test(request.method)) {
 		contentLengthValue = '0';
 	}
 
-	if (request.body !== null) {
+	if (request[BODY] !== null) {
 		const totalBytes = getTotalBytes(request);
 		// Set Content-Length if totalBytes is a number (that is not NaN)
 		if (typeof totalBytes === 'number' && !Number.isNaN(totalBytes)) {

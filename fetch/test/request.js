@@ -10,6 +10,7 @@ import Blob from 'fetch-blob';
 
 import TestServer from './utils/server.js';
 import {Request} from '../src/index.js';
+import {BODY} from '../src/body.js'
 
 const {expect} = chai;
 
@@ -80,7 +81,7 @@ describe('Request', () => {
 		expect(r2.method).to.equal('POST');
 		expect(r2.signal).to.equal(signal);
 		// Note that we didn't clone the body
-		expect(r2.body).to.equal(form);
+		expect(r2[BODY]).to.equal(form);
 		expect(r1.follow).to.equal(1);
 		expect(r2.follow).to.equal(2);
 		expect(r1.counter).to.equal(0);
@@ -129,7 +130,7 @@ describe('Request', () => {
 
 	it('should default to null as body', () => {
 		const request = new Request(base);
-		expect(request.body).to.equal(null);
+		expect(request[BODY]).to.equal(null);
 		return request.text().then(result => expect(result).to.equal(''));
 	});
 
@@ -237,7 +238,7 @@ describe('Request', () => {
 		expect(cl.agent).to.equal(agent);
 		expect(cl.signal).to.equal(signal);
 		// Clone body shouldn't be the same body
-		expect(cl.body).to.not.equal(body);
+		expect(cl[BODY]).to.not.equal(body);
 		return Promise.all([cl.text(), request.text()]).then(results => {
 			expect(results[0]).to.equal('a=1');
 			expect(results[1]).to.equal('a=1');

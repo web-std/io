@@ -12,7 +12,7 @@ import zlib from 'zlib';
 import Stream, {PassThrough, pipeline as pump} from 'stream';
 import dataUriToBuffer from 'data-uri-to-buffer';
 
-import {writeToStream} from './body.js';
+import {writeToStream, BODY} from './body.js';
 import Response from './response.js';
 import Headers, {fromRawHeaders} from './headers.js';
 import Request, {getNodeRequestOptions} from './request.js';
@@ -55,15 +55,15 @@ export default async function fetch(url, options_) {
 		const abort = () => {
 			const error = new AbortError('The operation was aborted.');
 			reject(error);
-			if (request.body && request.body instanceof Stream.Readable) {
-				request.body.destroy(error);
+			if (request[BODY] && request[BODY] instanceof Stream.Readable) {
+				request[BODY].destroy(error);
 			}
 
-			if (!response || !response.body) {
+			if (!response || !response[BODY]) {
 				return;
 			}
 
-			response.body.emit('error', error);
+			response[BODY].emit('error', error);
 		};
 
 		if (signal && signal.aborted) {
@@ -94,6 +94,30 @@ export default async function fetch(url, options_) {
 			reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, 'system', err));
 			finalize();
 		});
+
+		fixResponseChunkedTransferBadEnding(request_, err => {
+			response[BODY].destroy(err);
+		});
+
+		/* c8 ignore next 18 */
+		if (process.version < 'v14') {
+			// Before Node.js 14, pipeline() does not fully support async iterators and does not always
+			// properly handle when the socket close/end events are out of order.
+			request_.on('socket', s => {
+				let endedWithEventsCount;
+				s.prependListener('end', () => {
+					endedWithEventsCount = s._eventsCount;
+				});
+				s.prependListener('close', hadError => {
+					// if end happened before close but the socket didn't emit an error, do it now
+					if (response && endedWithEventsCount < s._eventsCount && !hadError) {
+						const err = new Error('Premature close');
+						err.code = 'ERR_STREAM_PREMATURE_CLOSE';
+						response[BODY].emit('error', err);
+					}
+				});
+			});
+		}
 
 		request_.on('response', response_ => {
 			request_.setTimeout(0);
@@ -142,13 +166,13 @@ export default async function fetch(url, options_) {
 							agent: request.agent,
 							compress: request.compress,
 							method: request.method,
-							body: request.body,
+							body: request[BODY],
 							signal: request.signal,
 							size: request.size
 						};
 
 						// HTTP-redirect fetch step 9
-						if (response_.statusCode !== 303 && request.body && options_.body instanceof Stream.Readable) {
+						if (response_.statusCode !== 303 && request[BODY] && options_.body instanceof Stream.Readable) {
 							reject(new FetchError('Cannot follow redirect with body being a readable stream', 'unsupported-redirect'));
 							finalize();
 							return;
@@ -262,6 +286,34 @@ export default async function fetch(url, options_) {
 			resolve(response);
 		});
 
-		writeToStream(request_, request);
+		writeToStream(request_, request[BODY]);
+	});
+}
+
+function fixResponseChunkedTransferBadEnding(request, errorCallback) {
+	const LAST_CHUNK = Buffer.from('0\r\n');
+	let socket;
+
+	request.on('socket', s => {
+		socket = s;
+	});
+
+	request.on('response', response => {
+		const {headers} = response;
+		if (headers['transfer-encoding'] === 'chunked' && !headers['content-length']) {
+			let properLastChunkReceived = false;
+
+			socket.on('data', buf => {
+				properLastChunkReceived = Buffer.compare(buf.slice(-3), LAST_CHUNK) === 0;
+			});
+
+			socket.prependListener('close', () => {
+				if (!properLastChunkReceived) {
+					const err = new Error('Premature close');
+					err.code = 'ERR_STREAM_PREMATURE_CLOSE';
+					errorCallback(err);
+				}
+			});
+		}
 	});
 }
