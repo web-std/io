@@ -4,7 +4,8 @@
     "blob",
     "file",
     "form-data",
-    "fetch"
+    "fetch",
+    "node-fetch"
   ],
   "scripts": {
     "prepare": "yarn prepare:blob && yarn prepare:file && yarn prepare:form-data",
