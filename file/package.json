@@ -1,6 +1,6 @@
 {
   "name": "@web-std/file",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Web API compatible File implementation for node",
   "keywords": [
     "file",
@@ -19,14 +19,14 @@
   },
   "types": "./dist/src/lib.d.ts",
   "dependencies": {
-    "@web-std/blob": "2.0.0"
+    "@web-std/blob": "^2.1.0"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "14.0.23",
-    "@web-std/fetch": "1.0.0",
+    "@web-std/fetch": "^2.0.0",
     "git-validate": "2.2.4",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",

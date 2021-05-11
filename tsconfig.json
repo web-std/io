@@ -27,10 +27,10 @@
         "./blob/src/lib.js"
       ],
       "@web-std/file": [
-        "./file/src/lib.js"
+        "./file/src/lib.node.js"
       ],
       "@web-std/form-data": [
-        "./form-data/src/lib.js"
+        "./form-data/src/lib.node.js"
       ]
     }
   },

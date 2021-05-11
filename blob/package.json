@@ -1,6 +1,6 @@
 {
   "name": "@web-std/blob",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Web API compatible Blob implementation",
   "keywords": [
     "blob",
@@ -28,7 +28,7 @@
     "git-validate": "2.2.4",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
-    "@web-std/fetch": "1.0.0",
+    "@web-std/fetch": "^2.0.0",
     "playwright-test": "2.1.0",
     "prettier": "^2.2.1",
     "rimraf": "3.0.2",
