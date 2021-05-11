@@ -4807,16 +4807,7 @@ readable-stream@^2.0.2, readable-stream@^2.3.3, readable-stream@^2.3.6:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.4.0, readable-stream@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
-  integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
-  dependencies:
-    inherits "^2.0.3"
-    string_decoder "^1.1.1"
-    util-deprecate "^1.0.1"
-
-"readable-stream@https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz":
+readable-stream@^3.4.0, readable-stream@^3.6.0, "readable-stream@https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz":
   version "3.6.0"
   resolved "https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz#25682c94346526abc8c8b1ece125b52a7247bb2e"
   dependencies:
@@ -5029,7 +5020,7 @@ rollup-plugin-multi-input@1.2.0:
     fast-glob "^3.0.0"
     lodash "^4.17.11"
 
-rollup@2.47.0, rollup@^2.47.0:
+rollup@2.47.0, rollup@^2.26.10:
   version "2.47.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.47.0.tgz#9d958aeb2c0f6a383cacc0401dff02b6e252664d"
   integrity sha512-rqBjgq9hQfW0vRmz+0S062ORRNJXvwRpzxhFXORvar/maZqY6za3rgQ/p1Glg+j1hnc1GtYyQCPiAei95uTElg==

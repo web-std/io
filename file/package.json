@@ -11,6 +11,9 @@
   "type": "module",
   "module": "./src/lib.js",
   "main": "./dist/src/lib.node.cjs",
+  "browser": {
+    "./src/lib.node.js": "./src/lib.js"
+  },
   "exports": {
     ".": {
       "require": "./dist/src/lib.node.cjs",
