@@ -300,7 +300,7 @@ const BlobFile = class File {
   arrayBuffer() {
     return this.blob.arrayBuffer()
   }
-  [Symbol.toStringTag]() {
+  get [Symbol.toStringTag]() {
     return "File"
   }
 }

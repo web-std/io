@@ -32,7 +32,7 @@ export const isURLSearchParameters = object => {
 /**
  * Check if `object` is a W3C `Blob` object (which `File` inherits from)
  *
- * @param  {*} obj
+ * @param  {*} object
  * @return {object is Blob}
  */
 export const isBlob = object => {
