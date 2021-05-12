@@ -102,7 +102,7 @@ export default async function fetch(url, options_ = {}) {
 		});
 
 		fixResponseChunkedTransferBadEnding(request_, err => {
-			response.body.cancel(err);
+			response_.emit('error', err);
 		});
 
 		/* c8 ignore next 18 */
@@ -119,7 +119,7 @@ export default async function fetch(url, options_ = {}) {
 					if (response && endedWithEventsCount < s._eventsCount && !hadError) {
 						const err = new Error('Premature close');
 						err.code = 'ERR_STREAM_PREMATURE_CLOSE';
-						response.body.cancel(err);
+						response_.emit('error', err);
 					}
 				});
 			});

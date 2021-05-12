@@ -1,4 +1,4 @@
-# @web-std/node-fetch
+# @web-std/fetch
 
 [![ci][ci.icon]][ci.url]
 [![package][version.icon] ![downloads][downloads.icon]][package.url]
