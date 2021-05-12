@@ -1,6 +1,5 @@
 import { expectType, expectAssignable } from 'tsd';
 import AbortController from 'abort-controller';
-import Blob = require('fetch-blob');
 
 import fetch, { Request, Response, Headers, Body, FetchError, AbortError } from '.';
 import * as _fetch from '.';

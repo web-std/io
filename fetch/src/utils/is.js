@@ -1,3 +1,5 @@
+import Stream from 'stream';
+
 /**
  * Is.js
  *
@@ -11,7 +13,7 @@ const NAME = Symbol.toStringTag;
  * ref: https://github.com/node-fetch/node-fetch/issues/296#issuecomment-307598143
  *
  * @param  {*} obj
- * @return {boolean}
+ * @return {obj is URLSearchParams}
  */
 export const isURLSearchParameters = object => {
 	return (
@@ -30,21 +32,17 @@ export const isURLSearchParameters = object => {
 /**
  * Check if `object` is a W3C `Blob` object (which `File` inherits from)
  *
- * @param  {*} obj
- * @return {boolean}
+ * @param  {*} object
+ * @return {object is Blob}
  */
 export const isBlob = object => {
 	return (
 		typeof object === 'object' &&
 		typeof object.arrayBuffer === 'function' &&
 		typeof object.type === 'string' &&
-		// typeof object.stream === 'function' &&
+		typeof object.stream === 'function' &&
 		typeof object.constructor === 'function' &&
-		(
-			/* c8 ignore next 2 */
-			/^(Blob|File)$/.test(object[NAME]) ||
-			/^(Blob|File)$/.test(object.constructor.name)
-		)
+		/^(Blob|File)$/.test(object[NAME])
 	);
 };
 
@@ -52,7 +50,7 @@ export const isBlob = object => {
  * Check if `obj` is a spec-compliant `FormData` object
  *
  * @param {*} object
- * @return {boolean}
+ * @return {object is FormData}
  */
 export function isFormData(object) {
 	return (
@@ -71,10 +69,25 @@ export function isFormData(object) {
 }
 
 /**
+ * Detect form data input from form-data module
+ *
+ * @param {any} value
+ * @returns {value is Stream & {getBoundary():string, hasKnownLength():boolean, getLengthSync():number|null}}
+ */
+export const isMultipartFormDataStream = value => {
+	return (
+		value instanceof Stream &&
+		typeof value.getBoundary === 'function' &&
+		typeof value.hasKnownLength === 'function' &&
+		typeof value.getLengthSync === 'function'
+	);
+};
+
+/**
  * Check if `obj` is an instance of AbortSignal.
  *
  * @param  {*} obj
- * @return {boolean}
+ * @return {obj is AbortSignal}
  */
 export const isAbortSignal = object => {
 	return (
@@ -85,3 +98,17 @@ export const isAbortSignal = object => {
 	);
 };
 
+/**
+ * Check if `value` is a ReadableStream.
+ *
+ * @param {*} value
+ * @returns {value is ReadableStream}
+ */
+export const isReadableStream = value => {
+	return (
+		typeof value === 'object' &&
+		typeof value.getReader === 'function' &&
+		typeof value.cancel === 'function' &&
+		typeof value.tee === 'function'
+	);
+};

@@ -1,12 +1,10 @@
-
-import stream from 'stream';
 import http from 'http';
 import {TextEncoder} from 'util';
 
 import AbortController from 'abort-controller';
 import chai from 'chai';
 import FormData from 'form-data';
-import Blob from 'fetch-blob';
+import {Blob} from '@web-std/blob';
 
 import TestServer from './utils/server.js';
 import {Request} from '../src/index.js';
@@ -80,7 +78,7 @@ describe('Request', () => {
 		expect(r2.method).to.equal('POST');
 		expect(r2.signal).to.equal(signal);
 		// Note that we didn't clone the body
-		expect(r2.body).to.equal(form);
+		expect(r2.body).to.instanceOf(ReadableStream);
 		expect(r1.follow).to.equal(1);
 		expect(r2.follow).to.equal(2);
 		expect(r1.counter).to.equal(0);
@@ -182,18 +180,6 @@ describe('Request', () => {
 		});
 	});
 
-	it('should support buffer() method', () => {
-		const url = base;
-		const request = new Request(url, {
-			method: 'POST',
-			body: 'a=1'
-		});
-		expect(request.url).to.equal(url);
-		return request.buffer().then(result => {
-			expect(result.toString()).to.equal('a=1');
-		});
-	});
-
 	it('should support blob() method', () => {
 		const url = base;
 		const request = new Request(url, {
@@ -210,7 +196,13 @@ describe('Request', () => {
 
 	it('should support clone() method', () => {
 		const url = base;
-		const body = stream.Readable.from('a=1');
+		const body = new ReadableStream({
+			start(c) {
+				c.enqueue('a=1');
+				c.close();
+			}
+		});
+
 		const agent = new http.Agent();
 		const {signal} = new AbortController();
 		const request = new Request(url, {

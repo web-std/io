@@ -4,7 +4,6 @@
 
 import { Agent } from 'http';
 import { URL, URLSearchParams } from 'url'
-import Blob = require('fetch-blob');
 
 type AbortSignal = {
 	readonly aborted: boolean;
@@ -85,6 +84,7 @@ interface RequestInit {
 	protocol?: string;
 	size?: number;
 	highWaterMark?: number;
+	insecureHTTPParser?: boolean;
 }
 
 interface ResponseInit {
@@ -98,6 +98,7 @@ type BodyInit =
 	| Buffer
 	| URLSearchParams
 	| NodeJS.ReadableStream
+	| ReadableStream
 	| string;
 type BodyType = { [K in keyof Body]: Body[K] };
 declare class Body {
@@ -175,12 +176,20 @@ declare function fetch(url: RequestInfo, init?: RequestInit): Promise<Response>;
 declare class fetch {
 	static default: typeof fetch;
 }
+
+declare var Blob:typeof globalThis.Blob
+declare var ReadableStream:typeof globalThis.ReadableStream
+
+
 declare namespace fetch {
 	export function isRedirect(code: number): boolean;
 
+	
 	export {
 		HeadersInit,
 		Headers,
+		Blob,
+		ReadableStream,
 
 		RequestInit,
 		RequestRedirect,

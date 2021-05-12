@@ -1,6 +1,5 @@
 import FormData from 'formdata-node';
-import Blob from 'fetch-blob';
-import { Response } from '../src/index.js';
+import {Blob} from '@web-std/blob';
 
 import chai from 'chai';
 
@@ -101,15 +100,5 @@ describe('FormData', () => {
 		form.set('blob', new Blob(['Hello, World!'], {type: 'text/plain'}));
 
 		expect(String(await read(formDataIterator(form, boundary)))).to.be.equal(expected);
-	});
-
-	it('Response derives content-type from FormData', async () => {
-		const form = new FormData();
-		form.set('blob', new Blob(['Hello, World!'], {type: 'text/plain'}));
-
-		const response = new Response(form)
-		const type = response.headers.get('content-type') || ''
-		expect(type).to.match(/multipart\/form-data;\s*boundary=/)
-		expect(await response.text()).to.have.string('Hello, World!')
 	});
 });

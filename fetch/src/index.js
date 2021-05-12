@@ -9,18 +9,23 @@
 import http from 'http';
 import https from 'https';
 import zlib from 'zlib';
-import Stream, {PassThrough, pipeline as pump} from 'stream';
 import dataUriToBuffer from 'data-uri-to-buffer';
 
-import {writeToStream} from './body.js';
+import {writeToStream, fromAsyncIterable} from './body.js';
 import Response from './response.js';
 import Headers, {fromRawHeaders} from './headers.js';
 import Request, {getNodeRequestOptions} from './request.js';
 import {FetchError} from './errors/fetch-error.js';
 import {AbortError} from './errors/abort-error.js';
 import {isRedirect} from './utils/is-redirect.js';
+import WebStreams from 'web-streams-polyfill';
+import {pipeline as pump, PassThrough} from 'stream';
+import * as Stream from 'stream';
+import {Blob} from '@web-std/blob';
 
-export {Headers, Request, Response, FetchError, AbortError, isRedirect};
+const {ReadableStream} = WebStreams;
+
+export {Headers, Request, Response, FetchError, AbortError, isRedirect, ReadableStream, Blob};
 
 const supportedSchemas = new Set(['data:', 'http:', 'https:']);
 
@@ -28,10 +33,10 @@ const supportedSchemas = new Set(['data:', 'http:', 'https:']);
  * Fetch function
  *
  * @param   {string | URL | import('./request').default} url - Absolute url or Request instance
- * @param   {*} [options_] - Fetch options
+ * @param   {RequestInit} [options_] - Fetch options
  * @return  {Promise<import('./response').default>}
  */
-export default async function fetch(url, options_) {
+export default async function fetch(url, options_ = {}) {
 	return new Promise((resolve, reject) => {
 		// Build request object
 		const request = new Request(url, options_);
@@ -51,19 +56,20 @@ export default async function fetch(url, options_) {
 		const send = (options.protocol === 'https:' ? https : http).request;
 		const {signal} = request;
 		let response = null;
+		let response_ = null;
 
 		const abort = () => {
 			const error = new AbortError('The operation was aborted.');
 			reject(error);
-			if (request.body && request.body instanceof Stream.Readable) {
-				request.body.destroy(error);
+			if (request.body) {
+				request.body.cancel(error);
 			}
 
-			if (!response || !response.body) {
+			if (!response_) {
 				return;
 			}
 
-			response.body.emit('error', error);
+			response_.emit('error', error);
 		};
 
 		if (signal && signal.aborted) {
@@ -95,7 +101,32 @@ export default async function fetch(url, options_) {
 			finalize();
 		});
 
-		request_.on('response', response_ => {
+		fixResponseChunkedTransferBadEnding(request_, err => {
+			response.body.cancel(err);
+		});
+
+		/* c8 ignore next 18 */
+		if (process.version < 'v14') {
+			// Before Node.js 14, pipeline() does not fully support async iterators and does not always
+			// properly handle when the socket close/end events are out of order.
+			request_.on('socket', s => {
+				let endedWithEventsCount;
+				s.prependListener('end', () => {
+					endedWithEventsCount = s._eventsCount;
+				});
+				s.prependListener('close', hadError => {
+					// if end happened before close but the socket didn't emit an error, do it now
+					if (response && endedWithEventsCount < s._eventsCount && !hadError) {
+						const err = new Error('Premature close');
+						err.code = 'ERR_STREAM_PREMATURE_CLOSE';
+						response.body.cancel(err);
+					}
+				});
+			});
+		}
+
+		request_.on('response', incoming => {
+			response_ = incoming;
 			request_.setTimeout(0);
 			const headers = fromRawHeaders(response_.rawHeaders);
 
@@ -142,13 +173,18 @@ export default async function fetch(url, options_) {
 							agent: request.agent,
 							compress: request.compress,
 							method: request.method,
-							body: request.body,
+							// Note: We can not use `request.body` because send would have
+							// consumed it already.
+							body: options_.body,
 							signal: request.signal,
 							size: request.size
 						};
 
 						// HTTP-redirect fetch step 9
-						if (response_.statusCode !== 303 && request.body && options_.body instanceof Stream.Readable) {
+						const isStreamBody =
+							requestOptions.body instanceof ReadableStream ||
+							requestOptions.body instanceof Stream.Readable;
+						if (response_.statusCode !== 303 && isStreamBody) {
 							reject(new FetchError('Cannot follow redirect with body being a readable stream', 'unsupported-redirect'));
 							finalize();
 							return;
@@ -181,6 +217,7 @@ export default async function fetch(url, options_) {
 
 			let body = pump(response_, new PassThrough(), reject);
 			// see https://github.com/nodejs/node/pull/29376
+			/* c8 ignore next 3 */
 			if (process.version < 'v12.10') {
 				response_.on('aborted', abortAndFinalize);
 			}
@@ -225,7 +262,7 @@ export default async function fetch(url, options_) {
 			// For gzip
 			if (codings === 'gzip' || codings === 'x-gzip') {
 				body = pump(body, zlib.createGunzip(zlibOptions), reject);
-				response = new Response(body, responseOptions);
+				response = new Response(fromAsyncIterable(body), responseOptions);
 				resolve(response);
 				return;
 			}
@@ -243,7 +280,7 @@ export default async function fetch(url, options_) {
 						body = pump(body, zlib.createInflateRaw(), reject);
 					}
 
-					response = new Response(body, responseOptions);
+					response = new Response(fromAsyncIterable(body), responseOptions);
 					resolve(response);
 				});
 				return;
@@ -252,16 +289,44 @@ export default async function fetch(url, options_) {
 			// For br
 			if (codings === 'br') {
 				body = pump(body, zlib.createBrotliDecompress(), reject);
-				response = new Response(body, responseOptions);
+				response = new Response(fromAsyncIterable(body), responseOptions);
 				resolve(response);
 				return;
 			}
 
 			// Otherwise, use response as-is
-			response = new Response(body, responseOptions);
+			response = new Response(fromAsyncIterable(body), responseOptions);
 			resolve(response);
 		});
 
 		writeToStream(request_, request);
+	});
+}
+
+function fixResponseChunkedTransferBadEnding(request, errorCallback) {
+	const LAST_CHUNK = Buffer.from('0\r\n');
+	let socket;
+
+	request.on('socket', s => {
+		socket = s;
+	});
+
+	request.on('response', response => {
+		const {headers} = response;
+		if (headers['transfer-encoding'] === 'chunked' && !headers['content-length']) {
+			let properLastChunkReceived = false;
+
+			socket.on('data', buf => {
+				properLastChunkReceived = Buffer.compare(buf.slice(-3), LAST_CHUNK) === 0;
+			});
+
+			socket.prependListener('close', () => {
+				if (!properLastChunkReceived) {
+					const err = new Error('Premature close');
+					err.code = 'ERR_STREAM_PREMATURE_CLOSE';
+					errorCallback(err);
+				}
+			});
+		}
 	});
 }

@@ -3,7 +3,7 @@ import { File } from "@web-std/file"
 import { assert } from "./test.js"
 
 /**
- * @param {import('./test').Test} test 
+ * @param {import('./test').Test} test
  */
 export const test = test => {
   test("test baisc", async () => {
@@ -25,9 +25,9 @@ export const test = test => {
     assert.throws(() => new File([]), TypeError)
 
     const before = Date.now()
-    await new Promise((resolve) => setTimeout(resolve, 3))
+    await new Promise(resolve => setTimeout(resolve, 3))
     const file = new File(["test"], "name")
-    await new Promise((resolve) => setTimeout(resolve, 3))
+    await new Promise(resolve => setTimeout(resolve, 3))
     const after = Date.now()
     assert.equal(file.size, 4)
     assert.equal(file.name, "name")

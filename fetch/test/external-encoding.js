@@ -10,8 +10,8 @@ describe('external encoding', () => {
 				expect(r.status).to.equal(200);
 				expect(r.headers.get('Content-Type')).to.equal('image/gif');
 
-				return r.buffer().then(b => {
-					expect(b).to.be.an.instanceOf(Buffer);
+				return r.arrayBuffer().then(b => {
+					expect(b).to.be.an.instanceOf(ArrayBuffer);
 				});
 			});
 		});

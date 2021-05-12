@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "form-data/**"
   pull_request:
     branches:
-      - "**"
+      - main
+    paths:
+      - "form-data/**"
+      - ".github/workflows/form-data.yml"
 
 jobs:
   check:
@@ -43,8 +48,8 @@ jobs:
 
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
-          with:
-            project: ${{matrix.project}}/tsconfig.json
+        with:
+          project: ${{matrix.project}}/tsconfig.json
   test:
     name: Test
     runs-on: ${{ matrix.os }}

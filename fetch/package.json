@@ -1,7 +1,7 @@
 {
   "name": "@web-std/fetch",
-  "version": "1.0.0",
-  "description": "A light-weight module that brings Fetch API to node.js",
+  "version": "2.0.0",
+  "description": "Web compatible Fetch API implementation for node.js",
   "main": "./dist/index.cjs",
   "module": "./src/index.js",
   "sideEffects": false,
@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "node --experimental-modules node_modules/c8/bin/c8 --reporter=html --reporter=lcov --reporter=text --check-coverage node --experimental-modules node_modules/mocha/bin/mocha",
+    "test": "node --experimental-modules ../node_modules/c8/bin/c8 --reporter=html --reporter=lcov --reporter=text --check-coverage node --experimental-modules ../node_modules/mocha/bin/mocha",
     "coverage": "c8 report --reporter=text-lcov | coveralls",
     "test-types": "tsd",
     "lint": "xo",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/node-fetch/node-fetch.git"
+    "url": "https://github.com/web-std/io.git"
   },
   "keywords": [
     "fetch",
@@ -47,16 +47,12 @@
   "author": "David Frank",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/node-fetch/node-fetch/issues"
+    "url": "https://github.com/web-std/io/issues"
   },
-  "homepage": "https://github.com/node-fetch/node-fetch",
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/node-fetch"
-  },
+  "homepage": "https://github.com/web-std/io",
   "devDependencies": {
     "abort-controller": "^3.0.0",
-    "abortcontroller-polyfill": "^1.5.0",
+    "abortcontroller-polyfill": "^1.7.1",
     "busboy": "^0.3.1",
     "c8": "^7.3.0",
     "chai": "^4.2.0",
@@ -74,8 +70,9 @@
     "xo": "^0.33.1"
   },
   "dependencies": {
+    "@web-std/blob": "^2.1.0",
     "data-uri-to-buffer": "^3.0.1",
-    "fetch-blob": "^2.1.1"
+    "web-streams-polyfill": "^3.0.2"
   },
   "esm": {
     "sourceMap": true,
@@ -86,7 +83,8 @@
     "compilerOptions": {
       "target": "esnext",
       "lib": [
-        "es2018"
+        "es2018",
+        "DOM"
       ],
       "allowSyntheticDefaultImports": false,
       "esModuleInterop": false

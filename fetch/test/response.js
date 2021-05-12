@@ -1,12 +1,12 @@
 
-import * as stream from 'stream';
+import WebStreams from 'web-streams-polyfill';
 import {TextEncoder} from 'util';
 import chai from 'chai';
-import Blob from 'fetch-blob';
-import buffer from 'buffer';
+import {Blob} from '@web-std/blob';
 import {Response} from '../src/index.js';
 import TestServer from './utils/server.js';
 
+const {ReadableStream} = WebStreams;
 const {expect} = chai;
 
 describe('Response', () => {
@@ -64,7 +64,7 @@ describe('Response', () => {
 	});
 
 	it('should support empty options', () => {
-		const res = new Response(stream.Readable.from('a=1'));
+		const res = new Response(streamFromString('a=1'));
 		return res.text().then(result => {
 			expect(result).to.equal('a=1');
 		});
@@ -93,13 +93,6 @@ describe('Response', () => {
 		});
 	});
 
-	it('should support buffer() method', () => {
-		const res = new Response('a=1');
-		return res.buffer().then(result => {
-			expect(result.toString()).to.equal('a=1');
-		});
-	});
-
 	it('should support blob() method', () => {
 		const res = new Response('a=1', {
 			method: 'POST',
@@ -115,7 +108,7 @@ describe('Response', () => {
 	});
 
 	it('should support clone() method', () => {
-		const body = stream.Readable.from('a=1');
+		const body = streamFromString('a=1');
 		const res = new Response(body, {
 			headers: {
 				a: '1'
@@ -138,7 +131,7 @@ describe('Response', () => {
 	});
 
 	it('should support stream as body', () => {
-		const body = stream.Readable.from('a=1');
+		const body = streamFromString('a=1');
 		const res = new Response(body);
 		return res.text().then(result => {
 			expect(result).to.equal('a=1');
@@ -174,15 +167,6 @@ describe('Response', () => {
 		});
 	});
 
-	if (buffer.Blob) {
-		it('should support Buffer.Blob as body', () => {
-			const res = new Response(new buffer.Blob(['a=1']));
-			return res.text().then(result => {
-				expect(result).to.equal('a=1');
-			});
-		});
-	}
-
 	it('should support Uint8Array as body', () => {
 		const encoder = new TextEncoder();
 		const res = new Response(encoder.encode('a=1'));
@@ -215,4 +199,11 @@ describe('Response', () => {
 		const res = new Response();
 		expect(res.url).to.equal('');
 	});
+});
+
+const streamFromString = text => new ReadableStream({
+	start(controller) {
+		controller.enqueue(Buffer.from(text));
+		controller.close();
+	}
 });

@@ -1,6 +1,6 @@
 {
   "name": "@web-std/blob",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Web API compatible Blob implementation",
   "keywords": [
     "blob",
@@ -8,37 +8,34 @@
   ],
   "type": "module",
   "module": "./src/lib.js",
-  "browser": {
-    "./src/lib.js": "./src/lib.web.js"
-  },
-  "main": "./dist/src/lib.cjs",
+  "main": "./dist/src/lib.node.cjs",
   "exports": {
     ".": {
-      "browser": "./src/lib.web.js",
-      "import": "./src/lib.js",
-      "require": "./dist/src/lib.cjs"
+      "require": "./dist/src/lib.node.cjs",
+      "node": "./src/lib.node.js",
+      "browser": "./src/lib.js"
     }
   },
   "types": "./dist/src/lib.d.ts",
   "dependencies": {
-    "web-encoding": "1.1.0",
-    "web-streams-polyfill": "2.1.1"
+    "web-encoding": "1.1.5",
+    "web-streams-polyfill": "3.0.3"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "14.0.23",
+    "@types/node": "15.0.2",
+    "@web-std/fetch": "^2.0.0",
     "git-validate": "2.2.4",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.11",
-    "@web-std/fetch": "1.0.0",
-    "playwright-test": "2.1.0",
-    "prettier": "^2.2.1",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "playwright-test": "3.0.7",
+    "prettier": "^2.3.0",
     "rimraf": "3.0.2",
-    "rollup": "2.22.1",
-    "rollup-plugin-multi-input": "1.1.1",
-    "typescript": "^4.2.3",
+    "rollup": "2.47.0",
+    "rollup-plugin-multi-input": "1.2.0",
+    "typescript": "^4.2.4",
     "uvu": "0.5.1"
   },
   "scripts": {
@@ -53,10 +50,6 @@
     "test": "npm run test:es && npm run test:cjs",
     "precommit": "lint-staged"
   },
-  "pre-push": [
-    "check",
-    "test"
-  ],
   "lint-staged": {
     "*.js": [
       "prettier --no-semi --write",

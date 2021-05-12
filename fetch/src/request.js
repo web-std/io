@@ -18,8 +18,8 @@ const INTERNALS = Symbol('Request internals');
 /**
  * Check if `obj` is an instance of Request.
  *
- * @param  {*} obj
- * @return {boolean}
+ * @param  {any} object
+ * @return {object is Request}
  */
 const isRequest = object => {
 	return (
@@ -30,12 +30,12 @@ const isRequest = object => {
 
 /**
  * Request class
- *
- * @param   Mixed   input  Url or Request instance
- * @param   Object  init   Custom options
- * @return  Void
  */
 export default class Request extends Body {
+	/**
+	 * @param {string|Request input  Url or Request instance
+	 * @param {RequestInit} init   Custom options
+	 */
 	constructor(input, init = {}) {
 		let parsedURL;
 
@@ -69,7 +69,7 @@ export default class Request extends Body {
 		const headers = new Headers(init.headers || input.headers || {});
 
 		if (inputBody !== null && !headers.has('Content-Type')) {
-			const contentType = extractContentType(inputBody, this);
+			const contentType = extractContentType(this);
 			if (contentType) {
 				headers.append('Content-Type', contentType);
 			}
@@ -108,6 +108,9 @@ export default class Request extends Body {
 		return this[INTERNALS].method;
 	}
 
+	/**
+	 * @type {URL}
+	 */
 	get url() {
 		return formatUrl(this[INTERNALS].parsedURL);
 	}
