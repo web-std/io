@@ -7,6 +7,11 @@ import { assert } from "./test.js"
  * @param {import('./test').Test} test
  */
 export const test = test => {
+  test("slow down", async () => {
+    await new Promise(resolve => setTimeout(resolve))
+    assert.ok(true, "run now")
+  })
+
   test("test baisc", async () => {
     assert.equal(typeof FormData, "function")
     assert.isEqual(typeof lib.FormData, "function")
