@@ -11,16 +11,16 @@ Web API compatible [Blob][] for nodejs.
 #### [fetch-blob][]
 
 The reason this library exists is because [fetch-blob][] chooses to compromise
-Web API compatibility of [`blob.stream()`][w3c blob.stream] by useing nodejs
+Web API compatibility of [`blob.stream()`][w3c blob.stream] by using nodejs
 native [Readable][] stream. We found this to be problematic when sharing code
-across nodejs and browser rutimes. Instead this library stays true to the
+across nodejs and browser runtimes. Instead this library stays true to the
 specification by using [ReadableStream][] implementation from [web-streams-polyfill][]
-library even if that is less convinient in nodejs context.
+library even if that is less convenient in nodejs context.
 
 > Note: Both node [Readable][] streams and web [ReadableStream][] implement
-> `AsyncIterable` intreface and in theory either could be used with [for await][]
+> `AsyncIterable` interface and in theory either could be used with [for await][]
 > loops. In practice however major browsers do not yet ship `AsyncIterable`
-> support for [ReadableStream][]s wich in our experience makes choice made by
+> support for [ReadableStream][]s which in our experience makes choice made by
 > [node-fetch][] impractical.
 
 [fetch-blob][] is build around node [Buffer][]s. This implementation is built
@@ -45,8 +45,8 @@ for await (const chunk of blob.stream()) {
 ### Usage from Typescript
 
 This library makes use of [typescript using JSDOC annotations][ts-jsdoc] and
-also generates type difinitions along with typed definition maps. So you should
-be able to get all the type innference out of the box.
+also generates type definitions along with typed definition maps. So you should
+be able to get all the type inference out of the box.
 
 ## Install
 
