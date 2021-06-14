@@ -1,9 +1,9 @@
 {
   "name": "@web-std/form-data",
   "version": "2.1.0",
-  "description": "Web API compatible Blob implementation",
+  "description": "Web API compatible Form Data implementation",
   "keywords": [
-    "blob",
+    "formdata",
     "typed"
   ],
   "type": "module",
@@ -25,7 +25,7 @@
     "web-streams-polyfill": "3.0.3"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
-  "repository": "https://github.com/web-std/blob",
+  "repository": "https://github.com/web-std/io",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "15.0.2",
