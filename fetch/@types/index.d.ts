@@ -116,7 +116,7 @@ declare class Body {
 }
 
 type RequestRedirect = 'error' | 'follow' | 'manual';
-type RequestInfo = string | Body;
+type RequestInfo = string | Body | URL;
 declare class Request extends Body {
 	constructor(input: RequestInfo, init?: RequestInit);
 
