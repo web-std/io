@@ -5560,7 +5560,6 @@ text-table@^0.2.0:
 
 "through2@https://registry.npmjs.org/@leichtgewicht/through2/-/through2-4.0.2.tgz":
   version "4.0.2"
-  uid ea39512757acd2dab1be4ff1eeb1e43708aa7333
   resolved "https://registry.npmjs.org/@leichtgewicht/through2/-/through2-4.0.2.tgz#ea39512757acd2dab1be4ff1eeb1e43708aa7333"
   dependencies:
     readable-stream "https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz"
