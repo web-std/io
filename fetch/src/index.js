@@ -55,7 +55,9 @@ export default async function fetch(url, options_ = {}) {
 		// Wrap http.request into fetch
 		const send = (options.protocol === 'https:' ? https : http).request;
 		const {signal} = request;
+		/** @type {Response|null} */
 		let response = null;
+		/** @type {import('http').IncomingMessage|null} */
 		let response_ = null;
 
 		const abort = () => {
@@ -102,24 +104,28 @@ export default async function fetch(url, options_ = {}) {
 		});
 
 		fixResponseChunkedTransferBadEnding(request_, err => {
-			response_.emit('error', err);
+			if (signal && signal.aborted) {
+				return
+			}
+
+			response_?.emit("error", err);
 		});
 
 		/* c8 ignore next 18 */
-		if (process.version < 'v14') {
+		if (parseInt(process.version.substring(1)) < 14) {
 			// Before Node.js 14, pipeline() does not fully support async iterators and does not always
 			// properly handle when the socket close/end events are out of order.
 			request_.on('socket', s => {
-				let endedWithEventsCount;
-				s.prependListener('end', () => {
-					endedWithEventsCount = s._eventsCount;
-				});
 				s.prependListener('close', hadError => {
+					// if a data listener is still present we didn't end cleanly
+					const hasDataListener = s.listenerCount('data') > 0
+
 					// if end happened before close but the socket didn't emit an error, do it now
-					if (response && endedWithEventsCount < s._eventsCount && !hadError) {
-						const err = new Error('Premature close');
-						err.code = 'ERR_STREAM_PREMATURE_CLOSE';
-						response_.emit('error', err);
+					if (response && hasDataListener && !hadError && !(signal && signal.aborted)) {
+						const err = Object.assign(new Error('Premature close'), {
+							code: 'ERR_STREAM_PREMATURE_CLOSE'
+						});
+						response_?.emit('error', err);
 					}
 				});
 			});
@@ -131,7 +137,7 @@ export default async function fetch(url, options_ = {}) {
 			const headers = fromRawHeaders(response_.rawHeaders);
 
 			// HTTP fetch step 5
-			if (isRedirect(response_.statusCode)) {
+			if (isRedirect(Number(response_.statusCode))) {
 				// HTTP fetch step 5.2
 				const location = headers.get('Location');
 
@@ -166,6 +172,7 @@ export default async function fetch(url, options_ = {}) {
 
 						// HTTP-redirect fetch step 6 (counter increment)
 						// Create a new Request object.
+						/** @type {RequestInit} */
 						const requestOptions = {
 							headers: new Headers(request.headers),
 							follow: request.follow,
@@ -198,7 +205,7 @@ export default async function fetch(url, options_ = {}) {
 						}
 
 						// HTTP-redirect fetch step 15
-						resolve(fetch(new Request(locationURL, requestOptions)));
+						fetch(new Request(locationURL.href, requestOptions)).then(resolve, reject);
 						finalize();
 						return;
 					}
@@ -303,8 +310,13 @@ export default async function fetch(url, options_ = {}) {
 	});
 }
 
+/**
+ * 
+ * @param {import('http').ClientRequest} request 
+ * @param {(error:Error) => void} errorCallback 
+ */
 function fixResponseChunkedTransferBadEnding(request, errorCallback) {
-	const LAST_CHUNK = Buffer.from('0\r\n');
+	/** @type {import('net').Socket} */
 	let socket;
 
 	request.on('socket', s => {
@@ -312,18 +324,17 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 	});
 
 	request.on('response', response => {
+
 		const {headers} = response;
+
 		if (headers['transfer-encoding'] === 'chunked' && !headers['content-length']) {
-			let properLastChunkReceived = false;
-
-			socket.on('data', buf => {
-				properLastChunkReceived = Buffer.compare(buf.slice(-3), LAST_CHUNK) === 0;
-			});
-
-			socket.prependListener('close', () => {
-				if (!properLastChunkReceived) {
-					const err = new Error('Premature close');
-					err.code = 'ERR_STREAM_PREMATURE_CLOSE';
+			socket.prependListener('close', hadError => {
+				// if a data listener is still present we didn't end cleanly
+				const hasDataListener = socket.listenerCount('data') > 0;
+				if (hasDataListener && !hadError) {
+					const err = Object.assign(new Error('Premature close'), {
+						code: 'ERR_STREAM_PREMATURE_CLOSE'
+					})
 					errorCallback(err);
 				}
 			});

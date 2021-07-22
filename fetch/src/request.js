@@ -33,7 +33,7 @@ const isRequest = object => {
  */
 export default class Request extends Body {
 	/**
-	 * @param {string|Request input  Url or Request instance
+	 * @param {string|Request} input  Url or Request instance
 	 * @param {RequestInit} init   Custom options
 	 */
 	constructor(input, init = {}) {
@@ -152,9 +152,9 @@ Object.defineProperties(Request.prototype, {
 
 /**
  * Convert a Request to Node.js http request options.
+ * The options object to be passed to http.request
  *
- * @param   Request  A Request instance
- * @return  Object   The options object to be passed to http.request
+ * @param {Request} request -  A Request instance
  */
 export const getNodeRequestOptions = request => {
 	const {parsedURL} = request[INTERNALS];

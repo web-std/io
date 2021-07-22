@@ -235,6 +235,19 @@ export default class TestServer {
 			res.end();
 		}
 
+		if (p === '/redirect/301/rn') {
+			res.statusCode = 301
+			res.setHeader('Location', '/403')
+			res.write('301 Permanently moved.\r\n');
+			res.end();
+		}
+
+		if (p === '/403') {
+			res.statusCode = 403;
+			res.write('403 Forbidden');
+			res.end();
+		}
+
 		if (p === '/redirect/302') {
 			res.statusCode = 302;
 			res.setHeader('Location', '/inspect');
