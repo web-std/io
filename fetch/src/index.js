@@ -59,6 +59,8 @@ export default async function fetch(url, options_ = {}) {
 		let response = null;
 		/** @type {import('http').IncomingMessage|null} */
 		let response_ = null;
+		/** @type {import('stream').PassThrough|null} */
+		let body = null;
 
 		const abort = () => {
 			const error = new AbortError('The operation was aborted.');
@@ -71,7 +73,7 @@ export default async function fetch(url, options_ = {}) {
 				return;
 			}
 
-			response_.emit('error', error);
+			body && destroyStream(body, error)
 		};
 
 		if (signal && signal.aborted) {
@@ -108,7 +110,7 @@ export default async function fetch(url, options_ = {}) {
 				return
 			}
 
-			response_?.emit("error", err);
+			body && destroyStream(body, err);
 		});
 
 		/* c8 ignore next 18 */
@@ -125,7 +127,7 @@ export default async function fetch(url, options_ = {}) {
 						const err = Object.assign(new Error('Premature close'), {
 							code: 'ERR_STREAM_PREMATURE_CLOSE'
 						});
-						response_?.emit('error', err);
+						body && destroyStream(body, err);
 					}
 				});
 			});
@@ -222,7 +224,7 @@ export default async function fetch(url, options_ = {}) {
 				});
 			}
 
-			let body = pump(response_, new PassThrough(), reject);
+			body = pump(response_, new PassThrough(), reject);
 			// see https://github.com/nodejs/node/pull/29376
 			/* c8 ignore next 3 */
 			if (process.version < 'v12.10') {
@@ -340,4 +342,20 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 			});
 		}
 	});
+}
+
+/**
+ * Destoryes stream with an error.
+ *
+ * @param {PassThrough} stream 
+ * @param {Error} error 
+ */
+const destroyStream = (stream, error) => {
+	if (stream.destroy) {
+		stream.destroy(error);
+	/* c8 ignore next 4 */
+	} else {
+		stream.emit('error', error);
+		stream.end();
+	}
 }

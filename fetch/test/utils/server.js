@@ -239,7 +239,9 @@ export default class TestServer {
 			res.statusCode = 301
 			res.setHeader('Location', '/403')
 			res.write('301 Permanently moved.\r\n');
-			res.end();
+			setTimeout(() => {
+				res.destroy();
+			}, 100);
 		}
 
 		if (p === '/403') {

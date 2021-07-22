@@ -613,9 +613,8 @@ describe('node-fetch', () => {
 			.and.have.property('code', 'ECONNRESET');
 	});
 
-	it('should handle premature close properly', () => {
+	it('should handle redirect with premature close', () => {
 		const url = `${base}redirect/301/rn`
-		// const url = `https://interop.finance/nft/0`
 
 		return fetch(url).then(res => {
 			expect(res.status).to.equal(403)
