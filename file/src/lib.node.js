@@ -4,11 +4,11 @@
 import { Blob } from "./package.js"
 import { WebFile } from "./file.js"
 
-// Electron-renderer has `XMLHttpRequest` and should get the browser implementation
-// instead of node.
+// Electron-renderer should get the browser implementation instead of node
+// Browser configuration is not enough
 
 // Marking export as a DOM File object instead of custom class.
 /** @type {typeof globalThis.File} */
-const File = typeof XMLHttpRequest === 'function' ? globalThis.File : WebFile
+const File = typeof globalThis.File === 'function' ? globalThis.File : WebFile
 
 export { File, Blob }
