@@ -1,5 +1,5 @@
 import {randomBytes} from 'crypto';
-
+import { iterateMultipart } from '@ssttevee/multipart-parser'
 import {isBlob} from './is.js';
 
 const carriage = '\r\n';
@@ -25,8 +25,9 @@ function getHeader(boundary, name, field) {
 	header += `Content-Disposition: form-data; name="${name}"`;
 
 	if (isBlob(field)) {
-		header += `; filename="${field.name}"${carriage}`;
-		header += `Content-Type: ${field.type || 'application/octet-stream'}`;
+		const { name = 'blob', type } = /** @type {Blob & {name?:string}} */ (field);
+		header += `; filename="${name}"${carriage}`;
+		header += `Content-Type: ${type || 'application/octet-stream'}`;
 	}
 
 	return `${header}${carriage.repeat(2)}`;
@@ -79,4 +80,26 @@ export function getFormDataLength(form, boundary) {
 	length += Buffer.byteLength(getFooter(boundary));
 
 	return length;
+}
+
+/**
+ * @param {Body & {headers?:Headers}} source
+ */
+export const toFormData = async ({ body, headers }) => {
+  const contentType = headers?.get('Content-Type') || ''
+  const [type, boundary] = contentType.split(/\s*;\s*boundary=/)
+  if (type === 'multipart/form-data' && boundary != null && body != null) {
+    const form = new FormData()
+    const parts = iterateMultipart(body, boundary)
+    for await (const { name, data, filename, contentType } of parts) {
+      if (filename) {
+        form.append(name, new File([data], filename, { type: contentType }))
+      } else {
+        form.append(name, new TextDecoder().decode(data), filename)
+      }
+    }
+    return form
+  } else {
+    throw new TypeError('Could not parse content as FormData.')
+  }
 }

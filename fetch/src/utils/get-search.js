@@ -1,3 +1,7 @@
+/**
+ * @param {URL} parsedURL 
+ * @returns {string}
+ */
 export const getSearch = parsedURL => {
 	if (parsedURL.search) {
 		return parsedURL.search;

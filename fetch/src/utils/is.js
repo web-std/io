@@ -12,7 +12,7 @@ const NAME = Symbol.toStringTag;
  * Check if `obj` is a URLSearchParams object
  * ref: https://github.com/node-fetch/node-fetch/issues/296#issuecomment-307598143
  *
- * @param  {*} obj
+ * @param  {any} object
  * @return {obj is URLSearchParams}
  */
 export const isURLSearchParameters = object => {
@@ -76,7 +76,7 @@ export function isFormData(object) {
  */
 export const isMultipartFormDataStream = value => {
 	return (
-		value instanceof Stream &&
+		value instanceof Stream === true &&
 		typeof value.getBoundary === 'function' &&
 		typeof value.hasKnownLength === 'function' &&
 		typeof value.getLengthSync === 'function'
@@ -86,7 +86,7 @@ export const isMultipartFormDataStream = value => {
 /**
  * Check if `obj` is an instance of AbortSignal.
  *
- * @param  {*} obj
+ * @param  {any} object
  * @return {obj is AbortSignal}
  */
 export const isAbortSignal = object => {
@@ -112,3 +112,13 @@ export const isReadableStream = value => {
 		typeof value.tee === 'function'
 	);
 };
+
+
+/**
+ * 
+ * @param {any} value
+ * @returns {value is Iterable<unknown>}
+ */
+export const isIterable = value =>
+	value && typeof value[Symbol.iterator] == 'function'
+

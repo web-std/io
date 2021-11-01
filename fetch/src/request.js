@@ -28,45 +28,80 @@ const isRequest = object => {
 	);
 };
 
+
 /**
  * Request class
+ * @implements {globalThis.Request}
+ * 
+ * @typedef {Object} RequestState
+ * @property {string} method
+ * @property {RequestRedirect} redirect
+ * @property {globalThis.Headers} headers
+ * @property {URL} parsedURL
+ * @property {AbortSignal|null} signal
+ * 
+ * @typedef {Object} RequestExtraOptions
+ * @property {number} [follow]
+ * @property {boolean} [compress]
+ * @property {number} [size]
+ * @property {number} [counter]
+ * @property {Agent} [agent]
+ * @property {number} [highWaterMark]
+ * @property {boolean} [insecureHTTPParser]
+ * 
+ * @typedef {((url:URL) => import('http').Agent) | import('http').Agent} Agent
+ * 
+ * @typedef {Object} RequestOptions
+ * @property {string} [method]
+ * @property {ReadableStream<Uint8Array>|null} [body]
+ * @property {globalThis.Headers} [headers]
+ * @property {RequestRedirect} [redirect]
+ * 
  */
 export default class Request extends Body {
 	/**
-	 * @param {string|Request} input  Url or Request instance
-	 * @param {RequestInit} init   Custom options
+	 * @param {string|Request|URL} info  Url or Request instance
+	 * @param {RequestInit & RequestExtraOptions} init   Custom options
 	 */
-	constructor(input, init = {}) {
+	constructor(info, init = {}) {
 		let parsedURL;
+		/** @type {RequestOptions & RequestExtraOptions} */
+		let settings
 
 		// Normalize input and force URL to be encoded as UTF-8 (https://github.com/node-fetch/node-fetch/issues/245)
-		if (isRequest(input)) {
-			parsedURL = new URL(input.url);
+		if (isRequest(info)) {
+			parsedURL = new URL(info.url);
+			settings = (info)
 		} else {
-			parsedURL = new URL(input);
-			input = {};
+			parsedURL = new URL(info);
+			settings = {};
 		}
 
-		let method = init.method || input.method || 'GET';
+
+
+		let method = init.method || settings.method || 'GET';
 		method = method.toUpperCase();
 
-		// eslint-disable-next-line no-eq-null, eqeqeq
-		if (((init.body != null || isRequest(input)) && input.body !== null) &&
-			(method === 'GET' || method === 'HEAD')) {
-			throw new TypeError('Request with GET/HEAD method cannot have body');
-		}
+		// // eslint-disable-next-line no-eq-null, eqeqeq
+		// if (((init.body != null || isRequest(input)) && input.body !== null) &&
+		// 	(method === 'GET' || method === 'HEAD')) {
+		// 	throw new TypeError('Request with GET/HEAD method cannot have body');
+		// }
 
 		const inputBody = init.body ?
 			init.body :
-			(isRequest(input) && input.body !== null ?
-				clone(input) :
+			(isRequest(info) && info.body !== null ?
+				clone(info) :
 				null);
 
 		super(inputBody, {
-			size: init.size || input.size || 0
+			size: init.size || settings.size || 0
 		});
+		const input = settings
 
-		const headers = new Headers(init.headers || input.headers || {});
+		
+		const headers = /** @type {globalThis.Headers} */
+			(new Headers(init.headers || input.headers || {}));
 
 		if (inputBody !== null && !headers.has('Content-Type')) {
 			const contentType = extractContentType(this);
@@ -79,7 +114,7 @@ export default class Request extends Body {
 			input.signal :
 			null;
 		if ('signal' in init) {
-			signal = init.signal;
+			signal = init.signal || null;
 		}
 
 		// eslint-disable-next-line no-eq-null, eqeqeq
@@ -87,6 +122,7 @@ export default class Request extends Body {
 			throw new TypeError('Expected signal to be an instanceof AbortSignal or EventTarget');
 		}
 
+		/** @type {RequestState} */
 		this[INTERNALS] = {
 			method,
 			redirect: init.redirect || input.redirect || 'follow',
@@ -95,26 +131,78 @@ export default class Request extends Body {
 			signal
 		};
 
+		/** @type {boolean} */
+		this.keepalive
+
 		// Node-fetch-only options
+		/** @type {number} */
 		this.follow = init.follow === undefined ? (input.follow === undefined ? 20 : input.follow) : init.follow;
+		/** @type {boolean} */
 		this.compress = init.compress === undefined ? (input.compress === undefined ? true : input.compress) : init.compress;
+		/** @type {number} */
 		this.counter = init.counter || input.counter || 0;
+		/** @type {Agent|undefined} */
 		this.agent = init.agent || input.agent;
+		/** @type {number} */
 		this.highWaterMark = init.highWaterMark || input.highWaterMark || 16384;
+		/** @type {boolean} */
 		this.insecureHTTPParser = init.insecureHTTPParser || input.insecureHTTPParser || false;
 	}
 
+	/**
+	 * @type {RequestCache}
+	 */
+	get cache() {
+		return "default"
+	}
+
+	/**
+	 * @type {RequestCredentials}
+	 */
+
+	get credentials() {
+		return "same-origin"
+	}
+
+	/**
+	 * @type {RequestDestination}
+	 */
+	get destination() {
+		return ""
+	}
+	
+	get integrity() {
+		return ""
+	}
+	
+	/** @type {RequestMode} */
+	get mode() {
+		return "cors"
+	}
+
+	/** @type {string} */
+	get referrer() {
+		return  ""
+	}
+	
+	/** @type {ReferrerPolicy} */
+	get referrerPolicy() {
+		return ""
+	}
 	get method() {
 		return this[INTERNALS].method;
 	}
 
 	/**
-	 * @type {URL}
+	 * @type {string}
 	 */
 	get url() {
 		return formatUrl(this[INTERNALS].parsedURL);
 	}
 
+	/**
+	 * @type {globalThis.Headers}
+	 */
 	get headers() {
 		return this[INTERNALS].headers;
 	}
@@ -123,14 +211,18 @@ export default class Request extends Body {
 		return this[INTERNALS].redirect;
 	}
 
+	/**
+	 * @returns {AbortSignal}
+	 */
 	get signal() {
+		// @ts-ignore
 		return this[INTERNALS].signal;
 	}
 
 	/**
 	 * Clone this request
 	 *
-	 * @return  Request
+	 * @return  {globalThis.Request}
 	 */
 	clone() {
 		return new Request(this);
@@ -154,7 +246,7 @@ Object.defineProperties(Request.prototype, {
  * Convert a Request to Node.js http request options.
  * The options object to be passed to http.request
  *
- * @param {Request} request -  A Request instance
+ * @param {Request & Record<INTERNALS, RequestState>} request -  A Request instance
  */
 export const getNodeRequestOptions = request => {
 	const {parsedURL} = request[INTERNALS];
@@ -216,9 +308,11 @@ export const getNodeRequestOptions = request => {
 		port: parsedURL.port,
 		hash: parsedURL.hash,
 		search: parsedURL.search,
+		// @ts-ignore - it does not has a query 
 		query: parsedURL.query,
 		href: parsedURL.href,
 		method: request.method,
+		// @ts-ignore - not sure what this supposed to do
 		headers: headers[Symbol.for('nodejs.util.inspect.custom')](),
 		insecureHTTPParser: request.insecureHTTPParser,
 		agent

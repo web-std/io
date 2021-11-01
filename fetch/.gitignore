@@ -3,6 +3,7 @@
 
 # Generated files
 dist/
+@types/
 
 # Logs
 logs
