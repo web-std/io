@@ -83,7 +83,7 @@ export default class Request extends Body {
 		method = method.toUpperCase();
 
 		// eslint-disable-next-line no-eq-null, eqeqeq
-		if (((init.body != null || isRequest(init)) && init.body !== null) &&
+		if (((init.body != null || isRequest(info)) && info.body !== null) &&
 			(method === 'GET' || method === 'HEAD')) {
 			throw new TypeError('Request with GET/HEAD method cannot have body');
 		}
