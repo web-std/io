@@ -82,17 +82,16 @@ export default class Request extends Body {
 		let method = init.method || settings.method || 'GET';
 		method = method.toUpperCase();
 
+		const inputBody = init.body
+			? init.body
+			: (isRequest(info) && info.body !== null)
+			? clone(info)
+			: null;
+
 		// eslint-disable-next-line no-eq-null, eqeqeq
-		if (((init.body != null || isRequest(info)) && info.body !== null) &&
-			(method === 'GET' || method === 'HEAD')) {
+		if (inputBody != null && (method === 'GET' || method === 'HEAD')) {
 			throw new TypeError('Request with GET/HEAD method cannot have body');
 		}
-
-		const inputBody = init.body ?
-			init.body :
-			(isRequest(info) && info.body !== null ?
-				clone(info) :
-				null);
 
 		super(inputBody, {
 			size: init.size || settings.size || 0
