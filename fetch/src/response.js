@@ -12,12 +12,20 @@ const INTERNALS = Symbol('Response internals');
 
 /**
  * Response class
- *
- * @param   Stream  body  Readable stream
- * @param   Object  opts  Response options
- * @return  Void
+ * 
+ * @typedef {Object} Ext
+ * @property {number} [size]
+ * @property {string} [url]
+ * @property {number} [counter]
+ * @property {number} [highWaterMark]
+ * 
+ * @implements {globalThis.Response}
  */
 export default class Response extends Body {
+	/**
+	 * @param {BodyInit|import('stream').Stream|null} [body] - Readable stream
+	 * @param {ResponseInit & Ext} [options] - Response options
+	 */
 	constructor(body = null, options = {}) {
 		super(body, options);
 
@@ -36,9 +44,16 @@ export default class Response extends Body {
 			status,
 			statusText: options.statusText || '',
 			headers,
-			counter: options.counter,
+			counter: options.counter || 0,
 			highWaterMark: options.highWaterMark
 		};
+	}
+
+	/**
+	 * @type {ResponseType}
+	 */
+	get type() {
+		return "default"
 	}
 
 	get url() {
@@ -75,16 +90,14 @@ export default class Response extends Body {
 	/**
 	 * Clone this response
 	 *
-	 * @return  Response
+	 * @returns {Response}
 	 */
 	clone() {
-		return new Response(clone(this, this.highWaterMark), {
+		return new Response(clone(this), {
 			url: this.url,
 			status: this.status,
 			statusText: this.statusText,
 			headers: this.headers,
-			ok: this.ok,
-			redirected: this.redirected,
 			size: this.size
 		});
 	}

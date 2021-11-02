@@ -22,6 +22,7 @@ import WebStreams from 'web-streams-polyfill';
 import {pipeline as pump, PassThrough} from 'stream';
 import * as Stream from 'stream';
 import {Blob} from '@web-std/blob';
+import {FormData} from '@web-std/form-data';
 
 const {ReadableStream} = WebStreams;
 
@@ -46,7 +47,7 @@ export default async function fetch(url, options_ = {}) {
 		}
 
 		if (options.protocol === 'data:') {
-			const data = dataUriToBuffer(request.url);
+			const data = dataUriToBuffer(request.url.toString());
 			const response = new Response(data, {headers: {'Content-Type': data.typeFull}});
 			resolve(response);
 			return;
@@ -99,6 +100,7 @@ export default async function fetch(url, options_ = {}) {
 		};
 
 		request_.on('error', err => {
+			// @ts-expect-error - err may not be SystemError
 			reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, 'system', err));
 			finalize();
 		});
@@ -153,7 +155,7 @@ export default async function fetch(url, options_ = {}) {
 					case 'manual':
 						// Node-fetch-specific step: make manual redirect a bit easier to use by setting the Location header value to the resolved URL.
 						if (locationURL !== null) {
-							headers.set('Location', locationURL);
+							headers.set('Location', locationURL.toString());
 						}
 
 						break;
@@ -172,7 +174,6 @@ export default async function fetch(url, options_ = {}) {
 
 						// HTTP-redirect fetch step 6 (counter increment)
 						// Create a new Request object.
-						/** @type {RequestInit} */
 						const requestOptions = {
 							headers: new Headers(request.headers),
 							follow: request.follow,

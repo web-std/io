@@ -13,10 +13,9 @@ import WebStreams from 'web-streams-polyfill';
 
 import {FetchError} from './errors/fetch-error.js';
 import {FetchBaseError} from './errors/base.js';
-import {formDataIterator, getBoundary, getFormDataLength} from './utils/form-data.js';
+import {formDataIterator, getBoundary, getFormDataLength, toFormData} from './utils/form-data.js';
 import {isBlob, isURLSearchParameters, isFormData, isMultipartFormDataStream, isReadableStream} from './utils/is.js';
 import * as utf8 from './utils/utf8.js';
-
 const {readableHighWaterMark} = new Stream.Readable();
 
 const {ReadableStream} = WebStreams;
@@ -26,15 +25,12 @@ const INTERNALS = Symbol('Body internals');
  * Body mixin
  *
  * Ref: https://fetch.spec.whatwg.org/#body
- *
- * @param {BodyInit}  body  Readable stream
- * @param   Object  opts  Response options
- * @return  Void
+ * @implements {globalThis.Body}
  */
 
 export default class Body {
 	/**
-	 * @param {BodyInit|Stream} body
+	 * @param {BodyInit|Stream|null} body
 	 * @param {{size?:number}} options
 	 */
 	constructor(body, {
@@ -123,7 +119,7 @@ export default class Body {
 	/** @type {Headers|undefined} */
 	/* c8 ignore next 3 */
 	get headers() {
-		return null;
+		return undefined;
 	}
 
 	get body() {
@@ -176,6 +172,14 @@ export default class Body {
 		const buffer = await consumeBody(this);
 		return utf8.decode(buffer);
 	}
+
+	/**
+	 * @returns {Promise<FormData>}
+	 */
+
+	async formData() {
+		return toFormData(this)
+	}
 }
 
 // In browsers, all properties are enumerable.
@@ -185,7 +189,8 @@ Object.defineProperties(Body.prototype, {
 	arrayBuffer: {enumerable: true},
 	blob: {enumerable: true},
 	json: {enumerable: true},
-	text: {enumerable: true}
+	text: {enumerable: true},
+	formData: {enumerable: true}
 });
 
 /**
@@ -217,8 +222,9 @@ async function consumeBody(data) {
 
 	// Body is stream
 	// get ready to actually consume the body
+	/** @type {[Uint8Array|null, Uint8Array[], number]} */
 	const [buffer, chunks, limit] = data.size > 0 ?
-		[new Uint8Array(data.size), null, data.size] :
+		[new Uint8Array(data.size), [], data.size] :
 		[null, [], Infinity];
 	let offset = 0;
 
@@ -244,7 +250,7 @@ async function consumeBody(data) {
 
 		if (buffer) {
 			if (offset < buffer.byteLength) {
-				throw new FetchError(`Premature close of server response while trying to fetch ${data.url}`);
+				throw new FetchError(`Premature close of server response while trying to fetch ${data.url}`, 'premature-close');
 			} else {
 				return buffer;
 			}
@@ -254,11 +260,13 @@ async function consumeBody(data) {
 	} catch (error) {
 		if (error instanceof FetchBaseError) {
 			throw error;
+		// @ts-expect-error - we know it will have a name
 		} else if (error && error.name === 'AbortError') {
 			throw error;
 		} else {
+			const e = /** @type {import('./errors/fetch-error').SystemError} */(error)
 			// Other errors, such as incorrect content-encoding
-			throw new FetchError(`Invalid response body while trying to fetch ${data.url}: ${error.message}`, 'system', error);
+			throw new FetchError(`Invalid response body while trying to fetch ${data.url}: ${e.message}`, 'system', e);
 		}
 	}
 }
@@ -277,6 +285,7 @@ export const clone = instance => {
 		throw new Error('cannot clone body after it is used');
 	}
 
+	// @ts-expect-error - could be null
 	const [left, right] = body.tee();
 	instance[INTERNALS].body = left;
 	return right;
@@ -332,7 +341,6 @@ class StreamIterableIterator {
 	constructor(stream) {
 		this.stream = stream;
 		this.reader = null;
-		this.state = null;
 	}
 
 	/**
@@ -359,6 +367,9 @@ class StreamIterableIterator {
 		return /** @type {Promise<IteratorResult<T, void>>} */ (this.getReader().read());
 	}
 
+	/**
+	 * @returns {Promise<IteratorResult<T, void>>}
+	 */
 	async return() {
 		if (this.reader) {
 			await this.reader.cancel();
@@ -367,6 +378,11 @@ class StreamIterableIterator {
 		return {done: true, value: undefined};
 	}
 
+	/**
+	 * 
+	 * @param {any} error 
+	 * @returns {Promise<IteratorResult<T, void>>}
+	 */
 	async throw(error) {
 		await this.getReader().cancel(error);
 		return {done: true, value: undefined};
@@ -429,7 +445,7 @@ class AsyncIterablePump {
 	 */
 	async pull(controller) {
 		try {
-			while (controller.desiredSize > 0) {
+			while (controller.desiredSize || 0 > 0) {
 				// eslint-disable-next-line no-await-in-loop
 				const next = await this.source.next();
 				if (next.done) {
@@ -444,6 +460,9 @@ class AsyncIterablePump {
 		}
 	}
 
+	/**
+	 * @param {any} [reason]
+	 */
 	cancel(reason) {
 		if (reason) {
 			if (typeof this.source.throw === 'function') {
@@ -463,8 +482,8 @@ class AsyncIterablePump {
  */
 export const fromStream = source => {
 	const pump = new StreamPump(source);
-	const stream =
-		/** @type {ReadableStream<Uint8Array>} */(new ReadableStream(pump, pump));
+	const stream = new ReadableStream(pump, pump);
+	// @ts-ignore - web-streams-polyfill API is incompatible
 	return stream;
 };
 
@@ -490,6 +509,10 @@ class StreamPump {
 		this.close = this.close.bind(this);
 	}
 
+	/**
+	 * @param {Uint8Array} chunk
+	 * @returns 
+	 */
 	size(chunk) {
 		return chunk.byteLength;
 	}
@@ -509,6 +532,9 @@ class StreamPump {
 		this.resume();
 	}
 
+	/**
+	 * @param {any} [reason]
+	 */
 	cancel(reason) {
 		if (this.stream.destroy) {
 			this.stream.destroy(reason);
@@ -530,7 +556,7 @@ class StreamPump {
 					chunk :
 					Buffer.from(chunk);
 
-				const available = this.controller.desiredSize - bytes.byteLength;
+				const available = (this.controller.desiredSize || 0) - bytes.byteLength;
 				this.controller.enqueue(bytes);
 				if (available <= 0) {
 					this.pause();
@@ -561,6 +587,9 @@ class StreamPump {
 		}
 	}
 
+	/**
+	 * @param {Error} error 
+	 */
 	error(error) {
 		if (this.controller) {
 			this.controller.error(error);

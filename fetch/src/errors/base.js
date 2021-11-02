@@ -1,6 +1,10 @@
 'use strict';
 
 export class FetchBaseError extends Error {
+	/**
+	 * @param {string} message 
+	 * @param {string} type 
+	 */
 	constructor(message, type) {
 		super(message);
 		// Hide custom error implementation details from end-users

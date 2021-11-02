@@ -9,14 +9,15 @@
   "exports": {
     ".": {
       "import": "./src/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./@types/index.d.ts"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "src",
     "dist",
-    "@types/index.d.ts"
+    "@types"
   ],
   "types": "./@types/index.d.ts",
   "engines": {
@@ -26,9 +27,9 @@
     "build": "rollup -c",
     "test": "node --experimental-modules ../node_modules/c8/bin/c8 --reporter=html --reporter=lcov --reporter=text --check-coverage node --experimental-modules ../node_modules/mocha/bin/mocha",
     "coverage": "c8 report --reporter=text-lcov | coveralls",
-    "test-types": "tsd",
+    "typecheck": "tsc --build",
     "lint": "xo",
-    "prepublishOnly": "node ./test/commonjs/test-artifact.js"
+    "prepublishOnly": "node ./test/commonjs/test-artifact.js && tsc --build"
   },
   "repository": {
     "type": "git",
@@ -67,12 +68,14 @@
     "p-timeout": "^3.2.0",
     "rollup": "^2.26.10",
     "tsd": "^0.13.1",
-    "xo": "^0.33.1"
+    "xo": "^0.33.1",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@web-std/blob": "^2.1.0",
     "data-uri-to-buffer": "^3.0.1",
-    "web-streams-polyfill": "^3.0.2"
+    "web-streams-polyfill": "^3.1.1",
+    "@ssttevee/multipart-parser": "^0.1.9"
   },
   "esm": {
     "sourceMap": true,

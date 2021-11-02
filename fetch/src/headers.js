@@ -6,9 +6,16 @@
 
 import {types} from 'util';
 import http from 'http';
+import { isIterable } from './utils/is.js'
 
-const validateHeaderName = typeof http.validateHeaderName === 'function' ?
-	http.validateHeaderName :
+const validators = /** @type {{validateHeaderName?:(name:string) => any, validateHeaderValue?:(name:string, value:string) => any}} */
+(http)
+
+const validateHeaderName = typeof validators.validateHeaderName === 'function' ?
+	validators.validateHeaderName :
+	/**
+	 * @param {string} name 
+	 */
 	name => {
 		if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name)) {
 			const err = new TypeError(`Header name must be a valid HTTP token [${name}]`);
@@ -17,8 +24,12 @@ const validateHeaderName = typeof http.validateHeaderName === 'function' ?
 		}
 	};
 
-const validateHeaderValue = typeof http.validateHeaderValue === 'function' ?
-	http.validateHeaderValue :
+const validateHeaderValue = typeof validators.validateHeaderValue === 'function' ?
+	validators.validateHeaderValue :
+	/**
+	 * @param {string} name 
+	 * @param {string} value 
+	 */
 	(name, value) => {
 		if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
 			const err = new TypeError(`Invalid character in header content ["${name}"]`);
@@ -38,6 +49,7 @@ const validateHeaderValue = typeof http.validateHeaderValue === 'function' ?
  * You can add to this using methods like append() (see Examples.)
  * In all methods of this interface, header names are matched by case-insensitive byte sequence.
  *
+ * @implements {globalThis.Headers}
  */
 export default class Headers extends URLSearchParams {
 	/**
@@ -57,36 +69,28 @@ export default class Headers extends URLSearchParams {
 			}
 		} else if (init == null) { // eslint-disable-line no-eq-null, eqeqeq
 			// No op
-		} else if (typeof init === 'object' && !types.isBoxedPrimitive(init)) {
-			const method = init[Symbol.iterator];
-			// eslint-disable-next-line no-eq-null, eqeqeq
-			if (method == null) {
-				// Record<ByteString, ByteString>
-				result.push(...Object.entries(init));
-			} else {
-				if (typeof method !== 'function') {
-					throw new TypeError('Header pairs must be iterable');
-				}
+		} else if (isIterable(init)) {
+			// Sequence<sequence<ByteString>>
+			// Note: per spec we have to first exhaust the lists then process them
+			result = [...init]
+				.map(pair => {
+					if (
+						typeof pair !== 'object' || types.isBoxedPrimitive(pair)
+					) {
+						throw new TypeError('Each header pair must be an iterable object');
+					}
 
-				// Sequence<sequence<ByteString>>
-				// Note: per spec we have to first exhaust the lists then process them
-				result = [...init]
-					.map(pair => {
-						if (
-							typeof pair !== 'object' || types.isBoxedPrimitive(pair)
-						) {
-							throw new TypeError('Each header pair must be an iterable object');
-						}
+					return [...pair];
+				}).map(pair => {
+					if (pair.length !== 2) {
+						throw new TypeError('Each header pair must be a name/value tuple');
+					}
 
-						return [...pair];
-					}).map(pair => {
-						if (pair.length !== 2) {
-							throw new TypeError('Each header pair must be a name/value tuple');
-						}
-
-						return [...pair];
-					});
-			}
+					return [...pair];
+				});
+		} else if (typeof init === "object" && init !== null) {
+			// Record<ByteString, ByteString>
+			result.push(...Object.entries(init));
 		} else {
 			throw new TypeError('Failed to construct \'Headers\': The provided value is not of type \'(sequence<sequence<ByteString>> or record<ByteString, ByteString>)');
 		}
@@ -99,7 +103,7 @@ export default class Headers extends URLSearchParams {
 					validateHeaderValue(name, String(value));
 					return [String(name).toLowerCase(), String(value)];
 				}) :
-				undefined;
+				[];
 
 		super(result);
 
@@ -110,6 +114,10 @@ export default class Headers extends URLSearchParams {
 				switch (p) {
 					case 'append':
 					case 'set':
+						/**
+						 * @param {string} name
+						 * @param {string} value
+						 */
 						return (name, value) => {
 							validateHeaderName(name);
 							validateHeaderValue(name, String(value));
@@ -123,8 +131,12 @@ export default class Headers extends URLSearchParams {
 					case 'delete':
 					case 'has':
 					case 'getAll':
+						/**
+						 * @param {string} name
+						 */
 						return name => {
 							validateHeaderName(name);
+							// @ts-ignore
 							return URLSearchParams.prototype[p].call(
 								receiver,
 								String(name).toLowerCase()
@@ -153,6 +165,10 @@ export default class Headers extends URLSearchParams {
 		return Object.prototype.toString.call(this);
 	}
 
+	/**
+	 * 
+	 * @param {string} name 
+	 */
 	get(name) {
 		const values = this.getAll(name);
 		if (values.length === 0) {
@@ -167,24 +183,32 @@ export default class Headers extends URLSearchParams {
 		return value;
 	}
 
+	/**
+	 * @param {(value: string, key: string, parent: this) => void} callback 
+	 * @param {any} thisArg 
+	 * @returns {void}
+	 */
 	forEach(callback, thisArg = undefined) {
 		for (const name of this.keys()) {
 			Reflect.apply(callback, thisArg, [this.get(name), name, this]);
 		}
 	}
 
+	/**
+	 * @returns {IterableIterator<string>}
+	 */
 	* values() {
 		for (const name of this.keys()) {
-			yield this.get(name);
+			yield /** @type {string} */(this.get(name));
 		}
 	}
 
 	/**
-	 * @type {() => IterableIterator<[string, string]>}
+	 * @returns {IterableIterator<[string, string]>}
 	 */
 	* entries() {
 		for (const name of this.keys()) {
-			yield [name, this.get(name)];
+			yield [name, /** @type {string} */(this.get(name))];
 		}
 	}
 
@@ -201,7 +225,7 @@ export default class Headers extends URLSearchParams {
 		return [...this.keys()].reduce((result, key) => {
 			result[key] = this.getAll(key);
 			return result;
-		}, {});
+		}, /** @type {Record<string, string[]>} */({}));
 	}
 
 	/**
@@ -219,7 +243,7 @@ export default class Headers extends URLSearchParams {
 			}
 
 			return result;
-		}, {});
+		}, /** @type {Record<string, string|string[]>} */({}));
 	}
 }
 
@@ -232,7 +256,7 @@ Object.defineProperties(
 	['get', 'entries', 'forEach', 'values'].reduce((result, property) => {
 		result[property] = {enumerable: true};
 		return result;
-	}, {})
+	}, /** @type {Record<string, {enumerable:true}>} */ ({}))
 );
 
 /**
@@ -250,7 +274,7 @@ export function fromRawHeaders(headers = []) {
 				}
 
 				return result;
-			}, [])
+			}, /** @type {string[][]} */([]))
 			.filter(([name, value]) => {
 				try {
 					validateHeaderName(name);
