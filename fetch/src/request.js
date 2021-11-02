@@ -82,7 +82,7 @@ export default class Request extends Body {
 		let method = init.method || settings.method || 'GET';
 		method = method.toUpperCase();
 
-		const inputBody = init.body
+		const inputBody = init.body != null
 			? init.body
 			: (isRequest(info) && info.body !== null)
 			? clone(info)
@@ -109,12 +109,11 @@ export default class Request extends Body {
 			}
 		}
 
-		let signal = isRequest(input) ?
-			input.signal :
-			null;
-		if ('signal' in init) {
-			signal = init.signal || null;
-		}
+		let signal = 'signal' in init
+			? init.signal
+			: isRequest(input)
+			? input.signal
+			: null;
 
 		// eslint-disable-next-line no-eq-null, eqeqeq
 		if (signal != null && !isAbortSignal(signal)) {
@@ -127,7 +126,7 @@ export default class Request extends Body {
 			redirect: init.redirect || input.redirect || 'follow',
 			headers,
 			parsedURL,
-			signal
+			signal: signal || null
 		};
 
 		/** @type {boolean} */
