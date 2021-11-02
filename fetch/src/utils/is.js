@@ -1,4 +1,4 @@
-import Stream from 'stream';
+import Stream from "stream";
 
 /**
  * Is.js
@@ -15,17 +15,17 @@ const NAME = Symbol.toStringTag;
  * @param  {any} object
  * @return {obj is URLSearchParams}
  */
-export const isURLSearchParameters = object => {
+export const isURLSearchParameters = (object) => {
 	return (
-		typeof object === 'object' &&
-		typeof object.append === 'function' &&
-		typeof object.delete === 'function' &&
-		typeof object.get === 'function' &&
-		typeof object.getAll === 'function' &&
-		typeof object.has === 'function' &&
-		typeof object.set === 'function' &&
-		typeof object.sort === 'function' &&
-		object[NAME] === 'URLSearchParams'
+		typeof object === "object" &&
+		typeof object.append === "function" &&
+		typeof object.delete === "function" &&
+		typeof object.get === "function" &&
+		typeof object.getAll === "function" &&
+		typeof object.has === "function" &&
+		typeof object.set === "function" &&
+		typeof object.sort === "function" &&
+		object[NAME] === "URLSearchParams"
 	);
 };
 
@@ -35,13 +35,13 @@ export const isURLSearchParameters = object => {
  * @param  {*} object
  * @return {object is Blob}
  */
-export const isBlob = object => {
+export const isBlob = (object) => {
 	return (
-		typeof object === 'object' &&
-		typeof object.arrayBuffer === 'function' &&
-		typeof object.type === 'string' &&
-		typeof object.stream === 'function' &&
-		typeof object.constructor === 'function' &&
+		typeof object === "object" &&
+		typeof object.arrayBuffer === "function" &&
+		typeof object.type === "string" &&
+		typeof object.stream === "function" &&
+		typeof object.constructor === "function" &&
 		/^(Blob|File)$/.test(object[NAME])
 	);
 };
@@ -54,17 +54,17 @@ export const isBlob = object => {
  */
 export function isFormData(object) {
 	return (
-		typeof object === 'object' &&
-		typeof object.append === 'function' &&
-		typeof object.set === 'function' &&
-		typeof object.get === 'function' &&
-		typeof object.getAll === 'function' &&
-		typeof object.delete === 'function' &&
-		typeof object.keys === 'function' &&
-		typeof object.values === 'function' &&
-		typeof object.entries === 'function' &&
-		typeof object.constructor === 'function' &&
-		object[NAME] === 'FormData'
+		typeof object === "object" &&
+		typeof object.append === "function" &&
+		typeof object.set === "function" &&
+		typeof object.get === "function" &&
+		typeof object.getAll === "function" &&
+		typeof object.delete === "function" &&
+		typeof object.keys === "function" &&
+		typeof object.values === "function" &&
+		typeof object.entries === "function" &&
+		typeof object.constructor === "function" &&
+		object[NAME] === "FormData"
 	);
 }
 
@@ -74,12 +74,12 @@ export function isFormData(object) {
  * @param {any} value
  * @returns {value is Stream & {getBoundary():string, hasKnownLength():boolean, getLengthSync():number|null}}
  */
-export const isMultipartFormDataStream = value => {
+export const isMultipartFormDataStream = (value) => {
 	return (
 		value instanceof Stream === true &&
-		typeof value.getBoundary === 'function' &&
-		typeof value.hasKnownLength === 'function' &&
-		typeof value.getLengthSync === 'function'
+		typeof value.getBoundary === "function" &&
+		typeof value.hasKnownLength === "function" &&
+		typeof value.getLengthSync === "function"
 	);
 };
 
@@ -89,12 +89,10 @@ export const isMultipartFormDataStream = value => {
  * @param  {any} object
  * @return {obj is AbortSignal}
  */
-export const isAbortSignal = object => {
+export const isAbortSignal = (object) => {
 	return (
-		typeof object === 'object' && (
-			object[NAME] === 'AbortSignal' ||
-			object[NAME] === 'EventTarget'
-		)
+		typeof object === "object" &&
+		(object[NAME] === "AbortSignal" || object[NAME] === "EventTarget")
 	);
 };
 
@@ -104,21 +102,18 @@ export const isAbortSignal = object => {
  * @param {*} value
  * @returns {value is ReadableStream}
  */
-export const isReadableStream = value => {
+export const isReadableStream = (value) => {
 	return (
-		typeof value === 'object' &&
-		typeof value.getReader === 'function' &&
-		typeof value.cancel === 'function' &&
-		typeof value.tee === 'function'
+		typeof value === "object" &&
+		typeof value.getReader === "function" &&
+		typeof value.cancel === "function" &&
+		typeof value.tee === "function"
 	);
 };
 
-
 /**
- * 
+ *
  * @param {any} value
  * @returns {value is Iterable<unknown>}
  */
-export const isIterable = value =>
-	value && typeof value[Symbol.iterator] == 'function'
-
+export const isIterable = (value) => value && Symbol.iterator in value;
