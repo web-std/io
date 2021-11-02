@@ -9,7 +9,8 @@
   "exports": {
     ".": {
       "import": "./src/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./@types/index.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -26,10 +27,9 @@
     "build": "rollup -c",
     "test": "node --experimental-modules ../node_modules/c8/bin/c8 --reporter=html --reporter=lcov --reporter=text --check-coverage node --experimental-modules ../node_modules/mocha/bin/mocha",
     "coverage": "c8 report --reporter=text-lcov | coveralls",
-    "test-types": "tsd",
     "typecheck": "tsc --build",
     "lint": "xo",
-    "prepublishOnly": "node ./test/commonjs/test-artifact.js"
+    "prepublishOnly": "node ./test/commonjs/test-artifact.js && tsc --build"
   },
   "repository": {
     "type": "git",
