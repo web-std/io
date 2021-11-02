@@ -33,8 +33,6 @@ jobs:
 
       - name: Install
         uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{matrix.project}}
 
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
@@ -73,8 +71,6 @@ jobs:
 
       - name: Install
         uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{matrix.project}}
 
       - name: Test
         run: yarn --cwd ${{matrix.project}} test -- --colors
@@ -100,8 +96,6 @@ jobs:
 
       - name: Install
         uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{matrix.project}}
 
       - name: Build
         run: yarn --cwd ${{matrix.project}} build
