@@ -4,6 +4,7 @@
 # Generated files
 dist/
 @types/
+*.tsbuildinfo
 
 # Logs
 logs
