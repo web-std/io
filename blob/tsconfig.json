@@ -6,5 +6,8 @@
   "include": [
     "src/**/*.js",
     "test/**/*.js"
+  ],
+  "references": [
+    { "path": "../fetch" }
   ]
 }

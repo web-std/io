@@ -7,7 +7,6 @@
     "fetch"
   ],
   "scripts": {
-    "prepare": "yarn prepare:fetch && yarn prepare:blob && yarn prepare:file && yarn prepare:form-data",
     "prepare:blob": "yarn --cwd blob prepare",
     "prepare:file": "yarn --cwd file prepare",
     "prepare:form-data": "yarn --cwd form-data prepare",

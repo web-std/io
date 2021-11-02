@@ -5,7 +5,10 @@
   },
   "references": [
     {
-      "path": "../blob"
+      "path": "../blob",
+    },
+    {
+      "path": "../fetch"
     }
   ],
   "include": [
