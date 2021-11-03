@@ -40,7 +40,7 @@ jobs:
         uses: gozala/typescript-error-reporter-action@v1.0.8
         with:
           project: ${{matrix.project}}/tsconfig.json
-  test:
+  test-node:
     name: Test Node
     runs-on: ${{ matrix.os }}
 
