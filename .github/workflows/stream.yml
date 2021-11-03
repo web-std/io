@@ -69,6 +69,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: ${{matrix.project}}
+          useLockFile: false
+          install-command: yarn
 
       - name: Test (ES)
         run: yarn --cwd ${{matrix.project}} test:es
