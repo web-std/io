@@ -14,9 +14,9 @@
   },
   "exports": {
     ".": {
+      "browser": "./src/lib.js",
       "require": "./dist/src/lib.node.cjs",
-      "node": "./src/lib.node.js",
-      "browser": "./src/lib.js"
+      "node": "./src/lib.node.js"
     }
   },
   "types": "./dist/src/lib.d.ts",
