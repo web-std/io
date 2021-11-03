@@ -8,8 +8,7 @@
 import Stream from 'stream';
 import {types} from 'util';
 
-import {Blob} from '@web-std/blob';
-import WebStreams from 'web-streams-polyfill';
+import {Blob, ReadableStream} from './package.js';
 
 import {FetchError} from './errors/fetch-error.js';
 import {FetchBaseError} from './errors/base.js';
@@ -18,7 +17,6 @@ import {isBlob, isURLSearchParameters, isFormData, isMultipartFormDataStream, is
 import * as utf8 from './utils/utf8.js';
 const {readableHighWaterMark} = new Stream.Readable();
 
-const {ReadableStream} = WebStreams;
 const INTERNALS = Symbol('Body internals');
 
 /**
@@ -49,6 +47,7 @@ export default class Body {
 			/** @type {null|Error} */
 			error: null
 		};
+		/** @private */
 		this[INTERNALS] = state;
 
 		if (body === null) {
@@ -116,10 +115,10 @@ export default class Body {
 		// }
 	}
 
-	/** @type {Headers|undefined} */
+	/** @type {Headers} */
 	/* c8 ignore next 3 */
 	get headers() {
-		return undefined;
+		throw new TypeError(`'get headers' called on an object that does not implements interface.`)
 	}
 
 	get body() {
@@ -483,12 +482,12 @@ class AsyncIterablePump {
 export const fromStream = source => {
 	const pump = new StreamPump(source);
 	const stream = new ReadableStream(pump, pump);
-	// @ts-ignore - web-streams-polyfill API is incompatible
 	return stream;
 };
 
 /**
- * @implements {WebStreams.UnderlyingSource<Uint8Array>}
+ * @implements {UnderlyingSource<Uint8Array>}
+ * @implements {QueuingStrategy<Uint8Array>}
  */
 class StreamPump {
 	/**
@@ -510,11 +509,10 @@ class StreamPump {
 	}
 
 	/**
-	 * @param {Uint8Array} chunk
-	 * @returns 
+	 * @param {Uint8Array} [chunk]
 	 */
 	size(chunk) {
-		return chunk.byteLength;
+		return chunk?.byteLength || 0;
 	}
 
 	/**

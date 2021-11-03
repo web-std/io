@@ -17,7 +17,7 @@ import FormDataNode from 'formdata-node';
 import delay from 'delay';
 import AbortControllerMysticatea from 'abort-controller';
 import abortControllerPolyfill from 'abortcontroller-polyfill/dist/abortcontroller.js';
-import WebStreams from 'web-streams-polyfill';
+import { ReadableStream } from '../src/package.js';
 const AbortControllerPolyfill = abortControllerPolyfill.AbortController;
 
 // Test subjects
@@ -148,7 +148,7 @@ describe('node-fetch', () => {
 		return fetch(url).then(res => {
 			expect(res).to.be.an.instanceof(Response);
 			expect(res.headers).to.be.an.instanceof(Headers);
-			expect(res.body).to.be.an.instanceof(WebStreams.ReadableStream);
+			expect(res.body).to.be.an.instanceof(ReadableStream);
 			expect(res.bodyUsed).to.be.false;
 
 			expect(res.url).to.equal(url);

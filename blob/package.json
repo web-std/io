@@ -7,19 +7,20 @@
     "typed"
   ],
   "type": "module",
-  "module": "./src/lib.js",
+  "module": "./src/lib.web.js",
   "main": "./dist/src/lib.node.cjs",
   "exports": {
     ".": {
-      "browser": "./src/lib.js",
+      "browser": "./src/lib.web.js",
       "require": "./dist/src/lib.node.cjs",
-      "node": "./src/lib.node.js"
+      "node": "./src/lib.node.js",
+      "types": "./dist/src/lib.d.ts"
     }
   },
-  "types": "./dist/src/lib.d.ts",
+  "types": "./dist/src/lib.web.d.ts",
   "dependencies": {
     "web-encoding": "1.1.5",
-    "web-streams-polyfill": "3.0.3"
+    "@web-std/stream": "1.0.0"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
@@ -30,13 +31,13 @@
     "git-validate": "2.2.4",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "playwright-test": "3.0.7",
+    "playwright-test": "^7.2.0",
     "prettier": "^2.3.0",
     "rimraf": "3.0.2",
     "rollup": "2.47.0",
     "rollup-plugin-multi-input": "1.2.0",
-    "typescript": "^4.2.4",
-    "uvu": "0.5.1"
+    "typescript": "^4.4.4",
+    "uvu": "0.5.2"
   },
   "scripts": {
     "check": "tsc --build",

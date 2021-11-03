@@ -14,7 +14,7 @@ The reason this library exists is because [fetch-blob][] chooses to compromise
 Web API compatibility of [`blob.stream()`][w3c blob.stream] by using nodejs
 native [Readable][] stream. We found this to be problematic when sharing code
 across nodejs and browser runtimes. Instead this library stays true to the
-specification by using [ReadableStream][] implementation from [web-streams-polyfill][]
+specification by using [ReadableStream][] implementation from [@web-std/stream][]
 library even if that is less convenient in nodejs context.
 
 > Note: Both node [Readable][] streams and web [ReadableStream][] implement
@@ -65,10 +65,10 @@ be able to get all the type inference out of the box.
 [readablestream]: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
 [readable]: https://nodejs.org/api/stream.html#stream_readable_streams
 [w3c blob.stream]: https://w3c.github.io/FileAPI/#dom-blob-stream
-[web-streams-polyfill]:https://www.npmjs.com/package/web-streams-polyfill
+[@web-std/stream]: https://github.com/web-std/io/tree/main/stream
 [for await]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of
 [buffer]: https://nodejs.org/api/buffer.html
 [weakmap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
 [ts-jsdoc]: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
-[Uint8Array]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
-[node-fetch]:https://github.com/node-fetch/
+[uint8array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
+[node-fetch]: https://github.com/node-fetch/

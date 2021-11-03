@@ -5,14 +5,6 @@
     "declarationDir": "./@types", /* Specify the output directory for generated declaration files. */
   },
   "include": [
-    "src/**/*.js"
-  ],
-  "references": [
-    {
-      "path": "../blob"
-    },
-    {
-      "path": "../form-data"
-    }
+    "src",
   ]
 }

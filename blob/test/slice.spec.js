@@ -10,7 +10,7 @@ import { assert } from "./test.js"
  * @param {Uint8Array[]} expected.content
  */
 const assertBlob = async (blob, expected) => {
-  assert.ok(blob instanceof Blob, "blob is instanceof Blob")
+  assert.equal(blob instanceof Blob, true, "blob is instanceof Blob")
   assert.equal(String(blob), "[object Blob]", "String(blob) -> [object Blob]")
   assert.equal(
     blob.toString(),
@@ -33,7 +33,6 @@ const assertBlob = async (blob, expected) => {
       chunks.push(chunk.value)
     }
   }
-  
 
   assert.deepEqual(
     concatUint8Array(chunks),
@@ -56,7 +55,7 @@ const assertBlob = async (blob, expected) => {
   // Not all browsers implement this
   const bytes = concatUint8Array(expected.content)
   const buffer = await blob.arrayBuffer()
-  assert.ok(buffer instanceof ArrayBuffer)
+  assert.equal(buffer instanceof ArrayBuffer, true)
   assert.deepEqual(buffer, bytes.buffer)
   assert.deepEqual(
     new Uint8Array(buffer),

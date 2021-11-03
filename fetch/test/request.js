@@ -4,7 +4,8 @@ import {TextEncoder} from 'util';
 import AbortController from 'abort-controller';
 import chai from 'chai';
 import FormData from 'form-data';
-import {Blob} from '@web-std/blob';
+import {Blob} from '@web-std/fetch';
+import { ReadableStream } from '@web-std/fetch';
 
 import TestServer from './utils/server.js';
 import {Request} from '../src/index.js';

@@ -95,7 +95,7 @@ export const test = test => {
 
   test("should be an instance of constructor", async () => {
     const blob = new Blob(["hi"])
-    assert.ok(blob instanceof Blob)
+    assert.equal(blob instanceof Blob, true)
   })
 
   test("from text", async () => {

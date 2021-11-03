@@ -13,14 +13,15 @@ export const test = test => {
     // @ts-ignore
     const response = new Response(data)
 
-    assert.ok(response.headers.has("content-type"))
+    assert.equal(response.headers.has("content-type"), true)
     const type = response.headers.get("content-type") || ""
-    assert.ok(
+    assert.equal(
       /multipart\/form-data;\s*boundary=/.test(type),
+      true,
       "multipart/form-data content type"
     )
 
     const text = await response.text()
-    assert.ok(text.includes("hello"))
+    assert.equal(text.includes("hello"), true)
   })
 }

@@ -1,12 +1,11 @@
 
-import WebStreams from 'web-streams-polyfill';
 import {TextEncoder} from 'util';
 import chai from 'chai';
 import {Blob} from '@web-std/blob';
 import {Response} from '../src/index.js';
 import TestServer from './utils/server.js';
+import { ReadableStream } from '../src/package.js';
 
-const {ReadableStream} = WebStreams;
 const {expect} = chai;
 
 describe('Response', () => {

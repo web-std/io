@@ -1,0 +1,139 @@
+name: stream
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "stream/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "stream/**"
+      - ".github/workflows/stream.yml"
+jobs:
+  check:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 16
+        project:
+          - stream
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ${{matrix.project}}
+
+      - name: Typecheck
+        uses: gozala/typescript-error-reporter-action@v1.0.8
+        with:
+          project: ${{matrix.project}}/tsconfig.json
+  test:
+    name: Test Node
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version:
+          - 14
+          - 15
+          - 16
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        project:
+          - stream
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ${{matrix.project}}
+
+      - name: Test (ES)
+        run: yarn --cwd ${{matrix.project}} test:es
+
+      - name: Test (CJS)
+        run: yarn --cwd ${{matrix.project}} test:cjs
+  test-web:
+    name: Test Web
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 16
+        project:
+          - stream
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ${{matrix.project}}
+
+      - name: Test (Web)
+        run: yarn --cwd ${{matrix.project}} test:web
+
+  publish:
+    name: Publish
+    needs:
+      - check
+      - test-node
+      - test-web
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - stream
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ${{matrix.project}}
+
+      - name: Publish
+        uses: mikeal/merge-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          DEPLOY_DIR: ${{matrix.project}}
+          SRC_PACKAGE_DIR: ${{matrix.project}}

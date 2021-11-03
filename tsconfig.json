@@ -10,6 +10,7 @@
     // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
 
     /* Language and Environment */
+    "target": "ESNext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
     // "jsx": "preserve",                                /* Specify what JSX code is generated. */
     // "experimentalDecorators": true,                   /* Enable experimental support for TC39 stage 2 draft decorators. */
@@ -28,7 +29,7 @@
     "baseUrl": "./",
     "paths": {
       "@web-std/blob": [
-        "./blob/src/lib.js"
+        "./blob/src/lib.web.js"
       ],
       "@web-std/file": [
         "./file/src/lib.node.js"
@@ -38,6 +39,9 @@
       ],
       "@web-std/fetch": [
         "./fetch/src/index.js"
+      ],
+      "@web-std/stream": [
+        "./stream/src/lib.d.ts"
       ]
     }, /* Specify a set of entries that re-map imports to additional lookup locations. */
 
@@ -57,6 +61,7 @@
     "declaration": true, /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
     "declarationMap": true, /* Create sourcemaps for d.ts files. */
     "emitDeclarationOnly": true, /* Only output d.ts files and not JavaScript files. */
+    "stripInternal": true,
     // "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If `declaration` is true, also designates a file that bundles all .d.ts output. */
     // "outDir": "./",                                   /* Specify an output folder for all emitted files. */

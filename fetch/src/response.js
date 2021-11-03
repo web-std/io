@@ -39,6 +39,9 @@ export default class Response extends Body {
 			}
 		}
 
+		/**
+		 * @private
+		*/
 		this[INTERNALS] = {
 			url: options.url,
 			status,
@@ -79,6 +82,9 @@ export default class Response extends Body {
 		return this[INTERNALS].statusText;
 	}
 
+	/**
+	 * @type {Headers}
+	 */
 	get headers() {
 		return this[INTERNALS].headers;
 	}

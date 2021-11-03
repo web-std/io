@@ -9,9 +9,6 @@
     },
     {
       "path": "../blob"
-    },
-    {
-      "path": "../fetch"
     }
   ],
   "include": [

@@ -19,7 +19,7 @@ they put it is:
 >
 
 We found these incompatibility to be really problematic when sharing code
-across nodejs and browser rutimes. This library introduces uses [web-streams-polyfill][]instead.
+across nodejs and browser rutimes. This library uses [@web-std/stream][] instead.
 
 
 
@@ -37,7 +37,7 @@ across nodejs and browser rutimes. This library introduces uses [web-streams-pol
 [readablestream]: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
 [readable]: https://nodejs.org/api/stream.html#stream_readable_streams
 [w3c blob.stream]: https://w3c.github.io/FileAPI/#dom-blob-stream
-[web-streams-polyfill]:https://www.npmjs.com/package/web-streams-polyfill
+[@web-std/stream]:https://github.com/web-std/io/tree/main/stream
 [Uint8Array]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
 [node-fetch]:https://github.com/node-fetch/
 [fetch api]:https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API

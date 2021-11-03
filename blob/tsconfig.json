@@ -8,6 +8,6 @@
     "test/**/*.js"
   ],
   "references": [
-    { "path": "../fetch" }
+    { "path": "../fetch"}
   ]
 }

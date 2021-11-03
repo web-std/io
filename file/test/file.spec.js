@@ -32,8 +32,8 @@ export const test = test => {
     assert.equal(file.size, 4)
     assert.equal(file.name, "name")
     assert.equal(typeof file.lastModified, "number")
-    assert.ok(file.lastModified > before)
-    assert.ok(file.lastModified < after)
+    assert.equal(file.lastModified > before, true)
+    assert.equal(file.lastModified < after, true)
     assert.equal(file.type, "")
 
     const chunks = []
@@ -87,7 +87,7 @@ export const test = test => {
 
     assert.equal(file.size, 4)
     // occording to spec it's former but in pratice it seems later 🤷‍♂️
-    assert.ok(file.name === "dir:name" || file.name === "dir/name")
+    assert.equal(file.name === "dir:name" || file.name === "dir/name", true)
     assert.equal(file.type, "")
   })
 }

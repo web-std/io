@@ -18,15 +18,12 @@ import Request, {getNodeRequestOptions} from './request.js';
 import {FetchError} from './errors/fetch-error.js';
 import {AbortError} from './errors/abort-error.js';
 import {isRedirect} from './utils/is-redirect.js';
-import WebStreams from 'web-streams-polyfill';
 import {pipeline as pump, PassThrough} from 'stream';
 import * as Stream from 'stream';
-import {Blob} from '@web-std/blob';
-import {FormData} from '@web-std/form-data';
+import { ReadableStream, Blob, FormData  } from './package.js';
 
-const {ReadableStream} = WebStreams;
 
-export {Headers, Request, Response, FetchError, AbortError, isRedirect, ReadableStream, Blob};
+export {Headers, Request, Response, FetchError, AbortError, isRedirect, ReadableStream, Blob, FormData};
 
 const supportedSchemas = new Set(['data:', 'http:', 'https:']);
 
