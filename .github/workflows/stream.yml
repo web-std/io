@@ -35,6 +35,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: ${{matrix.project}}
+          useLockFile: false
+          install-command: yarn
 
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
@@ -101,6 +103,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: ${{matrix.project}}
+          useLockFile: false
+          install-command: yarn
 
       - name: Test (Web)
         run: yarn --cwd ${{matrix.project}} test:web
@@ -130,6 +134,8 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: ${{matrix.project}}
+          useLockFile: false
+          install-command: yarn
 
       - name: Publish
         uses: mikeal/merge-release@master
