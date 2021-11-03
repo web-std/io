@@ -56,10 +56,10 @@ jobs:
           - fetch
         exclude:
           - os: windows-latest
-            node-version: 15
+            node-version: 14
           # On macOS, run tests with only the LTS environments.
           - os: macos-latest
-            node-version: 15
+            node-version: 14
 
     steps:
       - uses: actions/checkout@v2
