@@ -3,12 +3,12 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@web-std/blob": ["blob/src/lib.web.js"]
+      "@web-std/blob": ["blob/src/lib.js"]
     }
   },
   "include": [
-    "src/**/*.js",
-    "test/**/*.js"
+    "src",
+    "test"
   ],
   "references": [
     { "path": "../fetch"}

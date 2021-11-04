@@ -7,11 +7,11 @@
     "typed"
   ],
   "type": "module",
-  "module": "./src/lib.web.js",
+  "module": "./src/lib.js",
   "main": "./dist/src/lib.node.cjs",
   "exports": {
     ".": {
-      "browser": "./src/lib.web.js",
+      "browser": "./src/lib.js",
       "require": "./dist/src/lib.node.cjs",
       "import": "./src/lib.node.js",
       "types": "./dist/src/lib.d.ts"
