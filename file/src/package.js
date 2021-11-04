@@ -1,3 +1,1 @@
-import { Blob } from "@web-std/blob"
-
-export { Blob }
+export { Blob } from "@web-std/blob"

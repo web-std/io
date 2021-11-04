@@ -3,7 +3,7 @@ import { Blob } from "./package.js"
 /**
  * @implements {globalThis.File}
  */
-export const WebFile = class File extends Blob {
+export class File extends Blob {
   /**
    *
    * @param {BlobPart[]} init

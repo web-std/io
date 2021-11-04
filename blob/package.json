@@ -9,6 +9,7 @@
   "type": "module",
   "module": "./src/lib.js",
   "main": "./dist/src/lib.node.cjs",
+  "types": "./dist/src/lib.d.ts",
   "exports": {
     ".": {
       "browser": "./src/lib.js",
@@ -17,7 +18,6 @@
       "types": "./dist/src/lib.d.ts"
     }
   },
-  "types": "./dist/src/lib.web.d.ts",
   "dependencies": {
     "web-encoding": "1.1.5",
     "@web-std/stream": "1.0.0"
