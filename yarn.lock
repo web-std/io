@@ -4953,9 +4953,11 @@ readable-stream@^2.0.2, readable-stream@^2.3.3, readable-stream@^2.3.6:
 
 readable-stream@^3.4.0, readable-stream@^3.5.0, readable-stream@^3.6.0:
   version "3.6.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
-  integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
+  resolved "https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz#25682c94346526abc8c8b1ece125b52a7247bb2e"
   dependencies:
+    browser-util-inspect "^0.2.0"
+    buffer "^5.6.0"
+    events "^3.1.0"
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
