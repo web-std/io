@@ -1,5 +1,5 @@
 // @ts-ignore
-import streams from "./lib.node.cjs"
+import streams from "./stream.cjs"
 export const {
   ReadableStream,
   ReadableStreamDefaultReader,
