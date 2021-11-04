@@ -24,7 +24,7 @@ across nodejs and browser rutimes. This library uses [@web-std/stream][] instead
 
 
 [ci.icon]: https://github.com/web-std/io/workflows/fetch/badge.svg
-[ci.url]: https://github.com/web-std/io/actions
+[ci.url]: https://github.com/web-std/io/actions/workflows/fetch.yml
 [version.icon]: https://img.shields.io/npm/v/@web-std/fetch.svg
 [downloads.icon]: https://img.shields.io/npm/dm/@web-std/fetch.svg
 [package.url]: https://npmjs.org/package/@web-std/fetch

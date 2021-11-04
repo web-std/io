@@ -1,6 +1,6 @@
 # web-file
 
-![Node.js CI][node.js ci]
+[![ci][ci.icon]][ci.url]
 [![package][version.icon] ![downloads][downloads.icon]][package.url]
 [![styled with prettier][prettier.icon]][prettier.url]
 
@@ -26,7 +26,8 @@ be able to get all the type innference out of the box.
 
     npm install @web-std/file
 
-[node.js ci]: https://github.com/web-std/file/workflows/Node.js%20CI/badge.svg
+[ci.icon]: https://github.com/web-std/io/workflows/file/badge.svg
+[ci.url]: https://github.com/web-std/io/actions/workflows/file.yml
 [version.icon]: https://img.shields.io/npm/v/@web-std/file.svg
 [downloads.icon]: https://img.shields.io/npm/dm/@web-std/file.svg
 [package.url]: https://npmjs.org/package/@web-std/file

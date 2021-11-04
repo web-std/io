@@ -1,6 +1,6 @@
 # @web-std/blob
 
-![Node.js CI][node.js ci]
+[![ci][ci.icon]][ci.url]
 [![package][version.icon] ![downloads][downloads.icon]][package.url]
 [![styled with prettier][prettier.icon]][prettier.url]
 
@@ -52,7 +52,8 @@ be able to get all the type inference out of the box.
 
     npm install @web-std/blob
 
-[node.js ci]: https://github.com/web-std/blob/workflows/Node.js%20CI/badge.svg
+[ci.icon]: https://github.com/web-std/io/workflows/blob/badge.svg
+[ci.url]: https://github.com/web-std/io/actions/workflows/blob.yml
 [version.icon]: https://img.shields.io/npm/v/@web-std/blob.svg
 [downloads.icon]: https://img.shields.io/npm/dm/@web-std/blob.svg
 [package.url]: https://npmjs.org/package/@web-std/blob

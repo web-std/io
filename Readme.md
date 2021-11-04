@@ -1,3 +1,3 @@
 # Web Standard IO
 
-Monorepo of libraries that bring web standard IO APIs into nodejs.
+Set of libraries that provide standard web IO APIs so they can be imported and used across web and node runtimes without any configurations.
