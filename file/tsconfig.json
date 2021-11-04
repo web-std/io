@@ -2,6 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
+    "paths": {
+      "@web-std/file": ["file/src/lib.js"]
+    }
   },
   "references": [
     {

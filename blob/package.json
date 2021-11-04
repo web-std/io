@@ -13,7 +13,7 @@
     ".": {
       "browser": "./src/lib.web.js",
       "require": "./dist/src/lib.node.cjs",
-      "node": "./src/lib.node.js",
+      "import": "./src/lib.node.js",
       "types": "./dist/src/lib.d.ts"
     }
   },
@@ -48,7 +48,7 @@
     "test:es": "uvu test all.spec.js",
     "test:web": "playwright-test -r uvu test/web.spec.js",
     "test:cjs": "rimraf dist && npm run build && node dist/test/web.spec.cjs",
-    "test": "npm run test:es && npm run test:cjs",
+    "test": "npm run test:es && npm run test:web && npm run test:cjs",
     "precommit": "lint-staged"
   },
   "lint-staged": {

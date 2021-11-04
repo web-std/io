@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "declarationDir": "./@types", /* Specify the output directory for generated declaration files. */
   },
   "include": [
     "src",

@@ -4,38 +4,37 @@
   "description": "Web compatible Fetch API implementation for node.js",
   "main": "./dist/index.cjs",
   "module": "./src/index.js",
+  "types": "./dist/src/index.d.ts",
   "sideEffects": false,
   "type": "module",
   "exports": {
     ".": {
       "import": "./src/index.js",
       "require": "./dist/index.cjs",
-      "types": "./@types/index.d.ts"
+      "types": "./dist/src/index.d.ts"
     },
     "./package.json": "./package.json",
     "./body": {
       "import": "./src/body.js",
-      "types": "./@types/body.d.ts"
+      "types": "./dist/src/body.d.ts"
     },
     "./src/request.js": {
       "import": "./src/request.js",
-      "types": "./@types/request.d.ts"
+      "types": "./dist/src/request.d.ts"
     },
     "./src/response.js": {
       "import": "./src/response.js",
-      "types": "./@types/response.d.ts"
+      "types": "./dist/src/response.d.ts"
     },
     "./src/headers.js": {
       "import": "./src/headers.js",
-      "types": "./@types/headers.d.ts"
+      "types": "./dist/src/headers.d.ts"
     }
   },
   "files": [
     "src",
-    "dist",
-    "@types"
+    "dist"
   ],
-  "types": "./@types/index.d.ts",
   "engines": {
     "node": "^10.17 || >=12.3"
   },
@@ -92,7 +91,7 @@
     "@web-std/blob": "^2.1.0",
     "@web-std/form-data": "^2.1.0",
     "data-uri-to-buffer": "^3.0.1",
-    "@ssttevee/multipart-parser": "^0.1.9"
+    "@web3-storage/multipart-parser": "^1.0.0"
   },
   "esm": {
     "sourceMap": true,

@@ -18,7 +18,7 @@
     ".": {
       "browser": "./src/lib.js",
       "require": "./src/lib.node.cjs",
-      "node": "./src/lib.node.js",
+      "import": "./src/lib.node.js",
       "types": "./src/lib.d.ts"
     }
   },
@@ -45,7 +45,7 @@
     "test:es": "uvu test all.spec.js",
     "test:web": "playwright-test -r uvu test/web.spec.js",
     "test:cjs": "node test/node.spec.cjs",
-    "test": "npm run test:es && npm run test:cjs && npm run test:web",
+    "test": "npm run test:es && npm run test:web && npm run test:cjs",
     "precommit": "lint-staged"
   },
   "lint-staged": {
