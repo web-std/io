@@ -10,19 +10,19 @@
   ],
   "type": "module",
   "module": "./src/lib.js",
-  "main": "./dist/src/lib.node.cjs",
+  "main": "./src/stream.cjs",
+  "types": "./src/lib.d.ts",
   "browser": {
     "./src/lib.node.js": "./src/lib.js"
   },
   "exports": {
     ".": {
       "browser": "./src/lib.js",
-      "require": "./src/lib.node.cjs",
+      "require": "./src/stream.cjs",
       "import": "./src/lib.node.js",
       "types": "./src/lib.d.ts"
     }
   },
-  "types": "./src/lib.d.ts",
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
   "license": "MIT",
