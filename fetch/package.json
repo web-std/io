@@ -32,7 +32,7 @@
     "build:types": "tsc --build",
     "build:cjs": "rollup -c",
     "lint": "xo",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
