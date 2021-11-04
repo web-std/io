@@ -1,11 +1,4 @@
 // @ts-nocheck
-/**
- * Rebuild first
- */
-const {execFileSync} = require('child_process');
-
-console.log('Building CommonJS version...');
-execFileSync('npm', ['run', 'build'], {stdio: 'inherit'});
 
 const assert = require('assert');
 const fetch = require('../../');

@@ -308,26 +308,6 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@ssttevee/multipart-parser@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@ssttevee/multipart-parser/-/multipart-parser-0.1.9.tgz#972a8bffe7204aa3f519f53bc06adee3498df15b"
-  integrity sha512-4GmChu029N2VHdi3SEQMlqTctNRisGoE4HOLAsL7p6nrlWHQ63dqVZ2IsnI0HGizzt2/0MLFNlaF7EFBsuXK2g==
-  dependencies:
-    "@ssttevee/streamsearch" "~0.3.0"
-    "@ssttevee/u8-utils" "~0.1.5"
-
-"@ssttevee/streamsearch@~0.3.0":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@ssttevee/streamsearch/-/streamsearch-0.3.1.tgz#7f608ce5a1f77a2ac51e84a5c5a128c62f505828"
-  integrity sha512-qL6bEa8R1KlN0rcLVWaLZfS+IVi5nw51FlO54p8PbCkspM5G8ssZhcCNJjnPxSPNz1BqIIt0Rm4tALBilYx1dw==
-  dependencies:
-    "@ssttevee/u8-utils" "~0.1.5"
-
-"@ssttevee/u8-utils@~0.1.5":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@ssttevee/u8-utils/-/u8-utils-0.1.7.tgz#fb8db35ca9dda860ad3eaf1b557f61e4d43950bc"
-  integrity sha512-bSD+ocJRyAWiav1w7iQmAJ+ao/DJ5cRLcs2VsFDQeA1pODdF8cVZYy69+/irAeEntYoFbKigID/eM389pZ3vMA==
-
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -469,6 +449,11 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
+
+"@web3-storage/multipart-parser@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@web3-storage/multipart-parser/-/multipart-parser-1.0.0.tgz#6b69dc2a32a5b207ba43e556c25cc136a56659c4"
+  integrity sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==
 
 "@zxing/text-encoding@0.9.0":
   version "0.9.0"
@@ -4829,7 +4814,6 @@ readable-stream@^2.0.2, readable-stream@^2.3.3, readable-stream@^2.3.6:
 
 readable-stream@^3.4.0, readable-stream@^3.6.0, "readable-stream@https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz":
   version "3.6.0"
-  uid "25682c94346526abc8c8b1ece125b52a7247bb2e"
   resolved "https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz#25682c94346526abc8c8b1ece125b52a7247bb2e"
   dependencies:
     browser-util-inspect "^0.2.0"
@@ -5581,7 +5565,6 @@ text-table@^0.2.0:
 
 "through2@https://registry.npmjs.org/@leichtgewicht/through2/-/through2-4.0.2.tgz":
   version "4.0.2"
-  uid ea39512757acd2dab1be4ff1eeb1e43708aa7333
   resolved "https://registry.npmjs.org/@leichtgewicht/through2/-/through2-4.0.2.tgz#ea39512757acd2dab1be4ff1eeb1e43708aa7333"
   dependencies:
     readable-stream "https://registry.npmjs.org/@leichtgewicht/readable-stream/-/readable-stream-3.6.0.tgz"
