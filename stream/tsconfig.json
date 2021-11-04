@@ -6,8 +6,7 @@
     "outDir": "dist"
   },
   "include": [
-    "src/**/*.js",
-    "test/**/*.js",
-    "test/test.cjs"
+    "src",
+    "test",
   ]
 }
