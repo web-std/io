@@ -45,7 +45,7 @@
     "typecheck": "tsc --build",
     "lint": "xo",
     "prepublishOnly": "node ./test/commonjs/test-artifact.js",
-    "prepare": "tsc --build"
+    "prepare": "npm run typecheck && npm run build"
   },
   "repository": {
     "type": "git",
