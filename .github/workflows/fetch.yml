@@ -73,7 +73,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Test (ESM)
-        run: yarn --cwd packages/{{matrix.project}} test -- --colors
+        run: yarn --cwd packages/${{matrix.project}} test -- --colors
 
       # upload coverage only once
       - name: Coveralls
