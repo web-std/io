@@ -90,8 +90,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@web-std/blob": "^2.1.0",
-    "@web-std/form-data": "^2.1.0",
+    "@web-std/blob": "^3.0.0",
+    "@web-std/form-data": "^3.0.0",
     "data-uri-to-buffer": "^3.0.1",
     "@web3-storage/multipart-parser": "^1.0.0"
   },

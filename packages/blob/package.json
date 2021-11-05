@@ -27,7 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "15.0.2",
-    "@web-std/fetch": "^2.0.0",
+    "@web-std/fetch": "^3.0.0",
     "git-validate": "2.2.4",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
