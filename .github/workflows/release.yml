@@ -93,9 +93,9 @@ jobs:
         uses: bahmutov/npm-install@v1
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
         run: |
           cd packages/${{ matrix.package }}
           npm publish --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        if: ${{ steps.release.outputs.release_created }}
