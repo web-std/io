@@ -33,10 +33,6 @@ jobs:
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
-        with:
-          working-directory: ${{matrix.project}}
-          useLockFile: false
-          install-command: yarn
 
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
