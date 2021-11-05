@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - "blob/**"
+      - "packages/blob/**"
   pull_request:
     branches:
       - main
     paths:
-      - "blob/**"
+      - "packages/blob/**"
       - ".github/workflows/blob.yml"
 jobs:
   check:
@@ -36,7 +36,7 @@ jobs:
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
         with:
-          project: ${{matrix.project}}/tsconfig.json
+          project: packages/${{matrix.project}}/tsconfig.json
   test:
     name: Test
     runs-on: ${{ matrix.os }}
@@ -65,37 +65,10 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Test (ES)
-        run: yarn --cwd ${{matrix.project}} test:es
+        run: yarn --cwd packages/${{matrix.project}} test:es
 
       - name: Test (CJS)
-        run: yarn --cwd ${{matrix.project}} test:cjs
+        run: yarn --cwd packages/${{matrix.project}} test:cjs
 
       - name: Test (Web)
-        run: yarn --cwd ${{matrix.project}} test:web
-  publish:
-    name: Publish
-    needs:
-      - test
-      - check
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - blob
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
-      - name: Build
-        run: yarn --cwd ${{matrix.project}} build
-
-      - name: Publish
-        uses: mikeal/merge-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          DEPLOY_DIR: ${{matrix.project}}
-          SRC_PACKAGE_DIR: ${{matrix.project}}
+        run: yarn --cwd packages/${{matrix.project}} test:web

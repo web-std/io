@@ -1,17 +1,17 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@web-std/file": ["file/src/lib.js"]
+      "@web-std/form-data": ["packages/form-data/src/lib.js"]
     }
   },
   "references": [
     {
-      "path": "../blob",
+      "path": "../file"
     },
     {
-      "path": "../fetch"
+      "path": "../blob"
     }
   ],
   "include": [

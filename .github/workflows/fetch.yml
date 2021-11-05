@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - "fetch/**"
+      - "packages/fetch/**"
   pull_request:
     branches:
       - main
     paths:
-      - "fetch/**"
+      - "packages/fetch/**"
       - ".github/workflows/fetch.yml"
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
       - name: Typecheck
         uses: gozala/typescript-error-reporter-action@v1.0.8
         with:
-          project: ${{matrix.project}}/tsconfig.json
+          project: packages/${{matrix.project}}/tsconfig.json
 
   test:
     name: Test
@@ -73,7 +73,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Test (ESM)
-        run: yarn --cwd ${{matrix.project}} test -- --colors
+        run: yarn --cwd packages/{{matrix.project}} test -- --colors
 
       # upload coverage only once
       - name: Coveralls
@@ -83,30 +83,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test (CJS)
-        run: yarn --cwd ${{matrix.project}} test:cjs
-  publish:
-    name: Publish
-    needs:
-      - test
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          - fetch
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install
-        uses: bahmutov/npm-install@v1
-
-      - name: Build
-        run: yarn --cwd ${{matrix.project}} build
-
-      - name: Publish
-        uses: mikeal/merge-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          DEPLOY_DIR: ${{matrix.project}}
-          SRC_PACKAGE_DIR: ${{matrix.project}}
+        run: yarn --cwd packages/${{matrix.project}} test:cjs
