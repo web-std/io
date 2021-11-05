@@ -54,7 +54,7 @@ jobs:
           path: packages/${{ matrix.package }}
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: '@web-std/${{ matrix.package }}'
+          package-name: "@web-std/${{ matrix.package }}"
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"refactor","section":"Changes","hidden":false},{"type":"chore","section":"Changes","hidden":false}]'
           command: release-pr
@@ -68,12 +68,12 @@ jobs:
         package: ${{fromJson(needs.changeFinder.outputs.nodePaths)}}
     steps:
       - uses: GoogleCloudPlatform/release-please-action@v2
-        id: tag-release
+        id: release
         with:
           path: packages/${{ matrix.package }}
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: '@web-std/${{ matrix.package }}'
+          package-name: "@web-std/${{ matrix.package }}"
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"refactor","section":"Changes","hidden":false},{"type":"chore","section":"Changes","hidden":false}]'
           command: github-release
@@ -93,7 +93,9 @@ jobs:
         uses: bahmutov/npm-install@v1
         if: ${{ steps.release.outputs.release_created }}
       - name: Publish
-        run: npm publish --prefix packages/${{matrix.package}} --access=public
+        run: |
+          cd packages/${{ matrix.package }}
+          npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
