@@ -1,21 +1,23 @@
 {
   "private": true,
   "workspaces": [
-    "blob",
-    "file",
-    "form-data",
-    "fetch"
+    "packages/blob",
+    "packages/file",
+    "packages/form-data",
+    "packages/fetch",
+    "packages/stream"
   ],
   "scripts": {
     "prepare": "yarn prepare:blob && yarn prepare:file && yarn prepare:form-data && yarn prepare:fetch",
-    "prepare:blob": "yarn --cwd blob prepare",
-    "prepare:file": "yarn --cwd file prepare",
-    "prepare:form-data": "yarn --cwd form-data prepare",
-    "prepare:fetch": "yarn --cwd fetch prepare",
-    "test": "yarn test:blob && yarn test:file && yarn test:form-data && yarn test:fetch",
-    "test:blob": "yarn --cwd blob test",
-    "test:file": "yarn --cwd file test",
-    "test:form-data": "yarn --cwd form-data test",
-    "test:fetch": "yarn --cwd fetch test"
+    "prepare:blob": "yarn --cwd packages/blob prepare",
+    "prepare:file": "yarn --cwd packages/file prepare",
+    "prepare:form-data": "yarn --cwd packages/form-data prepare",
+    "prepare:fetch": "yarn --cwd packages/fetch prepare",
+    "test": "yarn test:stream && yarn test:blob && yarn test:file && yarn test:form-data && yarn test:fetch",
+    "test:blob": "yarn --cwd packages/blob test",
+    "test:file": "yarn --cwd packages/file test",
+    "test:form-data": "yarn --cwd packages/form-data test",
+    "test:fetch": "yarn --cwd packages/fetch test",
+    "test:stream": "yarn --cwd packages/stream test"
   }
 }

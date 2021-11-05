@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "@web-std/blob": ["packages/blob/src/lib.js"]
+    }
+  },
+  "include": [
+    "src",
+    "test"
+  ],
+  "references": [
+    { "path": "../fetch"}
+  ]
+}
