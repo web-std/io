@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.1](https://www.github.com/web-std/io/compare/blob-v3.0.0...blob-v3.0.1) (2021-11-08)
+
+
+### Changes
+
+* align package versions ([09c8676](https://www.github.com/web-std/io/commit/09c8676348619313d9df24d9597cea0eb82704d2))
+
 ## 3.0.0 (2021-11-05)
 
 
