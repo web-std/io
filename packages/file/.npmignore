@@ -1,0 +1,15 @@
+# folders:
+.github
+docs
+coverage
+test
+
+# files:
+.npmignore
+.prettierignore
+rollup.config.js
+tsconfig.json
+.editorconfig
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+example.js
