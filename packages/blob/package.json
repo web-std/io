@@ -6,6 +6,12 @@
     "blob",
     "typed"
   ],
+  "files": [
+    "src",
+    "dist/src",
+    "License.md",
+    "Readme.md"
+  ],
   "type": "module",
   "module": "./src/lib.js",
   "main": "./dist/src/lib.node.cjs",

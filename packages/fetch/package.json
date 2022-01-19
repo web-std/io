@@ -33,7 +33,9 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist/src",
+    "License.md",
+    "Readme.md"
   ],
   "engines": {
     "node": "^10.17 || >=12.3"
