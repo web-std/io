@@ -2,6 +2,12 @@
   "name": "@web-std/stream",
   "version": "1.0.0",
   "description": "Web API compatible streams for node/web",
+  "files": [
+    "src",
+    "dist/src",
+    "License.md",
+    "Readme.md"
+  ],
   "keywords": [
     "web-stream",
     "whatwg-stream",
