@@ -1,6 +1,6 @@
 {
   "name": "@web-std/file",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Web API compatible File implementation for node",
   "files": [
     "src",
