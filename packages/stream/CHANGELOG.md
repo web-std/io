@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/web-std/io/compare/stream-v1.0.0...stream-v1.0.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* ship less files to address TSC issues ([#35](https://www.github.com/web-std/io/issues/35)) ([0651e62](https://www.github.com/web-std/io/commit/0651e62ae42d17eae2db89858c9e44f3342c304c))
+
 ## 1.0.0 (2021-11-05)
 
 
