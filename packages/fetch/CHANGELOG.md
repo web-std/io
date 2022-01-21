@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.2](https://www.github.com/web-std/io/compare/fetch-v3.0.1...fetch-v3.0.2) (2022-01-21)
+
+
+### Changes
+
+* bump fetch versions ([e8ae4e5](https://www.github.com/web-std/io/commit/e8ae4e5e61591f1bcbd45a0541c762468e134e4b))
+
 ### [3.0.1](https://www.github.com/web-std/io/compare/fetch-v3.0.0...fetch-v3.0.1) (2022-01-19)
 
 
