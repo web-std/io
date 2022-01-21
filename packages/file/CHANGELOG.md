@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.2](https://www.github.com/web-std/io/compare/file-v3.0.1...file-v3.0.2) (2022-01-21)
+
+
+### Changes
+
+* **file:** update blob dep version ([767988b](https://www.github.com/web-std/io/commit/767988b9dade84ee04b8cda515c114cba8a1f659))
+
 ### [3.0.1](https://www.github.com/web-std/io/compare/file-v3.0.0...file-v3.0.1) (2022-01-19)
 
 
