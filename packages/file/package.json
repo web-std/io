@@ -29,7 +29,7 @@
   },
   "types": "./dist/src/lib.d.ts",
   "dependencies": {
-    "@web-std/blob": "^3.0.0"
+    "@web-std/blob": "^3.0.3"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
