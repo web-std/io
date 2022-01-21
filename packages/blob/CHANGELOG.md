@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.3](https://www.github.com/web-std/io/compare/blob-v3.0.2...blob-v3.0.3) (2022-01-21)
+
+
+### Changes
+
+* bump version ([91420e2](https://www.github.com/web-std/io/commit/91420e294b4188a6da9c961ce4ef4eeac93595a1))
+
 ### [3.0.2](https://www.github.com/web-std/io/compare/blob-v3.0.1...blob-v3.0.2) (2022-01-19)
 
 
