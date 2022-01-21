@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.2](https://www.github.com/web-std/io/compare/form-data-v3.0.1...form-data-v3.0.2) (2022-01-21)
+
+
+### Changes
+
+* bump form-data version ([b7ac808](https://www.github.com/web-std/io/commit/b7ac808ba8ae6488d5c2dc6d0d441412a7a8e2b8))
+
 ### [3.0.1](https://www.github.com/web-std/io/compare/form-data-v3.0.0...form-data-v3.0.1) (2022-01-19)
 
 
