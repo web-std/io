@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.3](https://www.github.com/web-std/io/compare/fetch-v3.0.2...fetch-v3.0.3) (2022-01-28)
+
+
+### Bug Fixes
+
+* include dist/index.cjs in files ([#47](https://www.github.com/web-std/io/issues/47)) ([2a12474](https://www.github.com/web-std/io/commit/2a1247404650bf5b6662fa520248bf07ae457987))
+
 ### [3.0.2](https://www.github.com/web-std/io/compare/fetch-v3.0.1...fetch-v3.0.2) (2022-01-21)
 
 
