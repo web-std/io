@@ -33,7 +33,7 @@
   },
   "files": [
     "src",
-    "dist/src",
+    "dist",
     "License.md",
     "Readme.md"
   ],
