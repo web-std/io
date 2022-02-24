@@ -1,6 +1,6 @@
 {
   "name": "@web-std/blob",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Web API compatible Blob implementation",
   "keywords": [
     "blob",

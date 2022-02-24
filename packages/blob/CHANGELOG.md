@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.4](https://www.github.com/web-std/io/compare/blob-v3.0.3...blob-v3.0.4) (2022-02-24)
+
+
+### Changes
+
+* disable node native blob ([#49](https://www.github.com/web-std/io/issues/49)) ([18e426e](https://www.github.com/web-std/io/commit/18e426e0552eb855275faadceab35c41335582f2))
+
 ### [3.0.3](https://www.github.com/web-std/io/compare/blob-v3.0.2...blob-v3.0.3) (2022-01-21)
 
 
