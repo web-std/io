@@ -2,8 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
+    "paths": {
+      "@web-std/fetch": [
+        "packages/fetch/src/lib.node.js"
+      ]
+    }
   },
   "include": [
-    "src",
+    "src"
   ]
 }

@@ -23,7 +23,7 @@ import * as Stream from 'stream';
 import { ReadableStream, Blob, FormData  } from './package.js';
 
 
-export {Headers, Request, Response, FetchError, AbortError, isRedirect, ReadableStream, Blob, FormData};
+export {Headers, Request, Response, ReadableStream, Blob, FormData};
 
 const supportedSchemas = new Set(['data:', 'http:', 'https:']);
 
@@ -34,7 +34,7 @@ const supportedSchemas = new Set(['data:', 'http:', 'https:']);
  * @param   {RequestInit} [options_] - Fetch options
  * @return  {Promise<import('./response').default>}
  */
-export default async function fetch(url, options_ = {}) {
+async function fetch(url, options_ = {}) {
 	return new Promise((resolve, reject) => {
 		// Build request object
 		const request = new Request(url, options_);
@@ -339,3 +339,6 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 		}
 	});
 }
+
+export default fetch
+export { fetch }

@@ -1,17 +1,18 @@
 {
   "name": "@web-std/fetch",
-  "version": "3.0.3",
-  "description": "Web compatible Fetch API implementation for node.js",
-  "main": "./dist/index.cjs",
-  "module": "./src/index.js",
-  "types": "./dist/src/index.d.ts",
+  "version": "4.0.0",
+  "description": "Web API compatible fetch implementation",
+  "main": "./dist/lib.node.cjs",
+  "module": "./src/lib.node.js",
+  "types": "./dist/src/lib.node.d.ts",
   "sideEffects": false,
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/src/index.d.ts"
+      "browser": "./src/lib.js",
+      "require": "./dist/lib.node.cjs",
+      "import": "./src/lib.node.js",
+      "types": "./dist/src/lib.node.d.ts"
     },
     "./package.json": "./package.json",
     "./body": {
@@ -72,6 +73,10 @@
   },
   "homepage": "https://github.com/web-std/io",
   "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.1.0",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/chai-string": "^1.4.2",
     "abort-controller": "^3.0.0",
     "abortcontroller-polyfill": "^1.7.1",
     "busboy": "^0.3.1",

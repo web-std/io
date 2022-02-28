@@ -1,4 +1,4 @@
-import fetch from '../src/index.js';
+import fetch from '@web-std/fetch';
 import chai from 'chai';
 
 const {expect} = chai;

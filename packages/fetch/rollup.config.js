@@ -2,9 +2,9 @@ import {builtinModules} from 'module';
 import {dependencies} from './package.json';
 
 export default {
-	input: 'src/index.js',
+	input: 'src/lib.node.js',
 	output: {
-		file: 'dist/index.cjs',
+		file: 'dist/lib.node.cjs',
 		format: 'cjs',
 		esModule: false,
 		interop: false,

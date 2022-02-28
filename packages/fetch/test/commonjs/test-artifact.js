@@ -1,14 +1,16 @@
 // @ts-nocheck
 
 const assert = require('assert');
-const fetch = require('../../');
+const fetch = require('@web-std/fetch');
 assert.strictEqual(
 	typeof fetch,
 	'function',
 	'default import must be a function'
 );
 
-const {Request, Response, Headers, FetchError, AbortError} = require('../../');
+const {Request, Response, Headers} = require('../../');
+const {FetchError} = require('../../errors/fetch-error.js');
+const {AbortError} = require('../../errors/abort-error.js');
 assert.ok(new FetchError() instanceof Error, 'FetchError must be an Error');
 assert.ok(
 	new AbortError() instanceof Error,
