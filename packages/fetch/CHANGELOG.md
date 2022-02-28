@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://www.github.com/web-std/io/compare/fetch-v3.0.3...fetch-v4.0.0) (2022-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* export native fetch on the web (#53)
+
+### Features
+
+* export native fetch on the web ([#53](https://www.github.com/web-std/io/issues/53)) ([af03280](https://www.github.com/web-std/io/commit/af03280788286cd69185efb0572da162f16d48cc))
+* implement file: protocol support for fetch ([#55](https://www.github.com/web-std/io/issues/55)) ([19d17c7](https://www.github.com/web-std/io/commit/19d17c76f995800c9e07d5d6a923f33b81ab1d22))
+
 ### [3.0.3](https://www.github.com/web-std/io/compare/fetch-v3.0.2...fetch-v3.0.3) (2022-01-28)
 
 
