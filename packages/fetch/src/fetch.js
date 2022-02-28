@@ -53,8 +53,8 @@ async function fetch(url, options_ = {}) {
 		}
 
 		if (options.protocol === 'file:') {
-			const stream = fs.createReadStream(request.url)
-			const type = mime.lookup(request.url)
+			const stream = fs.createReadStream(new URL(request.url))
+			const type = mime.lookup(request.url) || 'application/octet-stream'
 			const response = new Response(stream, {headers: {'Content-Type': type }});
 			resolve(response);
 			return;
