@@ -9,6 +9,8 @@
 import http from 'http';
 import https from 'https';
 import zlib from 'zlib';
+import fs from 'fs';
+import * as mime from 'mrmime'
 import dataUriToBuffer from 'data-uri-to-buffer';
 
 import {writeToStream, fromAsyncIterable} from './body.js';
@@ -25,7 +27,7 @@ import { ReadableStream, Blob, FormData  } from './package.js';
 
 export {Headers, Request, Response, ReadableStream, Blob, FormData};
 
-const supportedSchemas = new Set(['data:', 'http:', 'https:']);
+const supportedSchemas = new Set(['data:', 'http:', 'https:', 'file:']);
 
 /**
  * Fetch function
@@ -46,6 +48,14 @@ async function fetch(url, options_ = {}) {
 		if (options.protocol === 'data:') {
 			const data = dataUriToBuffer(request.url.toString());
 			const response = new Response(data, {headers: {'Content-Type': data.typeFull}});
+			resolve(response);
+			return;
+		}
+
+		if (options.protocol === 'file:') {
+			const stream = fs.createReadStream(request.url)
+			const type = mime.lookup(request.url)
+			const response = new Response(stream, {headers: {'Content-Type': type }});
 			resolve(response);
 			return;
 		}
