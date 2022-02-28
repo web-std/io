@@ -24,12 +24,11 @@ const AbortControllerPolyfill = abortControllerPolyfill.AbortController;
 import {Blob} from '@web-std/blob';
 
 import fetch, {
-	FetchError,
 	Headers,
 	Request,
 	Response
-} from '../src/index.js';
-import {FetchError as FetchErrorOrig} from '../src/errors/fetch-error.js';
+} from '@web-std/fetch';
+import {FetchError} from '../src/errors/fetch-error.js';
 import HeadersOrig, {fromRawHeaders} from '../src/headers.js';
 import RequestOrig from '../src/request.js';
 import ResponseOrig from '../src/response.js';
@@ -90,7 +89,6 @@ describe('node-fetch', () => {
 	});
 
 	it('should expose Headers, Response and Request constructors', () => {
-		expect(FetchError).to.equal(FetchErrorOrig);
 		expect(Headers).to.equal(HeadersOrig);
 		expect(Response).to.equal(ResponseOrig);
 		expect(Request).to.equal(RequestOrig);

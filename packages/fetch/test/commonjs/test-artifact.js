@@ -1,19 +1,15 @@
 // @ts-nocheck
 
 const assert = require('assert');
-const fetch = require('../../');
+const fetch = require('@web-std/fetch');
 assert.strictEqual(
 	typeof fetch,
 	'function',
 	'default import must be a function'
 );
 
-const {Request, Response, Headers, FetchError, AbortError} = require('../../');
-assert.ok(new FetchError() instanceof Error, 'FetchError must be an Error');
-assert.ok(
-	new AbortError() instanceof Error,
-	'AbortError must be an extension of Error'
-);
+const {Request, Response, Headers} = require('@web-std/fetch');
+
 assert.ok(
 	new Request('https://www.test.com').headers instanceof Headers,
 	'Request class is not exposing correct functionality'
