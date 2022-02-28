@@ -12,7 +12,7 @@ export default {
 		preferConst: true,
 		exports: 'named',
 		// https://github.com/rollup/rollup/issues/1961#issuecomment-534977678
-		intro: 'exports = module.exports = fetch;'
+		outro: 'exports = module.exports = Object.assign(fetch, exports);'
 	},
 	external: [...builtinModules, ...Object.keys(dependencies)]
 };
