@@ -8,14 +8,8 @@ assert.strictEqual(
 	'default import must be a function'
 );
 
-const {Request, Response, Headers} = require('../../');
-const {FetchError} = require('../../errors/fetch-error.js');
-const {AbortError} = require('../../errors/abort-error.js');
-assert.ok(new FetchError() instanceof Error, 'FetchError must be an Error');
-assert.ok(
-	new AbortError() instanceof Error,
-	'AbortError must be an extension of Error'
-);
+const {Request, Response, Headers} = require('@web-std/fetch');
+
 assert.ok(
 	new Request('https://www.test.com').headers instanceof Headers,
 	'Request class is not exposing correct functionality'
