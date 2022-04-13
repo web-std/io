@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/web-std/io/compare/stream-v1.0.1...stream-v1.0.2) (2022-04-13)
+
+
+### Bug Fixes
+
+* **packages/fetch:** only export what's needed so TS doesn't mess up the imports in the output files ([30ad037](https://www.github.com/web-std/io/commit/30ad0377a88ebffc3a998616e3b774ce5bcc584a))
+* **packages/stream:** no initializers in ambient contexts ([30ad037](https://www.github.com/web-std/io/commit/30ad0377a88ebffc3a998616e3b774ce5bcc584a))
+* typescript types ([#56](https://www.github.com/web-std/io/issues/56)) ([30ad037](https://www.github.com/web-std/io/commit/30ad0377a88ebffc3a998616e3b774ce5bcc584a))
+
 ### [1.0.1](https://www.github.com/web-std/io/compare/stream-v1.0.0...stream-v1.0.1) (2022-01-19)
 
 
