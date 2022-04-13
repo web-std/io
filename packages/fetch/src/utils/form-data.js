@@ -1,5 +1,6 @@
 import {randomBytes} from 'crypto';
 import { iterateMultipart } from '@web3-storage/multipart-parser';
+import { FormData } from '@web-std/form-data';
 import {isBlob} from './is.js';
 
 const carriage = '\r\n';
@@ -86,8 +87,17 @@ export function getFormDataLength(form, boundary) {
 /**
  * @param {Body & {headers?:Headers}} source
  */
-export const toFormData = async ({ body, headers }) => {
+export const toFormData = async (source) => {
+  let { body, headers } = source;
   const contentType = headers?.get('Content-Type') || ''
+
+  if (contentType.startsWith('application/x-www-form-urlencoded') && body != null) {
+	const form = new FormData();
+	let bodyText = await source.text();
+	new URLSearchParams(bodyText).forEach((v, k) => form.append(k, v));
+	return form;
+  }
+
   const [type, boundary] = contentType.split(/\s*;\s*boundary=/)
   if (type === 'multipart/form-data' && boundary != null && body != null) {
     const form = new FormData()

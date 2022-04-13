@@ -1500,6 +1500,25 @@ describe('node-fetch', () => {
 		});
 	});
 
+	it('should support URLSearchParams as POST body', () => {
+		const params = new URLSearchParams();
+		params.set('key1', 'value1');
+		params.set('key2', 'value2');
+
+		const url = `${base}multipart`;
+		const options = {
+			method: 'POST',
+			body: params
+		};
+
+		return fetch(url, options).then(res => res.json()).then(res => {
+			expect(res.method).to.equal('POST');
+			expect(res.headers['content-type']).to.startWith('application/x-www-form-urlencoded');
+			expect(res.body).to.contain('key1=');
+			expect(res.body).to.contain('key2=');
+		});
+	});
+
 	it('should allow POST request with object body', () => {
 		const url = `${base}inspect`;
 		// Note that fetch simply calls tostring on an object
@@ -1545,6 +1564,21 @@ describe('node-fetch', () => {
 		parameters.append('a', '1');
 		return request.text().then(text => {
 			expect(text).to.equal('');
+		});
+	});
+
+	it('constructing a Request with URLSearchParams should provide formData()', () => {
+		const parameters = new URLSearchParams();
+		parameters.append('key', 'value');
+		const request = new Request(base, {
+			method: 'POST', 
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: parameters,
+		});
+		return request.formData().then(formData => {
+			expect(formData.get('key')).to.equal('value');
 		});
 	});
 
