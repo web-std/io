@@ -1,4 +1,4 @@
 export const { FormData, Blob } = globalThis
-export * from "@web-std/stream"
+export { ReadableStream } from "@web-std/stream"
 
 
