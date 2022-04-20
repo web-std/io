@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://www.github.com/web-std/io/compare/fetch-v4.0.1...fetch-v4.1.0) (2022-04-20)
+
+
+### Features
+
+* add support for application/x-www-form-urlencoded in request.formData() ([#60](https://www.github.com/web-std/io/issues/60)) ([c719b0d](https://www.github.com/web-std/io/commit/c719b0de442811eb588309b777ab6ab3d966cdf1))
+
 ### [4.0.1](https://www.github.com/web-std/io/compare/fetch-v4.0.0...fetch-v4.0.1) (2022-04-13)
 
 
