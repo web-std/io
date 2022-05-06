@@ -1,4 +1,4 @@
-# @web-std/stream
+# @remix-run/web-stream
 
 [![ci][ci.icon]][ci.url]
 [![package][version.icon] ![downloads][downloads.icon]][package.url]
@@ -15,7 +15,7 @@ import {
   ReadableStream,
   WritableStream,
   TransformStream,
-} from "@web-std/stream"
+} from "@remix-run/web-stream"
 ```
 
 ### Usage from Typescript
@@ -26,15 +26,15 @@ be able to get all the type inference out of the box.
 
 ## Install
 
-    npm install @web-std/stream
+    npm install @remix-run/web-stream
 
 [ci.icon]: https://github.com/web-std/io/workflows/stream/badge.svg
 [ci.url]: https://github.com/web-std/io/actions/workflows/stream.yml
-[version.icon]: https://img.shields.io/npm/v/@web-std/stream.svg
-[downloads.icon]: https://img.shields.io/npm/dm/@web-std/stream.svg
-[package.url]: https://npmjs.org/package/@web-std/stream
-[downloads.image]: https://img.shields.io/npm/dm/@web-std/stream.svg
-[downloads.url]: https://npmjs.org/package/@web-std/stream
+[version.icon]: https://img.shields.io/npm/v/@remix-run/web-stream.svg
+[downloads.icon]: https://img.shields.io/npm/dm/@remix-run/web-stream.svg
+[package.url]: https://npmjs.org/package/@remix-run/web-stream
+[downloads.image]: https://img.shields.io/npm/dm/@remix-run/web-stream.svg
+[downloads.url]: https://npmjs.org/package/@remix-run/web-stream
 [prettier.icon]: https://img.shields.io/badge/styled_with-prettier-ff69b4.svg
 [prettier.url]: https://github.com/prettier/prettier
 [ts-jsdoc]: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html

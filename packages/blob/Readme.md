@@ -1,4 +1,4 @@
-# @web-std/blob
+# @remix-run/web-blob
 
 [![ci][ci.icon]][ci.url]
 [![package][version.icon] ![downloads][downloads.icon]][package.url]
@@ -14,7 +14,7 @@ The reason this library exists is because [fetch-blob][] chooses to compromise
 Web API compatibility of [`blob.stream()`][w3c blob.stream] by using nodejs
 native [Readable][] stream. We found this to be problematic when sharing code
 across nodejs and browser runtimes. Instead this library stays true to the
-specification by using [ReadableStream][] implementation from [@web-std/stream][]
+specification by using [ReadableStream][] implementation from [@remix-run/web-stream][]
 library even if that is less convenient in nodejs context.
 
 > Note: Both node [Readable][] streams and web [ReadableStream][] implement
@@ -35,7 +35,7 @@ to do with [node-fetch][].
 ### Usage
 
 ```js
-import { Blob } from "@web-std/blob"
+import { Blob } from "@remix-run/web-blob"
 const blob = new Blob(["hello", new TextEncoder().encode("world")])
 for await (const chunk of blob.stream()) {
   console.log(chunk)
@@ -50,15 +50,15 @@ be able to get all the type inference out of the box.
 
 ## Install
 
-    npm install @web-std/blob
+    npm install @remix-run/web-blob
 
 [ci.icon]: https://github.com/web-std/io/workflows/blob/badge.svg
 [ci.url]: https://github.com/web-std/io/actions/workflows/blob.yml
-[version.icon]: https://img.shields.io/npm/v/@web-std/blob.svg
-[downloads.icon]: https://img.shields.io/npm/dm/@web-std/blob.svg
-[package.url]: https://npmjs.org/package/@web-std/blob
-[downloads.image]: https://img.shields.io/npm/dm/@web-std/blob.svg
-[downloads.url]: https://npmjs.org/package/@web-std/blob
+[version.icon]: https://img.shields.io/npm/v/@remix-run/web-blob.svg
+[downloads.icon]: https://img.shields.io/npm/dm/@remix-run/web-blob.svg
+[package.url]: https://npmjs.org/package/@remix-run/web-blob
+[downloads.image]: https://img.shields.io/npm/dm/@remix-run/web-blob.svg
+[downloads.url]: https://npmjs.org/package/@remix-run/web-blob
 [prettier.icon]: https://img.shields.io/badge/styled_with-prettier-ff69b4.svg
 [prettier.url]: https://github.com/prettier/prettier
 [blob]: https://developer.mozilla.org/en-US/docs/Web/API/Blob/Blob
@@ -66,7 +66,7 @@ be able to get all the type inference out of the box.
 [readablestream]: https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
 [readable]: https://nodejs.org/api/stream.html#stream_readable_streams
 [w3c blob.stream]: https://w3c.github.io/FileAPI/#dom-blob-stream
-[@web-std/stream]: https://github.com/web-std/io/tree/main/stream
+[@remix-run/web-stream]: https://github.com/web-std/io/tree/main/stream
 [for await]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of
 [buffer]: https://nodejs.org/api/buffer.html
 [weakmap]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap

@@ -8,7 +8,8 @@ import {Blob} from '@web-std/fetch';
 import { ReadableStream } from '@web-std/fetch';
 
 import TestServer from './utils/server.js';
-import {Request} from '@web-std/fetch';
+import {Request,FormData as WebFormData} from '@web-std/fetch';
+import {File} from '@remix-run/web-file';
 
 const {expect} = chai;
 
@@ -19,6 +20,7 @@ describe('Request', () => {
 	before(async () => {
 		await local.start();
 		base = `http://${local.hostname}:${local.port}/`;
+		global.File = File;
 	});
 
 	after(async () => {
@@ -267,6 +269,26 @@ describe('Request', () => {
 		});
 		return request.text().then(result => {
 			expect(result).to.equal('a=1');
+		});
+	});
+
+	it.only('should read formData after clone with FormData body',async () => {
+		const ogFormData = new WebFormData();
+		ogFormData.append('a', 1);
+		ogFormData.append('b', 2);
+		ogFormData.append('file', new File(['content'], 'file.txt'));
+
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+
+		return clonedRequest.formData().then(clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			expect(clonedFormData.get('b')).to.equal("2");
+			const file = clonedFormData.get('file')
+			expect(typeof file).to.equal("object");
 		});
 	});
 });

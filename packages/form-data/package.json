@@ -34,9 +34,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "15.0.2",
-    "@web-std/blob": "^3.0.0",
-    "@web-std/fetch": "^3.0.0",
-    "@web-std/file": "^3.0.0",
+    "@remix-run/web-blob": "^3.0.4",
+    "@remix-run/web-fetch": "^4.1.1",
+    "@remix-run/web-file": "^3.0.2",
     "git-validate": "2.2.4",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",

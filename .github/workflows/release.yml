@@ -54,7 +54,7 @@ jobs:
           path: packages/${{ matrix.package }}
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: "@web-std/${{ matrix.package }}"
+          package-name: "@remix-run/web-${{ matrix.package }}"
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"refactor","section":"Changes","hidden":false},{"type":"chore","section":"Changes","hidden":false}]'
           command: release-pr
@@ -73,7 +73,7 @@ jobs:
           path: packages/${{ matrix.package }}
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: "@web-std/${{ matrix.package }}"
+          package-name: "@remix-run/web-${{ matrix.package }}"
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"refactor","section":"Changes","hidden":false},{"type":"chore","section":"Changes","hidden":false}]'
           command: github-release

@@ -175,7 +175,6 @@ export default class Body {
 	/**
 	 * @returns {Promise<FormData>}
 	 */
-
 	async formData() {
 		return toFormData(this)
 	}
@@ -425,7 +424,6 @@ const fromBytes = bytes => new ReadableStream({
  * @returns {ReadableStream<Uint8Array>}
  */
 export const fromAsyncIterable = content =>
-	// @ts-ignore
 	new ReadableStream(new AsyncIterablePump(content));
 
 /**
@@ -451,7 +449,11 @@ class AsyncIterablePump {
 					controller.close();
 					break;
 				} else {
-					controller.enqueue(next.value);
+					if (typeof next.value === 'string') {
+						controller.enqueue(new TextEncoder().encode(next.value));
+					} else {
+						controller.enqueue(next.value);
+					}
 				}
 			}
 		} catch (error) {

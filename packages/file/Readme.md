@@ -9,7 +9,7 @@ Web API compatible [File][] for nodejs.
 ### Usage
 
 ```js
-import { File, Blob } from "@web-std/file"
+import { File, Blob } from "@remix-run/web-file"
 const file = new File(["hello", new TextEncoder().encode("world")], "hello")
 for await (const chunk of blob.stream()) {
   console.log(chunk)
@@ -24,15 +24,15 @@ be able to get all the type innference out of the box.
 
 ## Install
 
-    npm install @web-std/file
+    npm install @remix-run/web-file
 
 [ci.icon]: https://github.com/web-std/io/workflows/file/badge.svg
 [ci.url]: https://github.com/web-std/io/actions/workflows/file.yml
-[version.icon]: https://img.shields.io/npm/v/@web-std/file.svg
-[downloads.icon]: https://img.shields.io/npm/dm/@web-std/file.svg
-[package.url]: https://npmjs.org/package/@web-std/file
-[downloads.image]: https://img.shields.io/npm/dm/@web-std/file.svg
-[downloads.url]: https://npmjs.org/package/@web-std/file
+[version.icon]: https://img.shields.io/npm/v/@remix-run/web-file.svg
+[downloads.icon]: https://img.shields.io/npm/dm/@remix-run/web-file.svg
+[package.url]: https://npmjs.org/package/@remix-run/web-file
+[downloads.image]: https://img.shields.io/npm/dm/@remix-run/web-file.svg
+[downloads.url]: https://npmjs.org/package/@remix-run/web-file
 [prettier.icon]: https://img.shields.io/badge/styled_with-prettier-ff69b4.svg
 [prettier.url]: https://github.com/prettier/prettier
 [blob]: https://developer.mozilla.org/en-US/docs/Web/API/Blob/Blob
