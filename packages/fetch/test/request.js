@@ -272,7 +272,7 @@ describe('Request', () => {
 		});
 	});
 
-	it.only('should read formData after clone with FormData body',async () => {
+	it('should read formData after clone with FormData body',async () => {
 		const ogFormData = new WebFormData();
 		ogFormData.append('a', 1);
 		ogFormData.append('b', 2);
