@@ -449,11 +449,7 @@ class AsyncIterablePump {
 					controller.close();
 					break;
 				} else {
-					if (typeof next.value === 'string') {
-						controller.enqueue(new TextEncoder().encode(next.value));
-					} else {
-						controller.enqueue(next.value);
-					}
+					controller.enqueue(next.value);
 				}
 			}
 		} catch (error) {
