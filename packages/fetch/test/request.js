@@ -111,6 +111,25 @@ describe('Request', () => {
 		expect(derivedRequest.signal).to.equal(null);
 	});
 
+	it('should abort signal', () => {
+		const controller = new AbortController();
+		const request = new Request(base, {
+			signal: controller.signal,
+		});
+		controller.abort();
+		expect(request.signal.aborted).to.equal(true);
+	});
+
+	it('should abort signal after clone', () => {
+		const controller = new AbortController();
+		const request = new Request(base, {
+			signal: controller.signal,
+		});
+		controller.abort();
+		const clonedRequest = request.clone();
+		expect(clonedRequest.signal.aborted).to.equal(true);
+	});
+
 	it('should throw error with GET/HEAD requests with body', () => {
 		expect(() => new Request(base, {body: ''}))
 			.to.throw(TypeError);
