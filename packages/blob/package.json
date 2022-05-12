@@ -25,15 +25,15 @@
     }
   },
   "dependencies": {
-    "web-encoding": "1.1.5",
-    "@web-std/stream": "1.0.0"
+    "@web-std/stream": "1.0.0",
+    "web-encoding": "1.1.5"
   },
   "author": "Irakli Gozalishvili <dev@gozala.io> (https://gozala.io)",
   "repository": "https://github.com/web-std/io",
   "license": "MIT",
   "devDependencies": {
+    "@remix-run/web-fetch": "^4.1.1",
     "@types/node": "15.0.2",
-    "@web-std/fetch": "^3.0.0",
     "git-validate": "2.2.4",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",

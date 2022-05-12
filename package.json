@@ -1,4 +1,5 @@
 {
+  "name": "@remix-run/web-std-io",
   "private": true,
   "workspaces": [
     "packages/blob",
@@ -8,6 +9,10 @@
     "packages/stream"
   ],
   "scripts": {
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "version-bump": "changeset version",
+    "postinstall": "manypkg fix",
     "prepare": "yarn prepare:blob && yarn prepare:file && yarn prepare:form-data && yarn prepare:fetch",
     "prepare:blob": "yarn --cwd packages/blob prepare",
     "prepare:file": "yarn --cwd packages/file prepare",
@@ -19,5 +24,11 @@
     "test:form-data": "yarn --cwd packages/form-data test",
     "test:fetch": "yarn --cwd packages/fetch test",
     "test:stream": "yarn --cwd packages/stream test"
+  },
+  "dependencies": {
+    "@changesets/changelog-github": "0.4.4",
+    "@changesets/cli": "^2.22.0",
+    "@manypkg/cli": "0.19.1",
+    "@manypkg/get-packages": "^1.1.3"
   }
 }
