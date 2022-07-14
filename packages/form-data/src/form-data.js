@@ -13,9 +13,9 @@ export class FormData {
           )
         : new TypeError(
             "FormData constructor: Argument 1 does not implement interface HTMLFormElement."
-          )
+          );
 
-      throw error
+      throw error;
     }
 
     /**
@@ -23,12 +23,12 @@ export class FormData {
      * @readonly
      * @type {Array<[string, FormDataEntryValue]>}
      */
-    this._entries = []
+    this._entries = [];
 
-    Object.defineProperty(this, "_entries", { enumerable: false })
+    Object.defineProperty(this, "_entries", { enumerable: false });
   }
   get [Symbol.toStringTag]() {
-    return "FormData"
+    return "FormData";
   }
 
   /**
@@ -54,7 +54,7 @@ export class FormData {
     ),
     filename
   ) {
-    this._entries.push([name, toEntryValue(value, filename)])
+    this._entries.push([name, toEntryValue(value, filename)]);
   }
 
   /**
@@ -65,16 +65,16 @@ export class FormData {
   delete(
     name = panic(new TypeError("FormData.delete: requires string argument"))
   ) {
-    const entries = this._entries
-    let index = 0
+    const entries = this._entries;
+    let index = 0;
     while (index < entries.length) {
       const [entryName] = /** @type {[string, FormDataEntryValue]}*/ (
         entries[index]
-      )
+      );
       if (entryName === name) {
-        entries.splice(index, 1)
+        entries.splice(index, 1);
       } else {
-        index++
+        index++;
       }
     }
   }
@@ -90,10 +90,10 @@ export class FormData {
   get(name = panic(new TypeError("FormData.get: requires string argument"))) {
     for (const [entryName, value] of this._entries) {
       if (entryName === name) {
-        return value
+        return value;
       }
     }
-    return null
+    return null;
   }
 
   /**
@@ -106,13 +106,13 @@ export class FormData {
   getAll(
     name = panic(new TypeError("FormData.getAll: requires string argument"))
   ) {
-    const values = []
+    const values = [];
     for (const [entryName, value] of this._entries) {
       if (entryName === name) {
-        values.push(value)
+        values.push(value);
       }
     }
-    return values
+    return values;
   }
 
   /**
@@ -124,10 +124,10 @@ export class FormData {
   has(name = panic(new TypeError("FormData.has: requires string argument"))) {
     for (const [entryName] of this._entries) {
       if (entryName === name) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   /**
@@ -144,27 +144,27 @@ export class FormData {
     value = panic(new TypeError("FormData.set: requires at least 2 arguments")),
     filename
   ) {
-    let index = 0
-    const { _entries: entries } = this
-    const entryValue = toEntryValue(value, filename)
-    let wasSet = false
+    let index = 0;
+    const { _entries: entries } = this;
+    const entryValue = toEntryValue(value, filename);
+    let wasSet = false;
     while (index < entries.length) {
-      const entry = /** @type {[string, FormDataEntryValue]}*/ (entries[index])
+      const entry = /** @type {[string, FormDataEntryValue]}*/ (entries[index]);
       if (entry[0] === name) {
         if (wasSet) {
-          entries.splice(index, 1)
+          entries.splice(index, 1);
         } else {
-          wasSet = true
-          entry[1] = entryValue
-          index++
+          wasSet = true;
+          entry[1] = entryValue;
+          index++;
         }
       } else {
-        index++
+        index++;
       }
     }
 
     if (!wasSet) {
-      entries.push([name, entryValue])
+      entries.push([name, entryValue]);
     }
   }
 
@@ -173,7 +173,7 @@ export class FormData {
    * contained in this object.
    */
   entries() {
-    return this._entries.values()
+    return this._entries.values();
   }
 
   /**
@@ -184,7 +184,7 @@ export class FormData {
    */
   *keys() {
     for (const [name] of this._entries) {
-      yield name
+      yield name;
     }
   }
 
@@ -196,12 +196,12 @@ export class FormData {
    */
   *values() {
     for (const [_, value] of this._entries) {
-      yield value
+      yield value;
     }
   }
 
   [Symbol.iterator]() {
-    return this._entries.values()
+    return this._entries.values();
   }
 
   /**
@@ -211,7 +211,7 @@ export class FormData {
    */
   forEach(fn, thisArg) {
     for (const [key, value] of this._entries) {
-      fn.call(thisArg, value, key, this)
+      fn.call(thisArg, value, key, this);
     }
   }
 }
@@ -220,8 +220,8 @@ export class FormData {
  * @param {any} value
  * @returns {value is HTMLFormElement}
  */
-const isHTMLFormElement = value =>
-  Object.prototype.toString.call(value) === "[object HTMLFormElement]"
+const isHTMLFormElement = (value) =>
+  Object.prototype.toString.call(value) === "[object HTMLFormElement]";
 
 /**
  * @param {string|Blob|File} value
@@ -230,33 +230,33 @@ const isHTMLFormElement = value =>
  */
 const toEntryValue = (value, filename) => {
   if (isFile(value)) {
-    return filename != null ? new BlobFile([value], filename, value) : value
+    return filename != null ? new BlobFile([value], filename, value) : value;
   } else if (isBlob(value)) {
-    return new BlobFile([value], filename != null ? filename : "blob")
+    return new BlobFile([value], filename != null ? filename : "blob");
   } else {
-    if (filename != null) {
+    if (filename != null && filename != "") {
       throw new TypeError(
         "filename is only supported when value is Blob or File"
-      )
+      );
     }
-    return `${value}`
+    return `${value}`;
   }
-}
+};
 
 /**
  * @param {any} value
  * @returns {value is File}
  */
-const isFile = value =>
+const isFile = (value) =>
   Object.prototype.toString.call(value) === "[object File]" &&
-  typeof value.name === "string"
+  typeof value.name === "string";
 
 /**
  * @param {any} value
  * @returns {value is Blob}
  */
-const isBlob = value =>
-  Object.prototype.toString.call(value) === "[object Blob]"
+const isBlob = (value) =>
+  Object.prototype.toString.call(value) === "[object Blob]";
 
 /**
  * Simple `File` implementation that just wraps a given blob.
@@ -269,18 +269,18 @@ const BlobFile = class File {
    * @param {FilePropertyBag} [options]
    */
   constructor([blob], name, { lastModified = Date.now() } = {}) {
-    this.blob = blob
-    this.name = name
-    this.lastModified = lastModified
+    this.blob = blob;
+    this.name = name;
+    this.lastModified = lastModified;
   }
   get webkitRelativePath() {
-    return ""
+    return "";
   }
   get size() {
-    return this.blob.size
+    return this.blob.size;
   }
   get type() {
-    return this.blob.type
+    return this.blob.type;
   }
   /**
    *
@@ -289,26 +289,26 @@ const BlobFile = class File {
    * @param {string} [contentType]
    */
   slice(start, end, contentType) {
-    return this.blob.slice(start, end, contentType)
+    return this.blob.slice(start, end, contentType);
   }
   stream() {
-    return this.blob.stream()
+    return this.blob.stream();
   }
   text() {
-    return this.blob.text()
+    return this.blob.text();
   }
   arrayBuffer() {
-    return this.blob.arrayBuffer()
+    return this.blob.arrayBuffer();
   }
   get [Symbol.toStringTag]() {
-    return "File"
+    return "File";
   }
-}
+};
 
 /**
  * @param {*} error
  * @returns {never}
  */
-const panic = error => {
-  throw error
-}
+const panic = (error) => {
+  throw error;
+};
