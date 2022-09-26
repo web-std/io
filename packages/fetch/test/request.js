@@ -237,6 +237,37 @@ describe('Request', () => {
 		});
 	});
 
+	it('should support clone() method with null body', () => {
+		const url = base;
+
+		const agent = new http.Agent();
+		const {signal} = new AbortController();
+		const request = new Request(url, {
+			method: 'POST',
+			redirect: 'manual',
+			headers: {
+				b: '2'
+			},
+			follow: 3,
+			compress: false,
+			agent,
+			signal
+		});
+		const cl = request.clone();
+		expect(cl.url).to.equal(url);
+		expect(cl.method).to.equal('POST');
+		expect(cl.redirect).to.equal('manual');
+		expect(cl.headers.get('b')).to.equal('2');
+		expect(cl.follow).to.equal(3);
+		expect(cl.compress).to.equal(false);
+		expect(cl.method).to.equal('POST');
+		expect(cl.counter).to.equal(0);
+		expect(cl.agent).to.equal(agent);
+		expect(cl.signal).to.equal(signal);
+		// Clone body should be null
+		expect(cl.body).to.equal(null);
+	});
+
 	it('should support ArrayBuffer as body', () => {
 		const encoder = new TextEncoder();
 		const request = new Request(base, {
