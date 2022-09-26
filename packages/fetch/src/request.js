@@ -49,7 +49,7 @@ const isRequest = object => {
  * @property {number} [highWaterMark]
  * @property {boolean} [insecureHTTPParser]
  * 
- * @typedef {((url:URL) => import('http').Agent) | import('http').Agent} Agent
+ * @typedef {((url:URL) => import('http').Agent | import('https').Agent) | import('http').Agent | import('https').Agent} Agent
  * 
  * @typedef {Object} RequestOptions
  * @property {string} [method]

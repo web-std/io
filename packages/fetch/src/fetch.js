@@ -33,7 +33,7 @@ const supportedSchemas = new Set(['data:', 'http:', 'https:', 'file:']);
  * Fetch function
  *
  * @param   {string | URL | import('./request').default} url - Absolute url or Request instance
- * @param   {RequestInit} [options_] - Fetch options
+ * @param   {RequestInit & import('./request.js').RequestExtraOptions} [options_] - Fetch options
  * @return  {Promise<import('./response').default>}
  */
 async function fetch(url, options_ = {}) {
@@ -319,9 +319,9 @@ async function fetch(url, options_ = {}) {
 }
 
 /**
- * 
- * @param {import('http').ClientRequest} request 
- * @param {(error:Error) => void} errorCallback 
+ *
+ * @param {import('http').ClientRequest} request
+ * @param {(error:Error) => void} errorCallback
  */
 function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 	/** @type {import('net').Socket} */
