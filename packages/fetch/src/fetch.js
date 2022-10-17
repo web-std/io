@@ -191,7 +191,7 @@ async function fetch(url, options_ = {}) {
 							// Note: We can not use `request.body` because send would have
 							// consumed it already.
 							body: options_.body,
-							signal: request.signal,
+							signal: signal,
 							size: request.size
 						};
 

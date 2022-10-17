@@ -99,7 +99,7 @@ describe('Request', () => {
 		expect(derivedRequest.signal).to.equal(derivedAbortController.signal);
 	});
 
-	it('should allow removing signal on derived Request instances', () => {
+	it('should allow overriding signal on derived Request instances', () => {
 		const parentAbortController = new AbortController();
 		const parentRequest = new Request(`${base}hello`, {
 			signal: parentAbortController.signal
@@ -108,7 +108,8 @@ describe('Request', () => {
 			signal: null
 		});
 		expect(parentRequest.signal).to.equal(parentAbortController.signal);
-		expect(derivedRequest.signal).to.equal(null);
+		expect(derivedRequest.signal).to.not.equal(null);
+		expect(derivedRequest.signal).to.not.equal(parentAbortController.signal);
 	});
 
 	it('should throw error with GET/HEAD requests with body', () => {

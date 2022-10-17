@@ -8,6 +8,7 @@
  */
 
 import {format as formatUrl} from 'url';
+import {AbortController as AbortControllerPolyfill} from 'abort-controller';
 import Headers from './headers.js';
 import Body, {clone, extractContentType, getTotalBytes} from './body.js';
 import {isAbortSignal} from './utils/is.js';
@@ -118,6 +119,15 @@ export default class Request extends Body {
 		// eslint-disable-next-line no-eq-null, eqeqeq
 		if (signal != null && !isAbortSignal(signal)) {
 			throw new TypeError('Expected signal to be an instanceof AbortSignal or EventTarget');
+		}
+		
+		if (!signal) {
+			let AbortControllerConstructor = typeof AbortController != "undefined"
+			? AbortController
+			: AbortControllerPolyfill;
+			/** @type {any} */
+			let newSignal = new AbortControllerConstructor().signal;
+			signal = newSignal;
 		}
 
 		/** @type {RequestState} */
