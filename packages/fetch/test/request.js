@@ -111,6 +111,16 @@ describe('Request', () => {
 		expect(derivedRequest.signal).to.equal(null);
 	});
 
+	it('should default to "same-origin" as credentials', () => {
+		const request = new Request(base)
+		expect(request.credentials).to.equal('same-origin');
+	})
+
+	it('should respect custom credentials value', () => {
+		expect(new Request(base, { credentials: 'omit'})).to.have.property('credentials', 'omit');
+		expect(new Request(base, { credentials: 'include'})).to.have.property('credentials', 'include');
+	})
+
 	it('should throw error with GET/HEAD requests with body', () => {
 		expect(() => new Request(base, {body: ''}))
 			.to.throw(TypeError);
