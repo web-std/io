@@ -250,26 +250,35 @@ export const test = test => {
   })
 
   test("Should allow passing a form element",  () => {
-    const form = document.createElement("form");
-    const insideInput = document.createElement("input");
-    const outsideInput = document.createElement("input");
+    // /** @type {globalThis.HTMLFormElement} */
+    /** @type {any} */
+    const form = {
+      id: "my-form",
+      elements: [
+        {
+          tagName: "INPUT",
+          name: "inside",
+          value: "",
+        },
+        {
+          tagName: "INPUT",
+          name: "outside",
+          value: "",
+          form: "my-form",
+        },
+        {
+          tagName: "INPUT",
+          name: "remember-me",
+          value: "on",
+          checked: true,
+        }
+      ]
+    };
 
-    outsideInput.type = "text";
-    outsideInput.name = "form";
-    outsideInput.value = "outside";
-    outsideInput.setAttribute("form", "my-form");
-
-    insideInput.type = "text";
-    insideInput.name = "form";
-    insideInput.value = "inside";
-
-    form.appendChild(insideInput);
-    form.id = "my-form";
-
-    document.body.appendChild(form);
-    document.body.appendChild(outsideInput);
-
+    // @ts-ignore
     const formData = new FormData(form);
-    assert.equal(formData.getAll("form"), ["inside", "outside"]);
+    assert.equal(formData.has("inside"), true)
+    assert.equal(formData.has("outside"), true)
+    assert.equal(formData.get("remember-me"), "on")
   })
 }
