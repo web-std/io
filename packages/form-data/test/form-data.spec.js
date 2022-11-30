@@ -233,8 +233,10 @@ export const test = test => {
     const insideInput = document.createElement("input");
     const outsideInput = document.createElement("input");
 
-    // `form` on an input is "read-only"
-    outsideInput.innerHTML = `<input type="text" name="form" value="outside" form="my-form">`;
+    outsideInput.type = "text";
+    outsideInput.name = "form";
+    outsideInput.value = "outside";
+    outsideInput.setAttribute("form", "my-form");
 
     insideInput.type = "text";
     insideInput.name = "form";
