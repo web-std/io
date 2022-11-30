@@ -1,6 +1,7 @@
 import { FormData } from "@web-std/form-data"
 import * as lib from "@web-std/form-data"
 import { File, Blob } from "@web-std/file"
+import { JSDOM } from 'jsdom';
 import { assert } from "./test.js"
 
 /**
@@ -228,30 +229,6 @@ export const test = test => {
     assert.equal("blob", file.name)
   })
 
-  test("Allows passing a form element", () => {
-    const form = document.createElement("form");
-    const insideInput = document.createElement("input");
-    const outsideInput = document.createElement("input");
-
-    outsideInput.type = "text";
-    outsideInput.name = "form";
-    outsideInput.value = "outside";
-    outsideInput.setAttribute("form", "my-form");
-
-    insideInput.type = "text";
-    insideInput.name = "form";
-    insideInput.value = "inside";
-
-    form.appendChild(insideInput);
-    form.id = "my-form";
-
-    document.body.appendChild(form);
-    document.body.appendChild(outsideInput);
-
-    const formData = new FormData(form);
-    assert.equal(formData.getAll("form"), ["inside", "outside"]);
-  })
-
   test.skip("complicated form", () => {
     const data = new FormData()
     data.append("blobs", new Blob(["basic"]))
@@ -271,5 +248,40 @@ export const test = test => {
       new File(["renamed"], "orig.txt", { type: "text/plain" }),
       "rename.md"
     )
+  })
+
+  test("Should allow passing a form element", () => {
+    test.before(() => {
+      const { window } = new JSDOM('<main></main>');
+      // @ts-ignore
+      global.window = window;
+      global.document = window.document;
+      global.navigator = window.navigator;
+      global.getComputedStyle = window.getComputedStyle;
+    })
+
+    test("pass a form element", () => {
+      const form = document.createElement("form");
+      const insideInput = document.createElement("input");
+      const outsideInput = document.createElement("input");
+
+      outsideInput.type = "text";
+      outsideInput.name = "form";
+      outsideInput.value = "outside";
+      outsideInput.setAttribute("form", "my-form");
+
+      insideInput.type = "text";
+      insideInput.name = "form";
+      insideInput.value = "inside";
+
+      form.appendChild(insideInput);
+      form.id = "my-form";
+
+      document.body.appendChild(form);
+      document.body.appendChild(outsideInput);
+
+      const formData = new FormData(form);
+      assert.equal(formData.getAll("form"), ["inside", "outside"]);
+    })
   })
 }
