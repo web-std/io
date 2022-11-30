@@ -322,7 +322,7 @@ const panic = error => {
 /**
  *
  * @param {Element} element
- * @returns {boolean}
+ * @returns {element is HTMLSelectElement}
  */
 function isSelectElement(element) {
   return element.tagName === 'SELECT';
@@ -331,7 +331,7 @@ function isSelectElement(element) {
 /**
  *
  * @param {Element} element
- * @returns {boolean}
+ * @returns {element is HTMLInputElement}
  */
 function isInputElement(element) {
   return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA';
