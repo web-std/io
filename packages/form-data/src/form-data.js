@@ -15,7 +15,7 @@ export class FormData {
 
     Object.defineProperty(this, "_entries", { enumerable: false });
 
-    if (form !== undefined) {
+    if (isHTMLFormElement(form)) {
       for (const element of form.elements) {
         if (isSelectElement(element)) {
           for (const option of element.options) {
