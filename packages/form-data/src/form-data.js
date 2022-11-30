@@ -7,15 +7,21 @@ export class FormData {
    */
   constructor(form) {
     if (form !== undefined) {
-      const error = isHTMLFormElement(form)
-        ? new TypeError(
-            "FormData constructor: HTMLFormElement parameter is not supported, if you need it submit an issue"
-          )
-        : new TypeError(
-            "FormData constructor: Argument 1 does not implement interface HTMLFormElement."
-          )
-
-      throw error
+      for (const element of form.elements) {
+        if (isSelectElement(element)) {
+          for (const option of element.options) {
+            if (option.selected) {
+              this.append(element.name, option.value);
+            }
+          }
+        } else if (
+          isInputElement(element) &&
+          (element.checked || !['radio', 'checkbox'].includes(element.type)) &&
+          element.name
+        ) {
+          this.append(element.name, element.value);
+        }
+      }
     }
 
     /**
@@ -311,4 +317,22 @@ const BlobFile = class File {
  */
 const panic = error => {
   throw error
+}
+
+/**
+ *
+ * @param {Element} element
+ * @returns {boolean}
+ */
+function isSelectElement(element) {
+  return element.tagName === 'SELECT';
+}
+
+/**
+ *
+ * @param {Element} element
+ * @returns {boolean}
+ */
+function isInputElement(element) {
+  return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA';
 }
