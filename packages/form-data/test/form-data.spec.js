@@ -228,6 +228,28 @@ export const test = test => {
     assert.equal("blob", file.name)
   })
 
+  test("Allows passing a form element", () => {
+    const form = document.createElement("form");
+    const insideInput = document.createElement("input");
+    const outsideInput = document.createElement("input");
+
+    // `form` on an input is "read-only"
+    outsideInput.innerHTML = `<input type="text" name="form" value="outside" form="my-form">`;
+
+    insideInput.type = "text";
+    insideInput.name = "form";
+    insideInput.value = "inside";
+
+    form.appendChild(insideInput);
+    form.id = "my-form";
+
+    document.body.appendChild(form);
+    document.body.appendChild(outsideInput);
+
+    const formData = new FormData(form);
+    assert.equal(formData.getAll("form"), ["inside", "outside"]);
+  })
+
   test.skip("complicated form", () => {
     const data = new FormData()
     data.append("blobs", new Blob(["basic"]))
