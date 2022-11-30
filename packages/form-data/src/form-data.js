@@ -6,6 +6,15 @@ export class FormData {
    * @param {HTMLFormElement} [form]
    */
   constructor(form) {
+    /**
+     * @private
+     * @readonly
+     * @type {Array<[string, FormDataEntryValue]>}
+     */
+    this._entries = [];
+
+    Object.defineProperty(this, "_entries", { enumerable: false });
+
     if (form !== undefined) {
       for (const element of form.elements) {
         if (isSelectElement(element)) {
@@ -23,15 +32,6 @@ export class FormData {
         }
       }
     }
-
-    /**
-     * @private
-     * @readonly
-     * @type {Array<[string, FormDataEntryValue]>}
-     */
-    this._entries = []
-
-    Object.defineProperty(this, "_entries", { enumerable: false })
   }
   get [Symbol.toStringTag]() {
     return "FormData"
@@ -60,6 +60,9 @@ export class FormData {
     ),
     filename
   ) {
+    if (!this._entries) {
+      throw new Error("FormData.append: missing entries...");
+    }
     this._entries.push([name, toEntryValue(value, filename)])
   }
 
