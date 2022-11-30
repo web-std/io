@@ -250,32 +250,41 @@ export const test = test => {
   })
 
   test("Should allow passing a form element",  () => {
-    // /** @type {globalThis.HTMLFormElement} */
-    /** @type {any} */
-    const form = {
-      id: "my-form",
-      elements: [
-        {
-          tagName: "INPUT",
-          name: "inside",
-          value: "",
-        },
-        {
-          tagName: "INPUT",
-          name: "outside",
-          value: "",
-          form: "my-form",
-        },
-        {
-          tagName: "INPUT",
-          name: "remember-me",
-          value: "on",
-          checked: true,
-        }
-      ]
-    };
 
-    // @ts-ignore
+    class FakeForm {
+      get [Symbol.toStringTag]() {
+        return "HTMLFormElement";
+      }
+
+      get elements() {
+        return [
+          {
+            tagName: "INPUT",
+            name: "inside",
+            value: "",
+          },
+          {
+            tagName: "INPUT",
+            name: "outside",
+            value: "",
+            form: "my-form",
+          },
+          {
+            tagName: "INPUT",
+            name: "remember-me",
+            value: "on",
+            checked: true,
+          }
+        ]
+      }
+
+      get id() {
+        return "my-form"
+      }
+    }
+
+    let form = /** @type {globalThis.HTMLFormElement} */ (/** @type {unknown} */ (new FakeForm()))
+
     const formData = new FormData(form);
     assert.equal(formData.has("inside"), true)
     assert.equal(formData.has("outside"), true)
