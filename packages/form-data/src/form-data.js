@@ -25,7 +25,7 @@ export class FormData {
           }
         } else if (
           isInputElement(element) &&
-          (element.checked || !['radio', 'checkbox'].includes(element.type)) &&
+          (element.checked || !["radio", "checkbox"].includes(element.type)) &&
           element.name
         ) {
           this.append(element.name, element.value);
@@ -60,9 +60,6 @@ export class FormData {
     ),
     filename
   ) {
-    if (!this._entries) {
-      throw new Error("FormData.append: missing entries...");
-    }
     this._entries.push([name, toEntryValue(value, filename)])
   }
 
@@ -328,7 +325,7 @@ const panic = error => {
  * @returns {element is HTMLSelectElement}
  */
 function isSelectElement(element) {
-  return element.tagName === 'SELECT';
+  return element.tagName === "SELECT";
 }
 
 /**
@@ -337,5 +334,5 @@ function isSelectElement(element) {
  * @returns {element is HTMLInputElement}
  */
 function isInputElement(element) {
-  return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA';
+  return element.tagName === "INPUT" || element.tagName === "TEXTAREA";
 }
