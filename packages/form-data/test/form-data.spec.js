@@ -249,40 +249,69 @@ export const test = test => {
     )
   })
 
-  test("Should allow passing a form element",  () => {
-    class FakeForm {
-      get [Symbol.toStringTag]() {
-        return "HTMLFormElement";
+  test("Should allow passing a form element", () => {
+    /** @type {globalThis.HTMLFormElement} */
+    let form;
+
+    if (typeof window === 'undefined') {
+      /** @implements {globalThis.HTMLFormElement} */
+      class FakeForm {
+        get [Symbol.toStringTag]() {
+          return "HTMLFormElement";
+        }
+
+        toString() {
+          return `<form></form>`;
+        }
+
+        // @ts-ignore
+        get elements() {
+          return [
+            {
+              tagName: "INPUT",
+              name: "inside",
+              value: "",
+            },
+            {
+              tagName: "INPUT",
+              name: "outside",
+              value: "",
+              form: "my-form",
+            },
+            {
+              tagName: "INPUT",
+              name: "remember-me",
+              value: "on",
+              checked: true,
+            }
+          ]
+        }
+
+        get id() {
+          return "my-form"
+        }
       }
 
-      get elements() {
-        return [
-          {
-            tagName: "INPUT",
-            name: "inside",
-            value: "",
-          },
-          {
-            tagName: "INPUT",
-            name: "outside",
-            value: "",
-            form: "my-form",
-          },
-          {
-            tagName: "INPUT",
-            name: "remember-me",
-            value: "on",
-            checked: true,
-          }
-        ]
-      }
+      form = /** @type {globalThis.HTMLFormElement} */ (/** @type {unknown} */ (new FakeForm()))
+    } else {
+      form = document.createElement('form');
+      let inside = document.createElement('input')
+      let outside = document.createElement('input')
+      let checkbox = document.createElement('input')
 
-      get id() {
-        return "my-form"
-      }
+      form.id = 'my-form'
+      inside.name = 'inside'
+      outside.name = 'outside'
+      outside.setAttribute('form', 'my-form')
+      checkbox.name = "remember-me"
+      checkbox.type = 'checkbox'
+      checkbox.checked = true;
+
+      form.appendChild(inside);
+      form.appendChild(checkbox);
+      document.body.appendChild(form);
+      document.body.appendChild(outside);
     }
-
-    let form = /** @type {globalThis.HTMLFormElement} */ (/** @type {unknown} */ (new FakeForm()))
 
     const formData = new FormData(form);
     assert.equal(formData.has("inside"), true)
