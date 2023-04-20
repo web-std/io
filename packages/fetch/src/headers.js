@@ -14,7 +14,7 @@ const validators = /** @type {{validateHeaderName?:(name:string) => any, validat
 const validateHeaderName = typeof validators.validateHeaderName === 'function' ?
 	validators.validateHeaderName :
 	/**
-	 * @param {string} name 
+	 * @param {string} name
 	 */
 	name => {
 		if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name)) {
@@ -27,8 +27,8 @@ const validateHeaderName = typeof validators.validateHeaderName === 'function' ?
 const validateHeaderValue = typeof validators.validateHeaderValue === 'function' ?
 	validators.validateHeaderValue :
 	/**
-	 * @param {string} name 
-	 * @param {string} value 
+	 * @param {string} name
+	 * @param {string} value
 	 */
 	(name, value) => {
 		if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
@@ -122,7 +122,7 @@ export default class Headers extends URLSearchParams {
 							validateHeaderName(name);
 							validateHeaderValue(name, String(value));
 							return URLSearchParams.prototype[p].call(
-								receiver,
+								target,
 								String(name).toLowerCase(),
 								String(value)
 							);
@@ -138,7 +138,7 @@ export default class Headers extends URLSearchParams {
 							validateHeaderName(name);
 							// @ts-ignore
 							return URLSearchParams.prototype[p].call(
-								receiver,
+								target,
 								String(name).toLowerCase()
 							);
 						};
@@ -166,8 +166,8 @@ export default class Headers extends URLSearchParams {
 	}
 
 	/**
-	 * 
-	 * @param {string} name 
+	 *
+	 * @param {string} name
 	 */
 	get(name) {
 		const values = this.getAll(name);
@@ -184,8 +184,8 @@ export default class Headers extends URLSearchParams {
 	}
 
 	/**
-	 * @param {(value: string, key: string, parent: this) => void} callback 
-	 * @param {any} thisArg 
+	 * @param {(value: string, key: string, parent: this) => void} callback
+	 * @param {any} thisArg
 	 * @returns {void}
 	 */
 	forEach(callback, thisArg = undefined) {
