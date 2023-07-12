@@ -269,4 +269,52 @@ describe('Request', () => {
 			expect(result).to.equal('a=1');
 		});
 	});
+
+	it('should decode empty file inputs into File instances (web FormData)', async () => {
+		const ogFormData = new WebFormData();
+		ogFormData.append('a', 1);
+		// This is what happens when you construct the form data set with an empty file input:
+		// https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#constructing-the-form-data-set
+		ogFormData.append('file', new File([], '', { type: 'application/octet-stream' }));
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			const file = clonedFormData.get('file');
+			expect(file.name).to.equal("");
+			expect(file.type).to.equal("application/octet-stream");
+			expect(file.size).to.equal(0);
+		});
+	});
+
+	it.skip('should decode empty file inputs into File instances (node FormData)', async () => {
+		const ogFormData = new FormData();
+		ogFormData.append('a', 1);
+		// This is what happens when you construct the form data set with an empty file input:
+		// https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#constructing-the-form-data-set
+		ogFormData.append('file', Buffer.from(''), {
+			// Note: This doesn't work at the moment due to https://github.com/form-data/form-data/issues/412.
+			// There is a v4 released which has a fix that might handle this but I
+			// wasn't positive if it had breaking changes that would impact us so we
+			// can handle an upgrade separately.
+			filename: '',
+			contentType: 'application/octet-stream',
+		});
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			const file = clonedFormData.get('file');
+			expect(file.name).to.equal("");
+			expect(file.type).to.equal("application/octet-stream");
+			expect(file.size).to.equal(0);
+		});
+
+	});
 });
