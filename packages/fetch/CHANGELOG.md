@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.1.2](https://www.github.com/web-std/io/compare/fetch-v4.1.1...fetch-v4.1.2) (2023-07-19)
+
+
+### Bug Fixes
+
+* bind globalThis in nodejs also ([#69](https://www.github.com/web-std/io/issues/69)) ([fd32fa2](https://www.github.com/web-std/io/commit/fd32fa22faffa7f3f16b603ca7d662e082f1eee6))
+
 ### [4.1.1](https://www.github.com/web-std/io/compare/fetch-v4.1.0...fetch-v4.1.1) (2023-07-19)
 
 
