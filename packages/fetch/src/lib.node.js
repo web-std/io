@@ -6,10 +6,10 @@ export { ReadableStream, Blob, FormData  } from './package.js';
 
 // Marking export as a DOM File object instead of custom class.
 export const fetch = /** @type {typeof globalThis.fetch} */
-  (typeof globalThis.fetch === "function" ? globalThis.fetch : WebFetch.fetch)
+  (typeof globalThis.fetch === "function" ? globalThis.fetch.bind(globalThis) : WebFetch.fetch)
 
 export const Headers = globalThis.Headers || WebFetch.Headers
 export const Request = globalThis.Request || WebFetch.Request
-export const Response = global.Response || WebFetch.Response
+export const Response = globalThis.Response || WebFetch.Response
 
 export default fetch
