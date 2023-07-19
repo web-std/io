@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.1.1](https://www.github.com/web-std/io/compare/fetch-v4.1.0...fetch-v4.1.1) (2023-07-19)
+
+
+### Bug Fixes
+
+* fetch called on non Window object ([#65](https://www.github.com/web-std/io/issues/65)) ([2af758f](https://www.github.com/web-std/io/commit/2af758fbae555494c6cf1ba40e053b164306ee16))
+
 ## [4.1.0](https://www.github.com/web-std/io/compare/fetch-v4.0.1...fetch-v4.1.0) (2022-04-20)
 
 
