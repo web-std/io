@@ -364,10 +364,13 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 		socket.prependListener('close', onSocketClose);
 		socket.on('data', onData);
 
-		request.on('close', () => {
+		const removeSocketListeners = () => {
 			socket.removeListener('close', onSocketClose);
 			socket.removeListener('data', onData);
-		});
+		}
+
+		request.on('close', removeSocketListeners);
+		request.on('abort', removeSocketListeners);
 	});
 }
 
