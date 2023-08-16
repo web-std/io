@@ -190,7 +190,14 @@ export default class Headers extends URLSearchParams {
 	 */
 	forEach(callback, thisArg = undefined) {
 		for (const name of this.keys()) {
-			Reflect.apply(callback, thisArg, [this.get(name), name, this]);
+			if (name.toLowerCase() === 'set-cookie') {
+				let cookies = this.getAll(name);
+				while (cookies.length > 0) {
+					Reflect.apply(callback, thisArg, [cookies.shift(), name, this])
+				}
+			} else {
+				Reflect.apply(callback, thisArg, [this.get(name), name, this]);
+			}
 		}
 	}
 
@@ -199,7 +206,14 @@ export default class Headers extends URLSearchParams {
 	 */
 	* values() {
 		for (const name of this.keys()) {
-			yield /** @type {string} */(this.get(name));
+			if (name.toLowerCase() === 'set-cookie') {
+				let cookies = this.getAll(name);
+				while (cookies.length > 0) {
+					yield /** @type {string} */(cookies.shift());
+				}
+			} else {
+				yield /** @type {string} */(this.get(name));
+			}
 		}
 	}
 
@@ -208,7 +222,14 @@ export default class Headers extends URLSearchParams {
 	 */
 	* entries() {
 		for (const name of this.keys()) {
-			yield [name, /** @type {string} */(this.get(name))];
+			if (name.toLowerCase() === 'set-cookie') {
+				let cookies = this.getAll(name);
+				while (cookies.length > 0) {
+					yield [name, /** @type {string} */(cookies.shift())];
+				}
+			} else {
+				yield [name, /** @type {string} */(this.get(name))];
+			}
 		}
 	}
 
