@@ -1,5 +1,5 @@
 ---
-"@remix-run/web-fetch": minor
+"@web-std/fetch": minor
 ---
 
-expose RequestExtraOptions to fetch & add HTTPs.agent to types
+expose `RequestExtraOptions` to `fetch` & add `HTTPs.agent` to types
