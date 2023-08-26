@@ -175,6 +175,7 @@ export default class Body {
 	/**
 	 * @returns {Promise<FormData>}
 	 */
+
 	async formData() {
 		return toFormData(this)
 	}
@@ -424,6 +425,7 @@ const fromBytes = bytes => new ReadableStream({
  * @returns {ReadableStream<Uint8Array>}
  */
 export const fromAsyncIterable = content =>
+	// @ts-ignore
 	new ReadableStream(new AsyncIterablePump(content));
 
 /**

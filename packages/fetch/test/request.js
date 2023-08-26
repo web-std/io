@@ -4,12 +4,10 @@ import {TextEncoder} from 'util';
 import AbortController from 'abort-controller';
 import chai from 'chai';
 import FormData from 'form-data';
-import {Blob} from '@web-std/fetch';
-import { ReadableStream } from '@web-std/fetch';
+import { Blob, ReadableStream, Request, FormData as WebFormData} from '@web-std/fetch';
+import { File } from '@web-std/file';
 
 import TestServer from './utils/server.js';
-import {Request,FormData as WebFormData} from '@web-std/fetch';
-import {File} from '@remix-run/web-file';
 
 const {expect} = chai;
 
