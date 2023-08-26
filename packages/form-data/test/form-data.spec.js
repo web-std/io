@@ -6,7 +6,7 @@ import { assert } from "./test.js"
 /**
  * @param {import('./test').Test} test
  */
-export const test = (test) => {
+export const test = test => {
   test("test baisc", async () => {
     assert.equal(typeof FormData, "function")
     assert.isEqual(typeof lib.FormData, "function")
@@ -92,13 +92,13 @@ export const test = (test) => {
   // This mimics the payload sent by a browser when a file input
   // exists but is not filled out.
   test("filename on string contents", () => {
-    const formData = new FormData();
-    formData.set("file-3", new Blob([]), "");
-    const file3 = /** @type {File} */ (formData.get("file-3"));
-    assert.equal(file3.constructor.name, "File");
-    assert.equal(file3.name, "");
-    assert.equal(file3.type, "");
-  });
+    const formData = new FormData()
+    formData.set("file-3", new Blob([]), "")
+    const file3 = /** @type {File} */ (formData.get("file-3"))
+    assert.equal(file3.constructor.name, "File")
+    assert.equal(file3.name, "")
+    assert.equal(file3.type, "")
+  })
 
   test("throws on few args", () => {
     const data = new FormData()
