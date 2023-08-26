@@ -11,9 +11,9 @@ export class FormData {
      * @readonly
      * @type {Array<[string, FormDataEntryValue]>}
      */
-    this._entries = [];
+    this._entries = []
 
-    Object.defineProperty(this, "_entries", { enumerable: false });
+    Object.defineProperty(this, "_entries", { enumerable: false })
 
     if (isHTMLFormElement(form)) {
       for (const element of form.elements) {
