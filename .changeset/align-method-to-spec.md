@@ -1,5 +1,5 @@
 ---
-"@remix-run/web-fetch": patch
+"@web-std/fetch": patch
 ---
 
 Align with [spec](https://fetch.spec.whatwg.org/#methods) for `new Request()` `method` normalization
