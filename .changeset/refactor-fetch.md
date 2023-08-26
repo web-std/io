@@ -1,5 +1,5 @@
 ---
-"@remix-run/web-fetch": patch
+"@web-std/fetch": patch
 ---
 
-Import Buffer from 'buffer'
+Import `Buffer` from `'buffer'`
