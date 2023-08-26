@@ -1,5 +1,5 @@
 ---
-"@remix-run/web-fetch": patch
+"@web-std/fetch": patch
 ---
 
-allow clone of request and responses will null body
+allow clone of request and responses will `null` body
