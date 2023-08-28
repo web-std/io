@@ -77,7 +77,6 @@
     "@types/mocha": "^9.1.0",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-string": "^1.4.2",
-    "abort-controller": "^3.0.0",
     "abortcontroller-polyfill": "^1.7.1",
     "busboy": "^0.3.1",
     "c8": "^7.3.0",
@@ -100,6 +99,7 @@
     "@web-std/blob": "^3.0.3",
     "@web-std/form-data": "^3.0.2",
     "@web-std/stream": "^1.0.1",
+    "abort-controller": "^3.0.0",
     "data-uri-to-buffer": "^3.0.1",
     "mrmime": "^1.0.0",
     "@web3-storage/multipart-parser": "^1.0.0"
