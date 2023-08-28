@@ -37,6 +37,7 @@ const isRequest = object => {
  * @property {string} method
  * @property {RequestRedirect} redirect
  * @property {globalThis.Headers} headers
+ * @property {RequestCredentials} credentials
  * @property {URL} parsedURL
  * @property {AbortSignal|null} signal
  * 
@@ -125,6 +126,7 @@ export default class Request extends Body {
 			method,
 			redirect: init.redirect || input.redirect || 'follow',
 			headers,
+			credentials: init.credentials || 'same-origin',
 			parsedURL,
 			signal: signal || null
 		};
@@ -159,7 +161,7 @@ export default class Request extends Body {
 	 */
 
 	get credentials() {
-		return "same-origin"
+		return this[INTERNALS].credentials
 	}
 
 	/**
