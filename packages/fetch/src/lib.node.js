@@ -1,6 +1,6 @@
 import { fetch as webFetch, Headers as WebHeaders, Request as WebRequest, Response as WebResponse } from "./fetch.js"
 
-export { ReadableStream, Blob, FormData  } from './package.js';
+export { ReadableStream, Blob, FormData, File  } from './package.js';
 // Electron-renderer should get the browser implementation instead of node
 // Browser configuration is not enough
 
