@@ -8,12 +8,16 @@
  */
 
 import {format as formatUrl} from 'url';
+import {AbortController as AbortControllerPolyfill} from 'abort-controller';
 import Headers from './headers.js';
 import Body, {clone, extractContentType, getTotalBytes} from './body.js';
 import {isAbortSignal} from './utils/is.js';
 import {getSearch} from './utils/get-search.js';
 
 const INTERNALS = Symbol('Request internals');
+
+const forbiddenMethods = new Set(["CONNECT", "TRACE", "TRACK"]);
+const normalizedMethods = new Set(["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"]);
 
 /**
  * Check if `obj` is an instance of Request.
@@ -32,14 +36,15 @@ const isRequest = object => {
 /**
  * Request class
  * @implements {globalThis.Request}
- * 
+ *
  * @typedef {Object} RequestState
  * @property {string} method
  * @property {RequestRedirect} redirect
  * @property {globalThis.Headers} headers
+ * @property {RequestCredentials} credentials
  * @property {URL} parsedURL
  * @property {AbortSignal|null} signal
- * 
+ *
  * @typedef {Object} RequestExtraOptions
  * @property {number} [follow]
  * @property {boolean} [compress]
@@ -48,15 +53,15 @@ const isRequest = object => {
  * @property {Agent} [agent]
  * @property {number} [highWaterMark]
  * @property {boolean} [insecureHTTPParser]
- * 
- * @typedef {((url:URL) => import('http').Agent) | import('http').Agent} Agent
- * 
+ *
+ * @typedef {((url:URL) => import('http').Agent | import('https').Agent) | import('http').Agent | import('https').Agent} Agent
+ *
  * @typedef {Object} RequestOptions
  * @property {string} [method]
  * @property {ReadableStream<Uint8Array>|null} [body]
  * @property {globalThis.Headers} [headers]
  * @property {RequestRedirect} [redirect]
- * 
+ *
  */
 export default class Request extends Body {
 	/**
@@ -79,8 +84,13 @@ export default class Request extends Body {
 
 
 
+		// Normalize method: https://fetch.spec.whatwg.org/#methods
 		let method = init.method || settings.method || 'GET';
-		method = method.toUpperCase();
+		if (forbiddenMethods.has(method.toUpperCase())) {
+			throw new TypeError(`Failed to construct 'Request': '${method}' HTTP method is unsupported.`)
+		} else if (normalizedMethods.has(method.toUpperCase())) {
+			method = method.toUpperCase();
+		}
 
 		const inputBody = init.body != null
 			? init.body
@@ -98,7 +108,7 @@ export default class Request extends Body {
 		});
 		const input = settings
 
-		
+
 		const headers = /** @type {globalThis.Headers} */
 			(new Headers(init.headers || input.headers || {}));
 
@@ -119,12 +129,22 @@ export default class Request extends Body {
 		if (signal != null && !isAbortSignal(signal)) {
 			throw new TypeError('Expected signal to be an instanceof AbortSignal or EventTarget');
 		}
+		
+		if (!signal) {
+			let AbortControllerConstructor = typeof AbortController != "undefined"
+			? AbortController
+			: AbortControllerPolyfill;
+			/** @type {any} */
+			let newSignal = new AbortControllerConstructor().signal;
+			signal = newSignal;
+		}
 
 		/** @type {RequestState} */
 		this[INTERNALS] = {
 			method,
 			redirect: init.redirect || input.redirect || 'follow',
 			headers,
+			credentials: init.credentials || 'same-origin',
 			parsedURL,
 			signal: signal || null
 		};
@@ -159,7 +179,7 @@ export default class Request extends Body {
 	 */
 
 	get credentials() {
-		return "same-origin"
+		return this[INTERNALS].credentials
 	}
 
 	/**
@@ -168,11 +188,11 @@ export default class Request extends Body {
 	get destination() {
 		return ""
 	}
-	
+
 	get integrity() {
 		return ""
 	}
-	
+
 	/** @type {RequestMode} */
 	get mode() {
 		return "cors"
@@ -182,7 +202,7 @@ export default class Request extends Body {
 	get referrer() {
 		return  ""
 	}
-	
+
 	/** @type {ReferrerPolicy} */
 	get referrerPolicy() {
 		return ""
@@ -306,7 +326,7 @@ export const getNodeRequestOptions = request => {
 		port: parsedURL.port,
 		hash: parsedURL.hash,
 		search: parsedURL.search,
-		// @ts-ignore - it does not has a query 
+		// @ts-ignore - it does not has a query
 		query: parsedURL.query,
 		href: parsedURL.href,
 		method: request.method,

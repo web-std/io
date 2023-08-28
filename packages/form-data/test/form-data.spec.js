@@ -7,7 +7,7 @@ import { assert } from "./test.js"
  * @param {import('./test').Test} test
  */
 export const test = test => {
-  test("test baisc", async () => {
+  test("test basic", async () => {
     assert.equal(typeof FormData, "function")
     assert.isEqual(typeof lib.FormData, "function")
   })
@@ -87,6 +87,17 @@ export const test = test => {
     assert.equal(file2.name, "custom name")
     assert.equal(file2.type, "")
     assert.equal(file2.lastModified, 123, "lastModified should be 123")
+  })
+
+  // This mimics the payload sent by a browser when a file input
+  // exists but is not filled out.
+  test("filename on string contents", () => {
+    const formData = new FormData()
+    formData.set("file-3", new Blob([]), "")
+    const file3 = /** @type {File} */ (formData.get("file-3"))
+    assert.equal(file3.constructor.name, "File")
+    assert.equal(file3.name, "")
+    assert.equal(file3.type, "")
   })
 
   test("throws on few args", () => {
@@ -207,21 +218,21 @@ export const test = test => {
     assert.deepEqual([...data], [["n2", "v2"]])
   })
 
-  test("Shold return correct filename with File", () => {
+  test("Should return correct filename with File", () => {
     const data = new FormData()
     data.set("key", new File([], "doc.txt"))
     const file = /** @type {File} */ (data.get("key"))
     assert.equal("doc.txt", file.name)
   })
 
-  test("Shold return correct filename with Blob filename", () => {
+  test("Should return correct filename with Blob filename", () => {
     const data = new FormData()
     data.append("key", new Blob(), "doc.txt")
     const file = /** @type {File} */ (data.get("key"))
     assert.equal("doc.txt", file.name)
   })
 
-  test("Shold return correct filename with just Blob", () => {
+  test("Should return correct filename with just Blob", () => {
     const data = new FormData()
     data.append("key", new Blob())
     const file = /** @type {File} */ (data.get("key"))
@@ -247,5 +258,75 @@ export const test = test => {
       new File(["renamed"], "orig.txt", { type: "text/plain" }),
       "rename.md"
     )
+  })
+
+  test("Should allow passing a form element", () => {
+    /** @type {globalThis.HTMLFormElement} */
+    let form;
+
+    if (typeof window === 'undefined') {
+      /** @implements {globalThis.HTMLFormElement} */
+      class FakeForm {
+        get [Symbol.toStringTag]() {
+          return "HTMLFormElement";
+        }
+
+        toString() {
+          return `<form></form>`;
+        }
+
+        // @ts-ignore
+        get elements() {
+          return [
+            {
+              tagName: "INPUT",
+              name: "inside",
+              value: "",
+            },
+            {
+              tagName: "INPUT",
+              name: "outside",
+              value: "",
+              form: "my-form",
+            },
+            {
+              tagName: "INPUT",
+              name: "remember-me",
+              value: "on",
+              checked: true,
+            }
+          ]
+        }
+
+        get id() {
+          return "my-form"
+        }
+      }
+
+      form = /** @type {globalThis.HTMLFormElement} */ (/** @type {unknown} */ (new FakeForm()))
+    } else {
+      form = document.createElement('form');
+      let inside = document.createElement('input')
+      let outside = document.createElement('input')
+      let checkbox = document.createElement('input')
+
+      form.id = 'my-form'
+      inside.name = 'inside'
+      outside.name = 'outside'
+      outside.setAttribute('form', 'my-form')
+      checkbox.name = "remember-me"
+      checkbox.type = 'checkbox'
+      checkbox.checked = true;
+
+      form.appendChild(inside);
+      form.appendChild(checkbox);
+      document.body.appendChild(form);
+      document.body.appendChild(outside);
+    }
+
+    const formData = new FormData(form);
+    assert.equal(formData.has("inside"), true)
+    assert.equal(formData.has("outside"), true)
+    assert.equal(formData.get("remember-me"), "on")
   })
 }

@@ -1,6 +1,6 @@
 {
   "name": "@web-std/fetch",
-  "version": "4.1.0",
+  "version": "4.1.2",
   "description": "Web API compatible fetch implementation",
   "main": "./dist/lib.node.cjs",
   "module": "./src/lib.node.js",
@@ -9,27 +9,27 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/src/lib.node.d.ts",
       "browser": "./src/lib.js",
       "require": "./dist/lib.node.cjs",
-      "import": "./src/lib.node.js",
-      "types": "./dist/src/lib.node.d.ts"
+      "import": "./src/lib.node.js"
     },
     "./package.json": "./package.json",
     "./body": {
-      "import": "./src/body.js",
-      "types": "./dist/src/body.d.ts"
+      "types": "./dist/src/body.d.ts",
+      "import": "./src/body.js"
     },
     "./src/request.js": {
-      "import": "./src/request.js",
-      "types": "./dist/src/request.d.ts"
+      "types": "./dist/src/request.d.ts",
+      "import": "./src/request.js"
     },
     "./src/response.js": {
-      "import": "./src/response.js",
-      "types": "./dist/src/response.d.ts"
+      "types": "./dist/src/response.d.ts",
+      "import": "./src/response.js"
     },
     "./src/headers.js": {
-      "import": "./src/headers.js",
-      "types": "./dist/src/headers.d.ts"
+      "types": "./dist/src/headers.d.ts",
+      "import": "./src/headers.js"
     }
   },
   "files": [
@@ -78,6 +78,7 @@
     "@types/chai-string": "^1.4.2",
     "@types/mocha": "^9.1.0",
     "abort-controller": "^3.0.0",
+    "@web-std/file": "^3.0.2",
     "abortcontroller-polyfill": "^1.7.1",
     "busboy": "^0.3.1",
     "c8": "^7.3.0",
@@ -102,6 +103,7 @@
     "@web-std/form-data": "^3.0.2",
     "@web-std/stream": "^1.0.1",
     "@web3-storage/multipart-parser": "^1.0.0",
+    "abort-controller": "^3.0.0",
     "data-uri-to-buffer": "^3.0.1",
     "mrmime": "^1.0.0"
   },

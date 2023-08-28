@@ -15,17 +15,18 @@
   "type": "module",
   "module": "./src/lib.js",
   "main": "./dist/src/lib.node.cjs",
+  "types": "./dist/src/lib.d.ts",
   "browser": {
     "./src/lib.node.js": "./src/lib.js"
   },
   "exports": {
     ".": {
+      "types": "./dist/src/lib.d.ts",
       "browser": "./src/lib.js",
       "require": "./dist/src/lib.node.cjs",
       "import": "./src/lib.node.js"
     }
   },
-  "types": "./dist/src/lib.d.ts",
   "dependencies": {
     "web-encoding": "1.1.5"
   },

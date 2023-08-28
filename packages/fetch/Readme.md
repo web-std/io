@@ -10,7 +10,7 @@ Web API compatible [fetch API][] for nodejs.
 #### [node-fetch][]
 
 The reason this fork exists is because [node-fetch][] chooses to compromise
-Web API compatibility and by useing nodejs native [Readable][] stream. They way
+Web API compatibility and by using nodejs native [Readable][] stream. They way
 they put it is:
 
 >
