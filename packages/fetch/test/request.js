@@ -8,7 +8,7 @@ import {Blob} from '@web-std/fetch';
 import { ReadableStream } from '@web-std/fetch';
 
 import TestServer from './utils/server.js';
-import {Request} from '@web-std/fetch';
+import {Request, FormData as WebFormData} from '@web-std/fetch';
 
 const {expect} = chai;
 
