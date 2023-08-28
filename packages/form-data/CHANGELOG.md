@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.0](https://www.github.com/web-std/io/compare/form-data-v3.0.2...form-data-v3.1.0) (2023-08-28)
+
+
+### Features
+
+* **form-data:** allow passing a `form` to `FormData` ([#84](https://www.github.com/web-std/io/issues/84)) ([fd274bd](https://www.github.com/web-std/io/commit/fd274bd8d03476997258b23bb3c120476adc5169))
+
+
+### Bug Fixes
+
+* **form-data:** support empty `File` ([#76](https://www.github.com/web-std/io/issues/76)) ([5453f55](https://www.github.com/web-std/io/commit/5453f5571182946cf6ed616968dac6e8f05060c9))
+
+
+### Changes
+
+* promote `types` conditional exports to the top of the list ([#88](https://www.github.com/web-std/io/issues/88)) ([c1339b9](https://www.github.com/web-std/io/commit/c1339b9bef4312e5efd4c5fe627b92e6c1d5c3d1))
+
 ### [3.0.2](https://www.github.com/web-std/io/compare/form-data-v3.0.1...form-data-v3.0.2) (2022-01-21)
 
 
