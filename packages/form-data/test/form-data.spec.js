@@ -7,7 +7,7 @@ import { assert } from "./test.js"
  * @param {import('./test').Test} test
  */
 export const test = test => {
-  test("test baisc", async () => {
+  test("test basic", async () => {
     assert.equal(typeof FormData, "function")
     assert.isEqual(typeof lib.FormData, "function")
   })
@@ -247,5 +247,75 @@ export const test = test => {
       new File(["renamed"], "orig.txt", { type: "text/plain" }),
       "rename.md"
     )
+  })
+
+  test("Should allow passing a form element", () => {
+    /** @type {globalThis.HTMLFormElement} */
+    let form;
+
+    if (typeof window === 'undefined') {
+      /** @implements {globalThis.HTMLFormElement} */
+      class FakeForm {
+        get [Symbol.toStringTag]() {
+          return "HTMLFormElement";
+        }
+
+        toString() {
+          return `<form></form>`;
+        }
+
+        // @ts-ignore
+        get elements() {
+          return [
+            {
+              tagName: "INPUT",
+              name: "inside",
+              value: "",
+            },
+            {
+              tagName: "INPUT",
+              name: "outside",
+              value: "",
+              form: "my-form",
+            },
+            {
+              tagName: "INPUT",
+              name: "remember-me",
+              value: "on",
+              checked: true,
+            }
+          ]
+        }
+
+        get id() {
+          return "my-form"
+        }
+      }
+
+      form = /** @type {globalThis.HTMLFormElement} */ (/** @type {unknown} */ (new FakeForm()))
+    } else {
+      form = document.createElement('form');
+      let inside = document.createElement('input')
+      let outside = document.createElement('input')
+      let checkbox = document.createElement('input')
+
+      form.id = 'my-form'
+      inside.name = 'inside'
+      outside.name = 'outside'
+      outside.setAttribute('form', 'my-form')
+      checkbox.name = "remember-me"
+      checkbox.type = 'checkbox'
+      checkbox.checked = true;
+
+      form.appendChild(inside);
+      form.appendChild(checkbox);
+      document.body.appendChild(form);
+      document.body.appendChild(outside);
+    }
+
+    const formData = new FormData(form);
+    assert.equal(formData.has("inside"), true)
+    assert.equal(formData.has("outside"), true)
+    assert.equal(formData.get("remember-me"), "on")
   })
 }
