@@ -86,6 +86,59 @@ describe('Request', () => {
 		expect(r2.counter).to.equal(0);
 	});
 
+	it('should throw a TypeError for forbidden methods', () => {
+		// https://fetch.spec.whatwg.org/#methods
+		const forbiddenMethods = [
+			"CONNECT",
+			"TRACE",
+			"TRACK",
+		];
+
+		forbiddenMethods.forEach(method => {
+			try {
+				new Request(base, { method: method.toLowerCase() });
+				expect(true).to.equal(false);
+			} catch (e) {
+				expect(e instanceof TypeError).to.equal(true);
+				expect(e.message).to.equal(`Failed to construct 'Request': '${method.toLowerCase()}' HTTP method is unsupported.`)
+			}
+			try {
+				new Request(base, { method: method.toUpperCase() });
+				expect(true).to.equal(false);
+			} catch (e) {
+				expect(e instanceof TypeError).to.equal(true);
+				expect(e.message).to.equal(`Failed to construct 'Request': '${method.toUpperCase()}' HTTP method is unsupported.`)
+			}
+		});
+	});
+
+	it('should normalize method', () => {
+		// https://fetch.spec.whatwg.org/#methods
+		const shouldUpperCaseMethods = [
+			"DELETE",
+			"GET",
+			"HEAD",
+			"OPTIONS",
+			"POST",
+			"PUT",
+		];
+		const otherMethods = ["PATCH", "CHICKEN"];
+
+		shouldUpperCaseMethods.forEach(method => {
+			const r1 = new Request(base, { method: method.toLowerCase() });
+			expect(r1.method).to.equal(method.toUpperCase());
+			const r2 = new Request(base, { method: method.toUpperCase() });
+			expect(r2.method).to.equal(method.toUpperCase());
+		});
+
+		otherMethods.forEach(method => {
+			const r1 = new Request(base, { method: method.toLowerCase() });
+			expect(r1.method).to.equal(method.toLowerCase());
+			const r2 = new Request(base, { method: method.toUpperCase() });
+			expect(r2.method).to.equal(method.toUpperCase());
+		});
+	});
+
 	it('should override signal on derived Request instances', () => {
 		const parentAbortController = new AbortController();
 		const derivedAbortController = new AbortController();
@@ -110,6 +163,16 @@ describe('Request', () => {
 		expect(parentRequest.signal).to.equal(parentAbortController.signal);
 		expect(derivedRequest.signal).to.equal(null);
 	});
+
+	it('should default to "same-origin" as credentials', () => {
+		const request = new Request(base)
+		expect(request.credentials).to.equal('same-origin');
+	})
+
+	it('should respect custom credentials value', () => {
+		expect(new Request(base, { credentials: 'omit'})).to.have.property('credentials', 'omit');
+		expect(new Request(base, { credentials: 'include'})).to.have.property('credentials', 'include');
+	})
 
 	it('should throw error with GET/HEAD requests with body', () => {
 		expect(() => new Request(base, {body: ''}))
@@ -235,6 +298,37 @@ describe('Request', () => {
 			expect(results[0]).to.equal('a=1');
 			expect(results[1]).to.equal('a=1');
 		});
+	});
+
+	it('should support clone() method with null body', () => {
+		const url = base;
+
+		const agent = new http.Agent();
+		const {signal} = new AbortController();
+		const request = new Request(url, {
+			method: 'POST',
+			redirect: 'manual',
+			headers: {
+				b: '2'
+			},
+			follow: 3,
+			compress: false,
+			agent,
+			signal
+		});
+		const cl = request.clone();
+		expect(cl.url).to.equal(url);
+		expect(cl.method).to.equal('POST');
+		expect(cl.redirect).to.equal('manual');
+		expect(cl.headers.get('b')).to.equal('2');
+		expect(cl.follow).to.equal(3);
+		expect(cl.compress).to.equal(false);
+		expect(cl.method).to.equal('POST');
+		expect(cl.counter).to.equal(0);
+		expect(cl.agent).to.equal(agent);
+		expect(cl.signal).to.equal(signal);
+		// Clone body should be null
+		expect(cl.body).to.equal(null);
 	});
 
 	it('should support ArrayBuffer as body', () => {

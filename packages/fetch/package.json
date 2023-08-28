@@ -9,27 +9,27 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/src/lib.node.d.ts",
       "browser": "./src/lib.js",
       "require": "./dist/lib.node.cjs",
-      "import": "./src/lib.node.js",
-      "types": "./dist/src/lib.node.d.ts"
+      "import": "./src/lib.node.js"
     },
     "./package.json": "./package.json",
     "./body": {
-      "import": "./src/body.js",
-      "types": "./dist/src/body.d.ts"
+      "types": "./dist/src/body.d.ts",
+      "import": "./src/body.js"
     },
     "./src/request.js": {
-      "import": "./src/request.js",
-      "types": "./dist/src/request.d.ts"
+      "types": "./dist/src/request.d.ts",
+      "import": "./src/request.js"
     },
     "./src/response.js": {
-      "import": "./src/response.js",
-      "types": "./dist/src/response.d.ts"
+      "types": "./dist/src/response.d.ts",
+      "import": "./src/response.js"
     },
     "./src/headers.js": {
-      "import": "./src/headers.js",
-      "types": "./dist/src/headers.d.ts"
+      "types": "./dist/src/headers.d.ts",
+      "import": "./src/headers.js"
     }
   },
   "files": [
