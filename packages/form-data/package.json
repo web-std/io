@@ -1,6 +1,6 @@
 {
   "name": "@web-std/form-data",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Web API compatible Form Data implementation",
   "files": [
     "src",
