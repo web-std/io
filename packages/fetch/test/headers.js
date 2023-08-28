@@ -69,6 +69,26 @@ describe('Headers', () => {
 		expect({key: 'content-type', value: 'text/html', object: headers}).to.deep.equal(results[1]);
 	});
 
+	it('should allow iterating through multiple set-cookie headers with forEach', () => {
+		let headers = new Headers([
+			['a', '1'],
+			['Set-Cookie', 'b=2']
+		]);
+		headers.append('Set-Cookie', 'c=3');
+		expect(headers.entries()).to.be.iterable;
+
+		const results = [];
+		headers.forEach((value, key, object) => {
+			results.push({value, key, object});
+		});
+
+		expect(results).to.deep.equal([
+			{ value: '1', key: 'a', object: headers },
+			{ value: 'b=2', key: 'set-cookie', object: headers },
+			{ value: 'c=3', key: 'set-cookie', object: headers },
+    ]);
+	})
+
 	it('should set "this" to undefined by default on forEach', () => {
 		const headers = new Headers({Accept: 'application/json'});
 		headers.forEach(function () {
@@ -103,7 +123,24 @@ describe('Headers', () => {
 			['b', '2, 3'],
 			['c', '4']
 		]);
+
 	});
+
+	it('should allow iterating through multiple set-cookie headers with for-of loop', () => {
+		let headers = new Headers([
+			['a', '1'],
+			['Set-Cookie', 'b=2']
+		]);
+		headers.append('Set-Cookie', 'c=3');
+		expect(headers.entries()).to.be.iterable;
+
+		const result = [];
+		for (const pair of headers) {
+			result.push(pair);
+		}
+
+		expect(result).to.deep.equal([['a', '1'], ['set-cookie', 'b=2'], ['set-cookie', 'c=3']]);
+	})
 
 	it('should allow iterating through all headers with entries()', () => {
 		const headers = new Headers([
@@ -120,6 +157,16 @@ describe('Headers', () => {
 				['c', '4']
 			]);
 	});
+
+	it('should allow iterating through multiple set-cookie headers with entries()', ()=> {
+		let headers = new Headers([
+			['a', '1'],
+			['Set-Cookie', 'b=2']
+		]);
+		headers.append('Set-Cookie', 'c=3');
+		expect(headers.entries()).to.be.iterable
+			.and.to.deep.iterate.over([['a', '1'], ['set-cookie', 'b=2'], ['set-cookie', 'c=3']]);
+	})
 
 	it('should allow iterating through all headers with keys()', () => {
 		const headers = new Headers([
@@ -144,6 +191,16 @@ describe('Headers', () => {
 		expect(headers.values()).to.be.iterable
 			.and.to.iterate.over(['1', '2, 3', '4']);
 	});
+
+	it('should allow iterating through multiple set-cookie headers with values()', ()=> {
+		let headers = new Headers([
+			['a', '1'],
+			['Set-Cookie', 'b=2']
+		]);
+		headers.append('Set-Cookie', 'c=3');
+		expect(headers.values()).to.be.iterable
+			.and.to.iterate.over(['1', 'b=2', 'c=3']);
+	})
 
 	it('should reject illegal header', () => {
 		const headers = new Headers();
