@@ -44,20 +44,21 @@ export const getBoundary = () => randomBytes(8).toString('hex');
  * @param {string} boundary
  */
 export async function * formDataIterator(form, boundary) {
+	const encoder = new TextEncoder();
 	for (const [name, value] of form) {
-		yield getHeader(boundary, name, value);
+		yield encoder.encode(getHeader(boundary, name, value));
 
 		if (isBlob(value)) {
 			// @ts-ignore - we know our streams implement aysnc iteration
 			yield * value.stream();
 		} else {
-			yield value;
+			yield encoder.encode(value);
 		}
 
-		yield carriage;
+		yield encoder.encode(carriage);
 	}
 
-	yield getFooter(boundary);
+	yield encoder.encode(getFooter(boundary));
 }
 
 /**

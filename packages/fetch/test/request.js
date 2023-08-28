@@ -4,11 +4,10 @@ import {TextEncoder} from 'util';
 import AbortController from 'abort-controller';
 import chai from 'chai';
 import FormData from 'form-data';
-import {Blob} from '@web-std/fetch';
-import { ReadableStream } from '@web-std/fetch';
+import { Blob, ReadableStream, Request, FormData as WebFormData} from '@web-std/fetch';
+import { File } from '@web-std/file';
 
 import TestServer from './utils/server.js';
-import {Request} from '@web-std/fetch';
 
 const {expect} = chai;
 
@@ -19,6 +18,7 @@ describe('Request', () => {
 	before(async () => {
 		await local.start();
 		base = `http://${local.hostname}:${local.port}/`;
+		global.File = File;
 	});
 
 	after(async () => {
@@ -382,6 +382,60 @@ describe('Request', () => {
 		});
 		return request.text().then(result => {
 			expect(result).to.equal('a=1');
+		});
+	});
+
+	it('should read formData after clone with web FormData body',async () => {
+		const ogFormData = new WebFormData();
+		ogFormData.append('a', 1);
+		ogFormData.append('b', 2);
+		ogFormData.append('file', new File(['content'], 'file.txt'));
+
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			expect(clonedFormData.get('b')).to.equal("2");
+			const file = clonedFormData.get('file')
+			if (typeof file !== "object") {
+				throw new Error("File is not an object");
+			}
+			expect(file.name).to.equal("file.txt");
+			expect(file.type).to.equal("application/octet-stream");
+			expect(file.size).to.equal(7);
+			expect(await file.text()).to.equal("content");
+			expect(file.lastModified).to.be.a('number');
+		});
+	});
+
+	it('should read formData after clone with node FormData body',async () => {
+		const ogFormData = new FormData();
+		ogFormData.append('a', '1');
+		ogFormData.append('b', '2');
+		ogFormData.append('file', Buffer.from('content'), { filename: "file.txt" });
+
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			expect(clonedFormData.get('b')).to.equal("2");
+			const file = clonedFormData.get('file')
+			if (typeof file !== "object") {
+				throw new Error("File is not an object");
+			}
+			expect(file.name).to.equal("file.txt");
+			expect(file.type).to.equal("text/plain");
+			expect(file.size).to.equal(7);
+			expect(await file.text()).to.equal("content");
+			expect(file.lastModified).to.be.a('number');
 		});
 	});
 });
