@@ -274,7 +274,7 @@ async function consumeBody(data) {
  * Clone body given Res/Req instance
  *
  * @param {Body} instance       Response or Request instance
- * @return {ReadableStream<Uint8Array>}
+ * @return {ReadableStream<Uint8Array> | null}
  */
 export const clone = instance => {
 	const {body} = instance;
@@ -284,7 +284,10 @@ export const clone = instance => {
 		throw new Error('cannot clone body after it is used');
 	}
 
-	// @ts-expect-error - could be null
+	if (!body) {
+		return null;
+	}
+
 	const [left, right] = body.tee();
 	instance[INTERNALS].body = left;
 	return right;
