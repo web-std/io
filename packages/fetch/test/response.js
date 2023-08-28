@@ -129,6 +129,28 @@ describe('Response', () => {
 		});
 	});
 
+	it('should support clone() method with null body', () => {
+		const res = new Response(null, {
+			headers: {
+				a: '1'
+			},
+			url: base,
+			status: 346,
+			statusText: 'production'
+		});
+		const cl = res.clone();
+		expect(cl.headers.get('a')).to.equal('1');
+		expect(cl.url).to.equal(base);
+		expect(cl.status).to.equal(346);
+		expect(cl.statusText).to.equal('production');
+		expect(cl.ok).to.be.false;
+		// Clone body should also be null
+		expect(cl.body).to.equal(null);
+		return cl.text().then(result => {
+			expect(result).to.equal('');
+		});
+	});
+
 	it('should support stream as body', () => {
 		const body = streamFromString('a=1');
 		const res = new Response(body);

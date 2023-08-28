@@ -4,11 +4,10 @@ import {TextEncoder} from 'util';
 import AbortController from 'abort-controller';
 import chai from 'chai';
 import FormData from 'form-data';
-import {Blob} from '@web-std/fetch';
-import { ReadableStream } from '@web-std/fetch';
+import { Blob, ReadableStream, Request, FormData as WebFormData} from '@web-std/fetch';
+import { File } from '@web-std/file';
 
 import TestServer from './utils/server.js';
-import {Request, FormData as WebFormData} from '@web-std/fetch';
 
 const {expect} = chai;
 
@@ -19,6 +18,7 @@ describe('Request', () => {
 	before(async () => {
 		await local.start();
 		base = `http://${local.hostname}:${local.port}/`;
+		global.File = File;
 	});
 
 	after(async () => {
@@ -86,6 +86,59 @@ describe('Request', () => {
 		expect(r2.counter).to.equal(0);
 	});
 
+	it('should throw a TypeError for forbidden methods', () => {
+		// https://fetch.spec.whatwg.org/#methods
+		const forbiddenMethods = [
+			"CONNECT",
+			"TRACE",
+			"TRACK",
+		];
+
+		forbiddenMethods.forEach(method => {
+			try {
+				new Request(base, { method: method.toLowerCase() });
+				expect(true).to.equal(false);
+			} catch (e) {
+				expect(e instanceof TypeError).to.equal(true);
+				expect(e.message).to.equal(`Failed to construct 'Request': '${method.toLowerCase()}' HTTP method is unsupported.`)
+			}
+			try {
+				new Request(base, { method: method.toUpperCase() });
+				expect(true).to.equal(false);
+			} catch (e) {
+				expect(e instanceof TypeError).to.equal(true);
+				expect(e.message).to.equal(`Failed to construct 'Request': '${method.toUpperCase()}' HTTP method is unsupported.`)
+			}
+		});
+	});
+
+	it('should normalize method', () => {
+		// https://fetch.spec.whatwg.org/#methods
+		const shouldUpperCaseMethods = [
+			"DELETE",
+			"GET",
+			"HEAD",
+			"OPTIONS",
+			"POST",
+			"PUT",
+		];
+		const otherMethods = ["PATCH", "CHICKEN"];
+
+		shouldUpperCaseMethods.forEach(method => {
+			const r1 = new Request(base, { method: method.toLowerCase() });
+			expect(r1.method).to.equal(method.toUpperCase());
+			const r2 = new Request(base, { method: method.toUpperCase() });
+			expect(r2.method).to.equal(method.toUpperCase());
+		});
+
+		otherMethods.forEach(method => {
+			const r1 = new Request(base, { method: method.toLowerCase() });
+			expect(r1.method).to.equal(method.toLowerCase());
+			const r2 = new Request(base, { method: method.toUpperCase() });
+			expect(r2.method).to.equal(method.toUpperCase());
+		});
+	});
+
 	it('should override signal on derived Request instances', () => {
 		const parentAbortController = new AbortController();
 		const derivedAbortController = new AbortController();
@@ -99,7 +152,7 @@ describe('Request', () => {
 		expect(derivedRequest.signal).to.equal(derivedAbortController.signal);
 	});
 
-	it('should allow removing signal on derived Request instances', () => {
+	it('should allow overriding signal on derived Request instances', () => {
 		const parentAbortController = new AbortController();
 		const parentRequest = new Request(`${base}hello`, {
 			signal: parentAbortController.signal
@@ -108,8 +161,39 @@ describe('Request', () => {
 			signal: null
 		});
 		expect(parentRequest.signal).to.equal(parentAbortController.signal);
-		expect(derivedRequest.signal).to.equal(null);
+		expect(derivedRequest.signal).to.not.equal(null);
+		expect(derivedRequest.signal).to.not.equal(parentAbortController.signal);
 	});
+
+
+	it('should abort signal', () => {
+		const controller = new AbortController();
+		const request = new Request(base, {
+			signal: controller.signal,
+		});
+		controller.abort();
+		expect(request.signal.aborted).to.equal(true);
+	});
+
+	it('should abort signal after clone', () => {
+		const controller = new AbortController();
+		const request = new Request(base, {
+			signal: controller.signal,
+		});
+		controller.abort();
+		const clonedRequest = request.clone();
+		expect(clonedRequest.signal.aborted).to.equal(true);
+	});
+
+	it('should default to "same-origin" as credentials', () => {
+		const request = new Request(base)
+		expect(request.credentials).to.equal('same-origin');
+	})
+
+	it('should respect custom credentials value', () => {
+		expect(new Request(base, { credentials: 'omit'})).to.have.property('credentials', 'omit');
+		expect(new Request(base, { credentials: 'include'})).to.have.property('credentials', 'include');
+	})
 
 	it('should throw error with GET/HEAD requests with body', () => {
 		expect(() => new Request(base, {body: ''}))
@@ -237,6 +321,37 @@ describe('Request', () => {
 		});
 	});
 
+	it('should support clone() method with null body', () => {
+		const url = base;
+
+		const agent = new http.Agent();
+		const {signal} = new AbortController();
+		const request = new Request(url, {
+			method: 'POST',
+			redirect: 'manual',
+			headers: {
+				b: '2'
+			},
+			follow: 3,
+			compress: false,
+			agent,
+			signal
+		});
+		const cl = request.clone();
+		expect(cl.url).to.equal(url);
+		expect(cl.method).to.equal('POST');
+		expect(cl.redirect).to.equal('manual');
+		expect(cl.headers.get('b')).to.equal('2');
+		expect(cl.follow).to.equal(3);
+		expect(cl.compress).to.equal(false);
+		expect(cl.method).to.equal('POST');
+		expect(cl.counter).to.equal(0);
+		expect(cl.agent).to.equal(agent);
+		expect(cl.signal).to.equal(signal);
+		// Clone body should be null
+		expect(cl.body).to.equal(null);
+	});
+
 	it('should support ArrayBuffer as body', () => {
 		const encoder = new TextEncoder();
 		const request = new Request(base, {
@@ -269,8 +384,8 @@ describe('Request', () => {
 			expect(result).to.equal('a=1');
 		});
 	});
-
-	it('should decode empty file inputs into File instances (web FormData)', async () => {
+  
+it('should decode empty file inputs into File instances (web FormData)', async () => {
 		const ogFormData = new WebFormData();
 		ogFormData.append('a', 1);
 		// This is what happens when you construct the form data set with an empty file input:
@@ -316,5 +431,59 @@ describe('Request', () => {
 			expect(file.size).to.equal(0);
 		});
 
+	});
+
+	it('should read formData after clone with web FormData body',async () => {
+		const ogFormData = new WebFormData();
+		ogFormData.append('a', 1);
+		ogFormData.append('b', 2);
+		ogFormData.append('file', new File(['content'], 'file.txt'));
+
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			expect(clonedFormData.get('b')).to.equal("2");
+			const file = clonedFormData.get('file')
+			if (typeof file !== "object") {
+				throw new Error("File is not an object");
+			}
+			expect(file.name).to.equal("file.txt");
+			expect(file.type).to.equal("application/octet-stream");
+			expect(file.size).to.equal(7);
+			expect(await file.text()).to.equal("content");
+			expect(file.lastModified).to.be.a('number');
+		});
+	});
+
+	it('should read formData after clone with node FormData body',async () => {
+		const ogFormData = new FormData();
+		ogFormData.append('a', '1');
+		ogFormData.append('b', '2');
+		ogFormData.append('file', Buffer.from('content'), { filename: "file.txt" });
+
+		const request = new Request(base, {
+			method: 'POST',
+			body: ogFormData,
+		});
+		const clonedRequest = request.clone();
+
+		return clonedRequest.formData().then(async clonedFormData => {
+			expect(clonedFormData.get('a')).to.equal("1");
+			expect(clonedFormData.get('b')).to.equal("2");
+			const file = clonedFormData.get('file')
+			if (typeof file !== "object") {
+				throw new Error("File is not an object");
+			}
+			expect(file.name).to.equal("file.txt");
+			expect(file.type).to.equal("text/plain");
+			expect(file.size).to.equal(7);
+			expect(await file.text()).to.equal("content");
+			expect(file.lastModified).to.be.a('number');
+		});
 	});
 });
