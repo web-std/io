@@ -240,7 +240,7 @@ const toEntryValue = (value, filename) => {
   } else if (isBlob(value)) {
     return new BlobFile([value], filename != null ? filename : "blob")
   } else {
-    if (filename != null) {
+    if (filename != null && filename != "") {
       throw new TypeError(
         "filename is only supported when value is Blob or File"
       )
