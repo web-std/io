@@ -18,10 +18,10 @@
   "types": "./dist/src/lib.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/src/lib.d.ts",
       "browser": "./src/lib.js",
       "require": "./dist/src/lib.node.cjs",
-      "import": "./src/lib.node.js",
-      "types": "./dist/src/lib.d.ts"
+      "import": "./src/lib.node.js"
     }
   },
   "dependencies": {
