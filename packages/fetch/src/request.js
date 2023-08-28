@@ -15,6 +15,9 @@ import {getSearch} from './utils/get-search.js';
 
 const INTERNALS = Symbol('Request internals');
 
+const forbiddenMethods = new Set(["CONNECT", "TRACE", "TRACK"]);
+const normalizedMethods = new Set(["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"]);
+
 /**
  * Check if `obj` is an instance of Request.
  *
@@ -32,7 +35,7 @@ const isRequest = object => {
 /**
  * Request class
  * @implements {globalThis.Request}
- * 
+ *
  * @typedef {Object} RequestState
  * @property {string} method
  * @property {RequestRedirect} redirect
@@ -40,7 +43,7 @@ const isRequest = object => {
  * @property {RequestCredentials} credentials
  * @property {URL} parsedURL
  * @property {AbortSignal|null} signal
- * 
+ *
  * @typedef {Object} RequestExtraOptions
  * @property {number} [follow]
  * @property {boolean} [compress]
@@ -49,15 +52,15 @@ const isRequest = object => {
  * @property {Agent} [agent]
  * @property {number} [highWaterMark]
  * @property {boolean} [insecureHTTPParser]
- * 
+ *
  * @typedef {((url:URL) => import('http').Agent) | import('http').Agent} Agent
- * 
+ *
  * @typedef {Object} RequestOptions
  * @property {string} [method]
  * @property {ReadableStream<Uint8Array>|null} [body]
  * @property {globalThis.Headers} [headers]
  * @property {RequestRedirect} [redirect]
- * 
+ *
  */
 export default class Request extends Body {
 	/**
@@ -80,8 +83,13 @@ export default class Request extends Body {
 
 
 
+		// Normalize method: https://fetch.spec.whatwg.org/#methods
 		let method = init.method || settings.method || 'GET';
-		method = method.toUpperCase();
+		if (forbiddenMethods.has(method.toUpperCase())) {
+			throw new TypeError(`Failed to construct 'Request': '${method}' HTTP method is unsupported.`)
+		} else if (normalizedMethods.has(method.toUpperCase())) {
+			method = method.toUpperCase();
+		}
 
 		const inputBody = init.body != null
 			? init.body
@@ -99,7 +107,7 @@ export default class Request extends Body {
 		});
 		const input = settings
 
-		
+
 		const headers = /** @type {globalThis.Headers} */
 			(new Headers(init.headers || input.headers || {}));
 
@@ -170,11 +178,11 @@ export default class Request extends Body {
 	get destination() {
 		return ""
 	}
-	
+
 	get integrity() {
 		return ""
 	}
-	
+
 	/** @type {RequestMode} */
 	get mode() {
 		return "cors"
@@ -184,7 +192,7 @@ export default class Request extends Body {
 	get referrer() {
 		return  ""
 	}
-	
+
 	/** @type {ReferrerPolicy} */
 	get referrerPolicy() {
 		return ""
@@ -308,7 +316,7 @@ export const getNodeRequestOptions = request => {
 		port: parsedURL.port,
 		hash: parsedURL.hash,
 		search: parsedURL.search,
-		// @ts-ignore - it does not has a query 
+		// @ts-ignore - it does not has a query
 		query: parsedURL.query,
 		href: parsedURL.href,
 		method: request.method,
