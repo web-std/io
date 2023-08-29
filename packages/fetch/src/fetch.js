@@ -12,6 +12,7 @@ import zlib from 'zlib';
 import fs from 'fs';
 import * as mime from 'mrmime'
 import dataUriToBuffer from 'data-uri-to-buffer';
+import {Buffer} from 'buffer';
 
 import {writeToStream, fromAsyncIterable} from './body.js';
 import Response from './response.js';
