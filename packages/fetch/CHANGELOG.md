@@ -1,5 +1,13 @@
 # Changelog
 
+### [4.2.1](https://www.github.com/web-std/io/compare/fetch-v4.2.0...fetch-v4.2.1) (2023-08-29)
+
+
+### Bug Fixes
+
+* **fetch:** fix memory leak when passing `keepAlive` ([#83](https://www.github.com/web-std/io/issues/83)) ([5fde362](https://www.github.com/web-std/io/commit/5fde362a9648de474c52006cf94d9dedba12b480))
+* **fetch:** import `Buffer` from `'buffer'` ([#90](https://www.github.com/web-std/io/issues/90)) ([29d8936](https://www.github.com/web-std/io/commit/29d8936fb489cee1fa132167da69bee8202bace8))
+
 ## [4.2.0](https://www.github.com/web-std/io/compare/fetch-v4.1.2...fetch-v4.2.0) (2023-08-28)
 
 
