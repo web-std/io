@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.3](https://www.github.com/web-std/io/compare/file-v3.0.2...file-v3.0.3) (2023-08-28)
+
+
+### Changes
+
+* promote `types` conditional exports to the top of the list ([#88](https://www.github.com/web-std/io/issues/88)) ([c1339b9](https://www.github.com/web-std/io/commit/c1339b9bef4312e5efd4c5fe627b92e6c1d5c3d1))
+
 ### [3.0.2](https://www.github.com/web-std/io/compare/file-v3.0.1...file-v3.0.2) (2022-01-21)
 
 
