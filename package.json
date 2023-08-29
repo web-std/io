@@ -1,5 +1,5 @@
 {
-  "name": "@remix-run/web-std-io",
+  "name": "@web-std/io",
   "private": true,
   "workspaces": [
     "packages/blob",
