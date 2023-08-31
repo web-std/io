@@ -1,4 +1,5 @@
 {
+  "name": "@web-std/io",
   "private": true,
   "workspaces": [
     "packages/blob",
