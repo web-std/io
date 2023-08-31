@@ -491,22 +491,19 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@web-std/fetch@^3.0.0":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@web-std/fetch/-/fetch-3.0.3.tgz#507e1371825298aae61172b0da439570437d3982"
-  integrity sha512-PtaKr6qvw2AmKChugzhQWuTa12dpbogHRBxwcleAZ35UhWucnfD4N+g3f7qYK2OeioSWTK3yMf6n/kOOfqxHaQ==
+"@web-std/fetch@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/@web-std/fetch/-/fetch-4.2.1.tgz#692c5545787081217fce3c024708fa8979c21f9c"
+  integrity sha512-M6sgHDgKegcjuVsq8J6jb/4XvhPGui8uwp3EIoADGXUnBl9vKzKLk9H9iFzrPJ6fSV6zZzFWXPyziBJp9hxzBA==
   dependencies:
     "@web-std/blob" "^3.0.3"
+    "@web-std/file" "^3.0.2"
     "@web-std/form-data" "^3.0.2"
+    "@web-std/stream" "^1.0.1"
     "@web3-storage/multipart-parser" "^1.0.0"
+    abort-controller "^3.0.0"
     data-uri-to-buffer "^3.0.1"
-
-"@web-std/stream@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@web-std/stream/-/stream-1.0.0.tgz#01066f40f536e4329d9b696dc29872f3a14b93c1"
-  integrity sha512-jyIbdVl+0ZJyKGTV0Ohb9E6UnxP+t7ZzX4Do3AHjZKxUXKMs9EmqnBDQgHF7bEw0EzbQygOjtt/7gvtmi//iCQ==
-  dependencies:
-    web-streams-polyfill "^3.1.1"
+    mrmime "^1.0.0"
 
 "@web3-storage/multipart-parser@^1.0.0":
   version "1.0.0"
