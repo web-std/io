@@ -106,55 +106,6 @@ export default class Headers extends URLSearchParams {
 				[];
 
 		super(result);
-
-		// Returning a Proxy that will lowercase key names, validate parameters and sort keys
-		// eslint-disable-next-line no-constructor-return
-		return new Proxy(this, {
-			get(target, p, receiver) {
-				switch (p) {
-					case 'append':
-					case 'set':
-						/**
-						 * @param {string} name
-						 * @param {string} value
-						 */
-						return (name, value) => {
-							validateHeaderName(name);
-							validateHeaderValue(name, String(value));
-							return URLSearchParams.prototype[p].call(
-								receiver,
-								String(name).toLowerCase(),
-								String(value)
-							);
-						};
-
-					case 'delete':
-					case 'has':
-					case 'getAll':
-						/**
-						 * @param {string} name
-						 */
-						return name => {
-							validateHeaderName(name);
-							// @ts-ignore
-							return URLSearchParams.prototype[p].call(
-								receiver,
-								String(name).toLowerCase()
-							);
-						};
-
-					case 'keys':
-						return () => {
-							target.sort();
-							return new Set(URLSearchParams.prototype.keys.call(target)).keys();
-						};
-
-					default:
-						return Reflect.get(target, p, receiver);
-				}
-			}
-			/* c8 ignore next */
-		});
 	}
 
 	get [Symbol.toStringTag]() {
@@ -184,8 +135,58 @@ export default class Headers extends URLSearchParams {
 	}
 
 	/**
-	 * @param {(value: string, key: string, parent: this) => void} callback 
-	 * @param {any} thisArg 
+	 * @param {string} name
+	 */
+	getAll(name) {
+		validateHeaderName(name);
+		return super.getAll(String(name).toLowerCase());
+	}
+
+	/**
+	 * @param {string} name
+	 * @param {string} value
+	 */
+	append(name, value) {
+		validateHeaderName(name);
+		validateHeaderValue(name, String(value));
+		return super.append(
+			String(name).toLowerCase(),
+			String(value)
+		);
+	}
+
+	/**
+	 * @param {string} name
+	 */
+	delete(name) {
+		validateHeaderName(name);
+		return super.delete(String(name).toLowerCase());
+	}
+
+	/**
+	 * @param {string} name
+	 */
+	has(name) {
+		validateHeaderName(name);
+		return super.has(String(name).toLowerCase());
+	}
+
+	/**
+	 * @param {string} name
+	 * @param {string} value
+	 */
+	set(name, value) {
+		validateHeaderName(name);
+		validateHeaderValue(name, String(value));
+		return super.set(
+			String(name).toLowerCase(),
+			String(value)
+		);
+	}
+
+	/**
+	 * @param {(value: string, key: string, parent: this) => void} callback
+	 * @param {any} thisArg
 	 * @returns {void}
 	 */
 	forEach(callback, thisArg = undefined) {
@@ -199,6 +200,11 @@ export default class Headers extends URLSearchParams {
 				Reflect.apply(callback, thisArg, [this.get(name), name, this]);
 			}
 		}
+	}
+
+	keys() {
+		this.sort();
+		return new Set(super.keys()).keys();
 	}
 
 	/**
@@ -274,7 +280,18 @@ export default class Headers extends URLSearchParams {
  */
 Object.defineProperties(
 	Headers.prototype,
-	['get', 'entries', 'forEach', 'values'].reduce((result, property) => {
+	[
+		'append',
+		'delete',
+		'entries',
+		'forEach',
+		'get',
+		'getAll',
+		'has',
+		'keys',
+		'set',
+		'values'
+	].reduce((result, property) => {
 		result[property] = {enumerable: true};
 		return result;
 	}, /** @type {Record<string, {enumerable:true}>} */ ({}))

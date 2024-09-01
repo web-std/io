@@ -334,4 +334,34 @@ describe('Headers', () => {
 		// eslint-disable-next-line quotes
 		expect(util.format(headers)).to.equal("{ a: [ '1', '3' ], b: '2', host: 'thehost' }");
 	});
+
+	it('should have the correct prototype chain', () => {
+		const headers = new Headers();
+
+		expect(headers).to.be.instanceOf(Headers);
+		expect(Object.getPrototypeOf(headers)).to.equal(Headers.prototype);
+	});
+
+	it('should have the correct prototype chain when extended', () => {
+		class MyHeaders extends Headers {}
+
+		const headers = new MyHeaders();
+
+		expect(headers).to.be.instanceOf(MyHeaders);
+		expect(headers).to.be.instanceOf(Headers);
+		expect(Object.getPrototypeOf(headers)).to.equal(MyHeaders.prototype);
+	});
+
+	it('should call the method of the subclass', () => {
+		class MyHeaders extends Headers {
+			append(_name, _value) {
+				return 'subclass method called';
+			}
+		}
+
+		const headers = new MyHeaders();
+		const result = headers.append('Content-Type', 'application/json');
+
+		expect(result).to.equal('subclass method called');
+	});
 });
