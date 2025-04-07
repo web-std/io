@@ -216,6 +216,19 @@ describe('Headers', () => {
 		expect(() => headers.append('', 'ok')).to.throw(TypeError);
 	});
 
+	it('should allow HTTP2 pseudo-headers', () => {
+		let headers = new Headers({':authority': 'something'});
+		headers.append(":method", "something else")
+
+		const result = [];
+		for (const pair of headers) {
+			result.push(pair);
+		}
+
+		expect(result).to.deep.equal([[':authority', 'something'], [':method', 'something else']]);
+
+	})
+
 	it('should ignore unsupported attributes while reading headers', () => {
 		const FakeHeader = function () { };
 		// Prototypes are currently ignored
