@@ -17,6 +17,7 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - 16
@@ -42,9 +43,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         node-version:
-          - 14
           - 16
         os:
           - ubuntu-latest
