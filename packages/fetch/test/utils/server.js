@@ -235,6 +235,12 @@ export default class TestServer {
 			res.end();
 		}
 
+		if (p === '/redirect/301/file') {
+			res.statusCode = 301;
+			res.setHeader('Location', 'file://inspect');
+			res.end();
+		}
+
 		if (p === '/redirect/301/rn') {
 			res.statusCode = 301
 			res.setHeader('Location', '/403')

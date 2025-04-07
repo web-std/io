@@ -180,6 +180,14 @@ async function fetch(url, options_ = {}) {
 							return;
 						}
 
+						// https://fetch.spec.whatwg.org/#http-redirect-fetch
+						// 6. If locationURL’s scheme is not an HTTP(S) scheme, then return a network error.
+						if (locationURL.protocol !== 'http:' && locationURL.protocol !== 'https:') {
+							reject(new FetchError('URL scheme must be a HTTP(S) scheme', 'bad-redirect-scheme'));
+							finalize();
+							return;
+						}
+
 						// HTTP-redirect fetch step 6 (counter increment)
 						// Create a new Request object.
 						const requestOptions = {

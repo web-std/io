@@ -442,6 +442,15 @@ describe('node-fetch', () => {
 		});
 	});
 
+	it("should not follow non HTTP(s) redirect", () => {
+		const url = `${base}redirect/301/file`;
+		const options = {
+		};
+		return expect(fetch(url, options))
+			.to.eventually.be.rejected.and.be.an.instanceOf(FetchError)
+			.and.have.property("type", "bad-redirect-scheme");
+	});
+
 	it('should allow not following redirect', () => {
 		const url = `${base}redirect/301`;
 		const options = {
@@ -1601,7 +1610,7 @@ describe('node-fetch', () => {
 		const parameters = new URLSearchParams();
 		parameters.append('key', 'value');
 		const request = new Request(base, {
-			method: 'POST', 
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
