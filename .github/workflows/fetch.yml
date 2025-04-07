@@ -18,16 +18,17 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - 16
         project:
           - fetch
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -44,28 +45,24 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         node-version:
-          - 14
           - 16
+          - 18
+          - 20
         os:
           - ubuntu-latest
           - windows-latest
           - macos-latest
         project:
           - fetch
-        exclude:
-          - os: windows-latest
-            node-version: 14
-          # On macOS, run tests with only the LTS environments.
-          - os: macos-latest
-            node-version: 14
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -74,13 +71,6 @@ jobs:
 
       - name: Test (ESM)
         run: yarn --cwd packages/${{matrix.project}} test -- --colors
-
-      # upload coverage only once
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        if: matrix.node == '14' && matrix.os == 'ubuntu-latest'
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test (CJS)
         run: yarn --cwd packages/${{matrix.project}} test:cjs
