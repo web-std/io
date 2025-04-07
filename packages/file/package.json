@@ -24,7 +24,10 @@
   "exports": {
     ".": {
       "types": "./dist/src/lib.d.ts",
-      "browser": "./src/lib.js",
+      "browser": {
+        "require": "./dist/src/lib.cjs",
+        "import": "./src/lib.js"
+      },
       "require": "./dist/src/lib.node.cjs",
       "node": "./src/lib.node.js"
     }
