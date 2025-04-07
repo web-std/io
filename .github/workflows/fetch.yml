@@ -18,9 +18,13 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - 16
+          - 18
+          - 20
+          - 22
         project:
           - fetch
     steps:
@@ -44,22 +48,19 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         node-version:
-          - 14
           - 16
+          - 18
+          - 20
+          - 22
         os:
           - ubuntu-latest
           - windows-latest
           - macos-latest
         project:
           - fetch
-        exclude:
-          - os: windows-latest
-            node-version: 14
-          # On macOS, run tests with only the LTS environments.
-          - os: macos-latest
-            node-version: 14
 
     steps:
       - uses: actions/checkout@v2
@@ -78,7 +79,7 @@ jobs:
       # upload coverage only once
       - name: Coveralls
         uses: coverallsapp/github-action@master
-        if: matrix.node == '14' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '22' && matrix.os == 'ubuntu-latest'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
